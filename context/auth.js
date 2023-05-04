@@ -21,10 +21,8 @@ const useProtectedRoute = (user) => {
       !user &&
       !inAuthGroup
     ) {
-      // Redirect to the sign-in page.
       router.replace("/login");
     } else if (user && inAuthGroup) {
-      // Redirect away from the sign-in page.
       router.replace("/");
     }
   }, [user, segments]);
@@ -35,16 +33,19 @@ export const Provider = (props) => {
   const [user, setUser] = React.useState(null);
   const [token, setToken] = React.useState(null);
 
-  useProtectedRoute(user);
-
   const signIn = async (email, password) => {
+    if (!email || !password) {
+      alert('No data en inputs');
+      return;
+    }
+
     setLoading(true);
     try {
       const response = await fetchLogin(email, password);
       setUser(response.user);
       setToken(response.token);
       AsyncStorage.setItem('token', response.token);
-      AsyncStorage.setItem('user', response.user);
+      AsyncStorage.setItem('user', JSON.stringify(response.user));
     } catch (error) {
       console.log("🚩 ~ auth.js ~ signIn() ~ error:", error);
     }
@@ -64,7 +65,15 @@ export const Provider = (props) => {
     setLoading(true);
     try {
       let userToken = await AsyncStorage.getItem('token');
-      setToken(userToken);
+      let userData = await AsyncStorage.getItem('user');
+
+      if(userToken !== null) {
+        setToken(userToken);
+      }
+
+      if(userData !== null) {
+        setUser(JSON.parse(userData));
+      }
     } catch (error) {
       console.log("🚩 ~ auth.js ~ isLoggedIn() ~ error:", error);
     }
@@ -74,6 +83,8 @@ export const Provider = (props) => {
   useEffect(() => {
     isLoggedIn();
   }, []);
+
+  useProtectedRoute(user);
 
   if (loading) {
     return (

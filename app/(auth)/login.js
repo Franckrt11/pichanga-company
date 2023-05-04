@@ -16,11 +16,6 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const { signIn } = useAuth();
 
-  // const fetchLogin = async () => {
-  //   const login = await signIn(email, password);
-  //   console.log("🚀 ~ file: LoginScreen.js:28 ~ fetchLogin ~ handleLogin:", login)
-  // };
-
   return (
     <KeyboardAvoidingView
       style={LayoutStyles.blueContainer}
@@ -49,8 +44,7 @@ const Login = () => {
 
       <View style={LoginStyles.buttonContainer}>
         <TouchableOpacity
-          // onPress={fetchLogin}
-          onPress={signIn}
+          onPress={() => signIn(email, password)}
           style={LoginStyles.button}
         >
           <Text style={LoginStyles.buttonText}>INGRESAR</Text>

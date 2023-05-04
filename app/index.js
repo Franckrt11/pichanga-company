@@ -2,12 +2,13 @@ import { Text, View } from "react-native";
 import { useAuth } from "../context/auth";
 
 const Index = () => {
-  const { signOut } = useAuth();
+  const { signOut, user } = useAuth();
 
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       <Text>HOME</Text>
-      <Text onPress={signOut}>Sign Out</Text>
+      <Text>{user.name}</Text>
+      <Text onPress={() => signOut}>Sign Out</Text>
     </View>
   );
 };

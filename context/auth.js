@@ -2,15 +2,14 @@ import { ActivityIndicator, View } from "react-native";
 import { useRouter, useSegments } from "expo-router";
 import React, { createContext, useEffect } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { fetchLogin } from "../models/auth";
 
-export const AuthContext = createContext(null);
+const AuthContext = createContext(null);
 
-// This hook can be used to access the user info.
 export const useAuth = () => {
   return React.useContext(AuthContext);
 };
 
-// This hook will protect the route access based on user authentication.
 const useProtectedRoute = (user) => {
   const segments = useSegments();
   const router = useRouter();
@@ -19,7 +18,6 @@ const useProtectedRoute = (user) => {
     const inAuthGroup = segments[0] === "(auth)";
 
     if (
-      // If the user is not signed in and the initial segment is not anything in the auth group.
       !user &&
       !inAuthGroup
     ) {
@@ -39,13 +37,14 @@ export const Provider = (props) => {
 
   useProtectedRoute(user);
 
-  const signIn = () => {
+  const signIn = async (email, password) => {
     setLoading(true);
     try {
-      setUser('Laucian');
-      setToken('adasdvavadsv');
-      AsyncStorage.setItem('token', token);
-      AsyncStorage.setItem('user', user);
+      const response = await fetchLogin(email, password);
+      setUser(response.user);
+      setToken(response.token);
+      AsyncStorage.setItem('token', response.token);
+      AsyncStorage.setItem('user', response.user);
     } catch (error) {
       console.log("🚩 ~ auth.js ~ signIn() ~ error:", error);
     }
@@ -91,6 +90,7 @@ export const Provider = (props) => {
         signOut,
         token,
         user,
+        loading
       }}
     >
       {props.children}

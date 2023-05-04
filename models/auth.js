@@ -6,7 +6,7 @@ const fetchHeaders = {
   "Content-Type": "application/json",
 };
 
-const handleLogin = async (email, password) => {
+export const fetchLogin = async (email, password) => {
   const response = await fetch(`${API_URL}api/company/login`, {
     method: "POST",
     headers: fetchHeaders,
@@ -21,7 +21,7 @@ const handleLogin = async (email, password) => {
   return await response.json();
 };
 
-const handleRegister = async (email, password) => {
+export const fetchRegister = async (email, password) => {
   const response = await fetch(`${API_URL}api/company/register`, {
     method: "POST",
     headers: fetchHeaders,
@@ -36,5 +36,3 @@ const handleRegister = async (email, password) => {
 
   return await response.json();
 };
-
-export { handleLogin, handleRegister };

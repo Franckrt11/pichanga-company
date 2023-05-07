@@ -4,7 +4,6 @@ import {
   KeyboardAvoidingView,
   Text,
   View,
-  ScrollView,
   Button,
   Alert
 } from 'react-native';
@@ -13,6 +12,7 @@ import { Stack, useRouter, Link } from 'expo-router';
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { useAuth } from "../../context/auth";
 import { LayoutStyles, RegisterStyles, Colors } from "../../constants/styles";
+import Input from "../../components/input";
 
 const CheckboxText = () => {
   return (
@@ -60,24 +60,28 @@ const Register = () => {
           value={ruc}
           onChangeText={text => setRuc(text)}
           style={RegisterStyles.input}
+          keyboardType="numeric"
         />
         <TextInput
           placeholder="Correo electrónico"
           value={email}
           onChangeText={text => setEmail(text)}
           style={RegisterStyles.input}
+          keyboardType="email-address"
         />
-        <TextInput
+        <Input
           placeholder="Contraseña"
           value={password}
           onChangeText={text => setPassword(text)}
-          style={RegisterStyles.input}
+          styles={RegisterStyles.input}
+          password={true}
         />
-        <TextInput
+        <Input
           placeholder="Repetir contraseña"
           value={password_confirmation}
           onChangeText={text => setPasswordConfirmation(text)}
-          style={RegisterStyles.input}
+          styles={RegisterStyles.input}
+          password={true}
         />
         <BouncyCheckbox
           fillColor={Colors.greenLizard}

@@ -7,9 +7,10 @@ import {
   View
 } from 'react-native';
 import { useState } from 'react';
+import { Link } from "expo-router";
 import { useAuth } from "../../context/auth";
 import { LayoutStyles, LoginStyles, AppImages } from "../../constants/styles";
-import { Link } from "expo-router";
+import Input from "../../components/input";
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -32,13 +33,14 @@ const Login = () => {
           value={email}
           onChangeText={text => setEmail(text)}
           style={LoginStyles.input}
+          keyboardType="email-address"
         />
-        <TextInput
+        <Input
           placeholder="Contraseña"
           value={password}
           onChangeText={text => setPassword(text)}
-          style={LoginStyles.input}
-          secureTextEntry
+          styles={LoginStyles.input}
+          password={true}
         />
       </View>
 

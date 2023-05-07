@@ -39,6 +39,7 @@ export const LoginStyles = StyleSheet.create({
     width: '80%'
   },
   input: {
+    color: Colors.maastrichtBlue,
     backgroundColor: Colors.white,
     paddingHorizontal: 15,
     paddingVertical: 10,

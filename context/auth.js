@@ -1,8 +1,8 @@
 import { ActivityIndicator, View } from "react-native";
 import { useRouter, useSegments } from "expo-router";
 import React, { createContext, useEffect } from "react";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { fetchLogin } from "../models/auth";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { fetchLogin, fetchRegister } from "../models/auth";
 
 const AuthContext = createContext(null);
 
@@ -17,10 +17,7 @@ const useProtectedRoute = (user) => {
   React.useEffect(() => {
     const inAuthGroup = segments[0] === "(auth)";
 
-    if (
-      !user &&
-      !inAuthGroup
-    ) {
+    if (!user && !inAuthGroup) {
       router.replace("/login");
     } else if (user && inAuthGroup) {
       router.replace("/");
@@ -35,7 +32,7 @@ export const Provider = (props) => {
 
   const signIn = async (email, password) => {
     if (!email || !password) {
-      alert('No data en inputs');
+      alert("No data en inputs");
       return;
     }
 
@@ -44,8 +41,8 @@ export const Provider = (props) => {
       const response = await fetchLogin(email, password);
       setUser(response.user);
       setToken(response.token);
-      AsyncStorage.setItem('token', response.token);
-      AsyncStorage.setItem('user', JSON.stringify(response.user));
+      AsyncStorage.setItem("token", response.token);
+      AsyncStorage.setItem("user", JSON.stringify(response.user));
     } catch (error) {
       console.log("🚩 ~ auth.js ~ signIn() ~ error:", error);
     }
@@ -56,22 +53,50 @@ export const Provider = (props) => {
     setLoading(true);
     setUser(null);
     setToken(null);
-    AsyncStorage.removeItem('token');
-    AsyncStorage.removeItem('user');
+    AsyncStorage.removeItem("token");
+    AsyncStorage.removeItem("user");
+    setLoading(false);
+  };
+
+  const signUp = async (name, ruc, email, password, password_confirmation, checkbox) => {
+    if (!checkbox) {
+      alert("Aceptar terminos");
+      return;
+    }
+    if (!email || !password) {
+      alert("No data en inputs");
+      return;
+    }
+    setLoading(true);
+    try {
+      const response = await fetchRegister({
+        name,
+        ruc,
+        email,
+        password,
+        password_confirmation,
+      });
+      setUser(response.user);
+      setToken(response.token);
+      AsyncStorage.setItem("token", response.token);
+      AsyncStorage.setItem("user", JSON.stringify(response.user));
+    } catch (error) {
+      console.log("🚩 ~ auth.js ~ signOut() ~ error:", error);
+    }
     setLoading(false);
   };
 
   const isLoggedIn = async () => {
     setLoading(true);
     try {
-      let userToken = await AsyncStorage.getItem('token');
-      let userData = await AsyncStorage.getItem('user');
+      let userToken = await AsyncStorage.getItem("token");
+      let userData = await AsyncStorage.getItem("user");
 
-      if(userToken !== null) {
+      if (userToken !== null) {
         setToken(userToken);
       }
 
-      if(userData !== null) {
+      if (userData !== null) {
         setUser(JSON.parse(userData));
       }
     } catch (error) {
@@ -99,9 +124,10 @@ export const Provider = (props) => {
       value={{
         signIn,
         signOut,
+        signUp,
         token,
         user,
-        loading
+        loading,
       }}
     >
       {props.children}

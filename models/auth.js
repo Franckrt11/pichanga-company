@@ -21,13 +21,16 @@ export const fetchLogin = async (email, password) => {
   return await response.json();
 };
 
-export const fetchRegister = async (email, password) => {
+export const fetchRegister = async (data) => {
   const response = await fetch(`${API_URL}api/company/register`, {
     method: "POST",
     headers: fetchHeaders,
     body: JSON.stringify({
-      email: email,
-      password: password,
+      name: data.name,
+      ruc: data.ruc,
+      email: data.email,
+      password: data.password,
+      password_confirmation: data.password_confirmation,
       status: true,
       // device: Device.modelId,
       device: 'MiIphone12', // Device temporal

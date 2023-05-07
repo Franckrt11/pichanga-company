@@ -83,8 +83,6 @@ export const LoginStyles = StyleSheet.create({
 
 export const RegisterStyles = StyleSheet.create({
   inputContainer: {
-    flexGrow: 1,
-    paddingTop: 100,
     width: '80%'
   },
   inputTitle: {
@@ -105,8 +103,7 @@ export const RegisterStyles = StyleSheet.create({
     marginBottom:15,
   },
   buttonContainer: {
-    paddingTop: 20,
-    paddingBottom: 20,
+    marginTop: 30,
     width: '80%'
   },
   button: {

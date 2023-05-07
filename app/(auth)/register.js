@@ -1,6 +1,5 @@
 import {
   TouchableOpacity,
-  Image,
   TextInput,
   KeyboardAvoidingView,
   Text,
@@ -12,6 +11,7 @@ import {
 import { useState } from 'react';
 import { Stack, useRouter, Link } from 'expo-router';
 import BouncyCheckbox from "react-native-bouncy-checkbox";
+import { useAuth } from "../../context/auth";
 import { LayoutStyles, RegisterStyles, Colors } from "../../constants/styles";
 
 const CheckboxText = () => {
@@ -28,44 +28,37 @@ const CheckboxText = () => {
 };
 
 const Register = () => {
+  const [ruc, setRuc] = useState('');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirm_password, setConfirmPassword] = useState('');
-  const [checkboxState, setCheckboxState] = useState(false);
+  const [password_confirmation, setPasswordConfirmation] = useState('');
+  const [checkbox, setCheckbox] = useState(false);
   const router = useRouter();
-
-  const fetchRegister = () => {
-    console.log('>> fetchRegister');
-    if (checkboxState) {
-      console.log('fetchRegister', {
-        name: name,
-        email: email,
-        password: password
-      });
-    } else {
-      alert('Tienes que aceptar');
-    }
-  };
+  const { signUp } = useAuth();
 
   return (
     <KeyboardAvoidingView
       style={LayoutStyles.whiteContainer}
       behavior="padding"
     >
-
       <Stack.Screen
         options={{
           headerLeft: () => <Button title="Volver" onPress={() => router.back()} />
         }}
       />
-
-      <ScrollView style={RegisterStyles.inputContainer}>
+      <View style={RegisterStyles.inputContainer}>
         <Text style={RegisterStyles.inputTitle}>REGISTRO</Text>
         <TextInput
           placeholder="Razón social"
           value={name}
           onChangeText={text => setName(text)}
+          style={RegisterStyles.input}
+        />
+        <TextInput
+          placeholder="R.U.C."
+          value={ruc}
+          onChangeText={text => setRuc(text)}
           style={RegisterStyles.input}
         />
         <TextInput
@@ -82,8 +75,8 @@ const Register = () => {
         />
         <TextInput
           placeholder="Repetir contraseña"
-          value={confirm_password}
-          onChangeText={text => setConfirmPassword(text)}
+          value={password_confirmation}
+          onChangeText={text => setPasswordConfirmation(text)}
           style={RegisterStyles.input}
         />
         <BouncyCheckbox
@@ -91,13 +84,13 @@ const Register = () => {
           innerIconStyle={{ borderColor: Colors.silverSand, borderWidth: 2 }}
           size={22}
           textComponent={<CheckboxText />}
-          onPress={() => setCheckboxState(!checkboxState)}
+          onPress={() => setCheckbox(!checkbox)}
         />
-      </ScrollView>
+      </View>
 
       <View style={RegisterStyles.buttonContainer}>
         <TouchableOpacity
-          onPress={fetchRegister}
+          onPress={() => signUp(name, ruc, email, password, password_confirmation, checkbox)}
           style={RegisterStyles.button}
         >
           <Text style={RegisterStyles.buttonText}>REGISTRAR</Text>

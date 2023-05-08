@@ -20,7 +20,7 @@ const useProtectedRoute = (user) => {
     if (!user && !inAuthGroup) {
       router.replace("/login");
     } else if (user && inAuthGroup) {
-      router.replace("/");
+      router.replace("/(tabs)/home");
     }
   }, [user, segments]);
 };
@@ -39,10 +39,16 @@ export const Provider = (props) => {
     setLoading(true);
     try {
       const response = await fetchLogin(email, password);
-      setUser(response.user);
-      setToken(response.token);
-      AsyncStorage.setItem("token", response.token);
-      AsyncStorage.setItem("user", JSON.stringify(response.user));
+
+      if (response.status) {
+        setUser(response.user);
+        setToken(response.token);
+        AsyncStorage.setItem("token", response.token);
+        AsyncStorage.setItem("user", JSON.stringify(response.user));
+      } else {
+        alert("Error en Login");
+        console.log('Error', response.messages);
+      }
     } catch (error) {
       console.log("🚩 ~ auth.js ~ signIn() ~ error:", error);
     }
@@ -76,10 +82,19 @@ export const Provider = (props) => {
         password,
         password_confirmation,
       });
-      setUser(response.user);
-      setToken(response.token);
-      AsyncStorage.setItem("token", response.token);
-      AsyncStorage.setItem("user", JSON.stringify(response.user));
+
+      if (response.status) {
+        setUser(response.user);
+        setToken(response.token);
+        AsyncStorage.setItem("token", response.token);
+        AsyncStorage.setItem("user", JSON.stringify(response.user));
+      } else {
+        alert("Error en registro");
+        console.log('Error', response.messages);
+        setLoading(false);
+        return;
+      }
+
     } catch (error) {
       console.log("🚩 ~ auth.js ~ signOut() ~ error:", error);
     }
@@ -92,11 +107,11 @@ export const Provider = (props) => {
       let userToken = await AsyncStorage.getItem("token");
       let userData = await AsyncStorage.getItem("user");
 
-      if (userToken !== null) {
+      if (userToken !== null && typeof userToken === 'undefined') {
         setToken(userToken);
       }
 
-      if (userData !== null) {
+      if (userData !== null && typeof userData === 'undefined') {
         setUser(JSON.parse(userData));
       }
     } catch (error) {

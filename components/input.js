@@ -3,10 +3,11 @@ import { useState } from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Colors } from '../constants/styles';
 
-const Input = ({ error, password, onFocus = () => {}, styles, ...props }) => {
+const Input = ({ error, password, onFocus = () => {}, styles, theme, ...props }) => {
 
   const [hidePassword, setHidePassword] = useState(password);
   const [isFocused, setIsFocused] = useState(false);
+  const errorColor = theme === 'light' ? 'red' : 'white';
 
   return (
     <View
@@ -18,6 +19,7 @@ const Input = ({ error, password, onFocus = () => {}, styles, ...props }) => {
           //   : '#F3F4FB',
           // alignItems: 'center',
           position: 'relative',
+          marginBottom:15,
         }}
     >
       <TextInput
@@ -44,11 +46,7 @@ const Input = ({ error, password, onFocus = () => {}, styles, ...props }) => {
           }}
         />
       )}
-      {error && (
-        <Text style={{marginTop: 7, color: 'red', fontSize: 12}}>
-          {error}
-        </Text>
-      )}
+      {error && error.map((message, i) => <Text key={i} style={{marginTop: 5, color: errorColor, fontSize: 12}}>{message}</Text>)}
     </View>
   );
 };

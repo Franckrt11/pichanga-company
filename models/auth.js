@@ -1,5 +1,7 @@
-import { API_URL } from "@env";
+// import { API_URL } from "@env";
 import * as Device from "expo-device";
+
+const API_URL = 'https://api.tejuegounapichanga.com/';
 
 const fetchHeaders = {
   Accept: "application/json",
@@ -13,8 +15,8 @@ export const fetchLogin = async (email, password) => {
     body: JSON.stringify({
       email: email,
       password: password,
-      // device: Device.modelId,
-      device: 'MiIphone12', // Device temporal
+      device: Device.modelId,
+      // device: 'MiIphone12', // Device temporal
     }),
   });
 
@@ -32,8 +34,8 @@ export const fetchRegister = async (data) => {
       password: data.password,
       password_confirmation: data.password_confirmation,
       status: true,
-      // device: Device.modelId,
-      device: 'MiIphone12', // Device temporal
+      device: Device.modelId,
+      // device: 'MiIphone12', // Device temporal
     }),
   });
 

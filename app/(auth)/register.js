@@ -1,15 +1,14 @@
 import {
   TouchableOpacity,
-  TextInput,
+  ActivityIndicator,
   KeyboardAvoidingView,
   Text,
-  View,
-  Button,
-  Alert
+  View
 } from 'react-native';
 import { useState } from 'react';
 import { Stack, useRouter, Link } from 'expo-router';
 import BouncyCheckbox from "react-native-bouncy-checkbox";
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useAuth } from "../../context/auth";
 import { LayoutStyles, RegisterStyles, Colors } from "../../constants/styles";
 import Input from "../../components/input";
@@ -35,52 +34,67 @@ const Register = () => {
   const [password_confirmation, setPasswordConfirmation] = useState('');
   const [checkbox, setCheckbox] = useState(false);
   const router = useRouter();
-  const { signUp } = useAuth();
+  const { signUp, loading, errors } = useAuth();
 
   return (
     <KeyboardAvoidingView
-      style={LayoutStyles.whiteContainer}
+      style={[LayoutStyles.whiteContainer, {position:'relative'}]}
       behavior="padding"
     >
-      <Stack.Screen
-        options={{
-          headerLeft: () => <Button title="Volver" onPress={() => router.back()} />
+      <Icon
+        onPress={() => router.back()}
+        name={'arrow-left-thick'}
+        style={{
+          color: Colors.maastrichtBlue,
+          fontSize: 30,
+          position: 'absolute',
+          left: 10,
+          top: 10
         }}
       />
       <View style={RegisterStyles.inputContainer}>
         <Text style={RegisterStyles.inputTitle}>REGISTRO</Text>
-        <TextInput
+        <Input
           placeholder="Razón social"
           value={name}
           onChangeText={text => setName(text)}
-          style={RegisterStyles.input}
+          styles={RegisterStyles.input}
+          theme="light"
+          error={errors ? errors.name : null}
         />
-        <TextInput
+        <Input
           placeholder="R.U.C."
           value={ruc}
           onChangeText={text => setRuc(text)}
-          style={RegisterStyles.input}
+          styles={RegisterStyles.input}
+          theme="light"
           keyboardType="numeric"
+          error={errors ? errors.ruc : null}
         />
-        <TextInput
+        <Input
           placeholder="Correo electrónico"
           value={email}
           onChangeText={text => setEmail(text)}
-          style={RegisterStyles.input}
+          styles={RegisterStyles.input}
+          theme="light"
           keyboardType="email-address"
+          error={errors ? errors.email : null}
         />
         <Input
           placeholder="Contraseña"
           value={password}
           onChangeText={text => setPassword(text)}
           styles={RegisterStyles.input}
+          theme="light"
           password={true}
+          error={errors ? errors.password : null}
         />
         <Input
           placeholder="Repetir contraseña"
           value={password_confirmation}
           onChangeText={text => setPasswordConfirmation(text)}
           styles={RegisterStyles.input}
+          theme="light"
           password={true}
         />
         <BouncyCheckbox
@@ -93,12 +107,16 @@ const Register = () => {
       </View>
 
       <View style={RegisterStyles.buttonContainer}>
+      {loading ? (
+        <ActivityIndicator size={"large"} />
+      ) : (
         <TouchableOpacity
           onPress={() => signUp(name, ruc, email, password, password_confirmation, checkbox)}
           style={RegisterStyles.button}
         >
           <Text style={RegisterStyles.buttonText}>REGISTRAR</Text>
         </TouchableOpacity>
+      )}
       </View>
     </KeyboardAvoidingView>
   );

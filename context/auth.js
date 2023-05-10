@@ -29,6 +29,7 @@ export const Provider = (props) => {
   const [loading, setLoading] = React.useState(false);
   const [user, setUser] = React.useState(null);
   const [token, setToken] = React.useState(null);
+  const [errors, setErrors] = React.useState(null);
 
   const signIn = async (email, password) => {
     if (!email || !password) {
@@ -46,7 +47,7 @@ export const Provider = (props) => {
         AsyncStorage.setItem("token", response.token);
         AsyncStorage.setItem("user", JSON.stringify(response.user));
       } else {
-        alert("Error en Login");
+        setErrors(response.messages);
         console.log('Error', response.messages);
       }
     } catch (error) {
@@ -89,12 +90,9 @@ export const Provider = (props) => {
         AsyncStorage.setItem("token", response.token);
         AsyncStorage.setItem("user", JSON.stringify(response.user));
       } else {
-        alert("Error en registro");
+        setErrors(response.messages);
         console.log('Error', response.messages);
-        setLoading(false);
-        return;
       }
-
     } catch (error) {
       console.log("🚩 ~ auth.js ~ signOut() ~ error:", error);
     }
@@ -126,14 +124,6 @@ export const Provider = (props) => {
 
   useProtectedRoute(user);
 
-  if (loading) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size={"large"} />
-      </View>
-    );
-  }
-
   return (
     <AuthContext.Provider
       value={{
@@ -143,6 +133,7 @@ export const Provider = (props) => {
         token,
         user,
         loading,
+        errors
       }}
     >
       {props.children}

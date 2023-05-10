@@ -4,18 +4,20 @@ import {
   TextInput,
   KeyboardAvoidingView,
   Text,
-  View
+  View,
+  ActivityIndicator
 } from 'react-native';
 import { useState } from 'react';
-import { Link } from "expo-router";
+import { useRouter } from "expo-router";
 import { useAuth } from "../../context/auth";
 import { LayoutStyles, LoginStyles, AppImages } from "../../constants/styles";
 import Input from "../../components/input";
 
 const Login = () => {
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { signIn } = useAuth();
+  const { signIn, loading, errors } = useAuth();
 
   return (
     <KeyboardAvoidingView
@@ -28,37 +30,42 @@ const Login = () => {
       />
 
       <View style={LoginStyles.inputContainer}>
-        <TextInput
+        <Input
           placeholder="Correo"
           value={email}
           onChangeText={text => setEmail(text)}
-          style={LoginStyles.input}
-          keyboardType="email-address"
+          styles={LoginStyles.input}
+          theme="dark"
+          error={errors ? errors.email : null}
         />
         <Input
           placeholder="Contraseña"
           value={password}
           onChangeText={text => setPassword(text)}
           styles={LoginStyles.input}
+          theme="dark"
           password={true}
+          error={errors ? errors.password : null}
         />
       </View>
 
       <View style={LoginStyles.buttonContainer}>
+      {loading ? (
+        <ActivityIndicator size={"large"} />
+      ) : (
         <TouchableOpacity
           onPress={() => signIn(email, password)}
           style={LoginStyles.button}
         >
           <Text style={LoginStyles.buttonText}>INGRESAR</Text>
         </TouchableOpacity>
-
-        <Link href="/register" asChild>
-          <TouchableOpacity
-            style={LoginStyles.buttonOutline}
-          >
-            <Text style={LoginStyles.buttonOutlineText}>REGISTRARSE</Text>
-          </TouchableOpacity>
-        </Link>
+      )}
+        <TouchableOpacity
+          style={LoginStyles.buttonOutline}
+          onPress={() => router.push("/register")}
+        >
+          <Text style={LoginStyles.buttonOutlineText}>REGISTRARSE</Text>
+        </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
   )

@@ -44,7 +44,6 @@ export const LoginStyles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 10,
     borderRadius: 10,
-    marginBottom:15,
   },
   buttonContainer: {
     width: '80%',
@@ -101,7 +100,6 @@ export const RegisterStyles = StyleSheet.create({
     borderColor: Colors.silverSand,
     borderWidth: 2,
     borderRadius: 10,
-    marginBottom:15,
   },
   buttonContainer: {
     marginTop: 30,

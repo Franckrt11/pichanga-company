@@ -2,15 +2,15 @@
   "expo": {
     "name": "pichanga-company",
     "slug": "pichanga-company",
-    "version": "1.0.0",
+    "version": "0.1.2",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "scheme": "myapp",
+    "scheme": "pichanga",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#00182E"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -21,12 +21,18 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      }
+        "backgroundColor": "#00182E"
+      },
+      "package": "com.pichanga.company"
     },
     "web": {
       "favicon": "./assets/favicon.png",
       "bundler": "metro"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "8b856a9a-84a9-46e3-b5ff-3bda32e8741b"
+      }
     }
   }
 }

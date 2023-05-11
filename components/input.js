@@ -41,8 +41,8 @@ const Input = ({ error, password, onFocus = () => {}, styles, theme, ...props })
             color: Colors.maastrichtBlue,
             fontSize: 22,
             position: 'absolute',
-            right: 8,
-            top: 7
+            right: 10,
+            top: 14
           }}
         />
       )}

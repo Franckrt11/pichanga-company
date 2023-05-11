@@ -3,7 +3,8 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
   Text,
-  View
+  View,
+  Platform
 } from 'react-native';
 import { useState } from 'react';
 import { Stack, useRouter, Link } from 'expo-router';
@@ -39,7 +40,7 @@ const Register = () => {
   return (
     <KeyboardAvoidingView
       style={[LayoutStyles.whiteContainer, {position:'relative'}]}
-      behavior="padding"
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <Icon
         onPress={() => router.back()}
@@ -49,7 +50,7 @@ const Register = () => {
           fontSize: 30,
           position: 'absolute',
           left: 10,
-          top: 10
+          top: 25
         }}
       />
       <View style={RegisterStyles.inputContainer}>

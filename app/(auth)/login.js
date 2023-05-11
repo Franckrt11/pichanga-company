@@ -1,7 +1,7 @@
 import {
   TouchableOpacity,
   Image,
-  TextInput,
+  Platform,
   KeyboardAvoidingView,
   Text,
   View,
@@ -22,7 +22,7 @@ const Login = () => {
   return (
     <KeyboardAvoidingView
       style={LayoutStyles.blueContainer}
-      behavior="padding"
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <Image
         style={LoginStyles.logo}

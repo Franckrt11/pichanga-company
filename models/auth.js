@@ -15,8 +15,7 @@ export const fetchLogin = async (email, password) => {
     body: JSON.stringify({
       email: email,
       password: password,
-      device: Device.modelId,
-      // device: 'MiIphone12', // Device temporal
+      device: Device.brand ? Device.brand : 'myweb'
     }),
   });
 
@@ -34,8 +33,7 @@ export const fetchRegister = async (data) => {
       password: data.password,
       password_confirmation: data.password_confirmation,
       status: true,
-      device: Device.modelId,
-      // device: 'MiIphone12', // Device temporal
+      device: Device.brand ? Device.brand : 'myweb'
     }),
   });
 

@@ -9,9 +9,9 @@ import {
 } from 'react-native';
 import { useState } from 'react';
 import { useRouter } from "expo-router";
-import { useAuth } from "../../context/auth";
-import { LayoutStyles, LoginStyles, AppImages } from "../../constants/styles";
-import Input from "../../components/input";
+import { useAuth } from "../../src/context/auth";
+import { LayoutStyles, LoginStyles, AppImages } from "../../src/constants/styles";
+import Input from "../../src/components/input";
 
 const Login = () => {
   const router = useRouter();
@@ -51,7 +51,7 @@ const Login = () => {
 
       <View style={LoginStyles.buttonContainer}>
       {loading ? (
-        <ActivityIndicator size={"large"} />
+        <ActivityIndicator style={{marginBottom:10}} size={"large"} />
       ) : (
         <TouchableOpacity
           onPress={() => signIn(email, password)}

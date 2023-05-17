@@ -1,4 +1,4 @@
-import { View, Text, TextInput, StyleSheet } from 'react-native';
+import { View, Text, TextInput } from 'react-native';
 import { useState } from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Colors } from '../constants/styles';
@@ -12,12 +12,6 @@ const Input = ({ error, password, onFocus = () => {}, styles, theme, ...props })
   return (
     <View
       style={{
-          // borderColor: error
-          //   ? 'red'
-          //   : isFocused
-          //   ? '#7978B5'
-          //   : '#F3F4FB',
-          // alignItems: 'center',
           position: 'relative',
           marginBottom:15,
         }}

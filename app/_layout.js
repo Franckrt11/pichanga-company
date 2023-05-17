@@ -1,5 +1,5 @@
-import { Stack, Slot } from "expo-router";
-import { Provider } from "../context/auth";
+import { Slot } from "expo-router";
+import { Provider } from "../src/context/auth";
 
 const Root = () => {
   return (

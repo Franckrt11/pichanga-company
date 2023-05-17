@@ -1,6 +1,5 @@
-import { ActivityIndicator, View } from "react-native";
-import { useRouter, useSegments } from "expo-router";
 import React, { createContext, useEffect } from "react";
+import { useRouter, useSegments } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { fetchLogin, fetchRegister } from "../models/auth";
 
@@ -14,7 +13,7 @@ const useProtectedRoute = (user) => {
   const segments = useSegments();
   const router = useRouter();
 
-  React.useEffect(() => {
+  useEffect(() => {
     const inAuthGroup = segments[0] === "(auth)";
 
     if (!user && !inAuthGroup) {
@@ -100,22 +99,20 @@ export const Provider = (props) => {
   };
 
   const isLoggedIn = async () => {
-    setLoading(true);
     try {
       let userToken = await AsyncStorage.getItem("token");
       let userData = await AsyncStorage.getItem("user");
 
-      if (userToken !== null && typeof userToken === 'undefined') {
+      if (userToken !== null && typeof userToken !== 'undefined') {
         setToken(userToken);
       }
 
-      if (userData !== null && typeof userData === 'undefined') {
+      if (userData !== null && typeof userData !== 'undefined') {
         setUser(JSON.parse(userData));
       }
     } catch (error) {
       console.log("🚩 ~ auth.js ~ isLoggedIn() ~ error:", error);
     }
-    setLoading(false);
   };
 
   useEffect(() => {

@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, Button } from "react-native";
 import React from "react";
-import { useAuth } from "../../context/auth";
+import { useAuth } from "../../src/context/auth";
 
 const Home = () => {
   const { signOut, user } = useAuth();

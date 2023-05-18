@@ -120,3 +120,14 @@ export const RegisterStyles = StyleSheet.create({
   },
 });
 
+export const TabStyles = StyleSheet.create({
+  tabIcon: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: -25,
+    borderRadius: 20,
+    borderWidth: 1,
+    height: 30,
+    width: 30
+  }
+});

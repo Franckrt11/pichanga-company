@@ -1,17 +1,35 @@
 import { Tabs } from "expo-router";
-import { StyleSheet } from "react-native";
-import { Colors } from "../../src/constants/styles";
+import { View, Text, StyleSheet, Image } from "react-native";
+import { Colors, AppImages } from "../../src/constants/styles";
 import HomeIcon from "../../src/components/icons/home-icon";
 import FieldIcon from "../../src/components/icons/field-icon";
 import CalendarIcon from "../../src/components/icons/calendar-icon";
 import ChatIcon from "../../src/components/icons/chat-icon";
 import BellIcon from "../../src/components/icons/bell-icon";
 
+const Header = () => {
+  return (
+    <View
+      style={{ flexDirection: 'row', alignItems: 'center' }}
+    >
+      <Image
+        source={require('../../src/assets/logo.png')}
+        style={{ width: 50, height: 50, marginRight: 10 }}
+      />
+      <Text
+        style={{ color: Colors.maastrichtBlue, fontWeight: 600, width: 100, fontSize: 15, lineHeight: 16 }}
+      >Te Juego una Pichanga</Text>
+    </View>
+  );
+};
+
 const TabsLayout = () => {
   return (
     <Tabs
       screenOptions={{
         headerShown: true,
+        headerTitle: () => <Header />,
+        headerStyle: { backgroundColor: 'white', borderBottomWidth: 0 },
         tabBarStyle: styles.tabBar,
         tabBarActiveTintColor: "white",
         tabBarInactiveTintColor: Colors.maastrichtBlue,

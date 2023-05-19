@@ -1,20 +1,26 @@
-import { View, Text, TextInput } from 'react-native';
-import { useState } from 'react';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { Colors } from '../constants/styles';
+import { View, Text, TextInput, StyleSheet } from "react-native";
+import { useState } from "react";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { Colors } from "../constants/styles";
 
-const Input = ({ error, password, onFocus = () => {}, styles, theme, ...props }) => {
-
+const Input = ({
+  error,
+  password,
+  onFocus = () => {},
+  styles,
+  theme,
+  ...props
+}) => {
   const [hidePassword, setHidePassword] = useState(password);
   const [isFocused, setIsFocused] = useState(false);
-  const errorColor = theme === 'light' ? 'red' : 'white';
+  const errorColor = theme === "light" ? "red" : "white";
 
   return (
     <View
       style={{
-          position: 'relative',
-          marginBottom:15,
-        }}
+        position: "relative",
+        marginBottom: 15,
+      }}
     >
       <TextInput
         autoCorrect={false}
@@ -30,19 +36,33 @@ const Input = ({ error, password, onFocus = () => {}, styles, theme, ...props })
       {password && (
         <Icon
           onPress={() => setHidePassword(!hidePassword)}
-          name={hidePassword ? 'eye-outline' : 'eye-off-outline'}
-          style={{
-            color: Colors.maastrichtBlue,
-            fontSize: 22,
-            position: 'absolute',
-            right: 10,
-            top: 14
-          }}
+          name={hidePassword ? "eye-outline" : "eye-off-outline"}
+          style={Styles.icon}
         />
       )}
-      {error && error.map((message, i) => <Text key={i} style={{marginTop: 5, color: errorColor, fontSize: 12}}>{message}</Text>)}
+      {error &&
+        error.map((message, i) => (
+          <Text key={i} style={[Styles.errorMessages, { color: errorColor }]}>
+            {message}
+          </Text>
+        ))}
     </View>
   );
 };
 
 export default Input;
+
+const Styles = StyleSheet.create({
+  errorMessages: {
+    marginTop: 5,
+    fontSize: 12,
+    fontFamily: "PoppinsMedium",
+  },
+  icon: {
+    color: Colors.maastrichtBlue,
+    fontSize: 22,
+    position: "absolute",
+    right: 10,
+    top: 14,
+  },
+});

@@ -44,6 +44,7 @@ export const LoginStyles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 10,
     borderRadius: 10,
+    fontFamily: "PoppinsMedium",
   },
   buttonContainer: {
     width: '80%',
@@ -63,6 +64,7 @@ export const LoginStyles = StyleSheet.create({
     color: Colors.white,
     fontWeight: '700',
     fontSize: 16,
+    fontFamily: "PoppinsMedium",
   },
   buttonOutline: {
     backgroundColor: Colors.maastrichtBlue,
@@ -73,12 +75,7 @@ export const LoginStyles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     width: '80%'
-  },
-  buttonOutlineText: {
-    color: Colors.white,
-    fontWeight: '700',
-    fontSize: 16,
-  },
+  }
 });
 
 export const RegisterStyles = StyleSheet.create({
@@ -88,9 +85,10 @@ export const RegisterStyles = StyleSheet.create({
   inputTitle: {
     color: Colors.maastrichtBlue,
     fontWeight: '700',
-    fontSize: 28,
+    fontSize: 30,
     marginBottom: 20,
-    textAlign: 'center'
+    textAlign: 'center',
+    fontFamily: "PoppinsSemiBold",
   },
   input: {
     color: Colors.maastrichtBlue,
@@ -100,6 +98,7 @@ export const RegisterStyles = StyleSheet.create({
     borderColor: Colors.silverSand,
     borderWidth: 2,
     borderRadius: 10,
+    fontFamily: "PoppinsMedium",
   },
   buttonContainer: {
     marginTop: 30,
@@ -117,6 +116,7 @@ export const RegisterStyles = StyleSheet.create({
     color: Colors.white,
     fontWeight: '700',
     fontSize: 16,
+    fontFamily: "PoppinsMedium",
   },
 });
 

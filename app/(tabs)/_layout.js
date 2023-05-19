@@ -14,10 +14,10 @@ const Header = () => {
     >
       <Image
         source={require('../../src/assets/logo.png')}
-        style={{ width: 50, height: 50, marginRight: 10 }}
+        style={{ width: 50, height: 50, marginRight: 5 }}
       />
       <Text
-        style={{ color: Colors.maastrichtBlue, fontWeight: 600, width: 100, fontSize: 15, lineHeight: 16 }}
+        style={{ color: Colors.maastrichtBlue, fontWeight: 600, width: 120, fontSize: 13, lineHeight: 15, fontFamily: "PoppinsMedium", }}
       >Te Juego una Pichanga</Text>
     </View>
   );

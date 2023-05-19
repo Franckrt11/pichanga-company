@@ -64,7 +64,7 @@ const Login = () => {
           style={LoginStyles.buttonOutline}
           onPress={() => router.push("/register")}
         >
-          <Text style={LoginStyles.buttonOutlineText}>REGISTRARSE</Text>
+          <Text style={LoginStyles.buttonText}>REGISTRARSE</Text>
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>

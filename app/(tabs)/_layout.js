@@ -1,5 +1,6 @@
 import { Tabs } from "expo-router";
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { useRouter } from "expo-router";
 import { Colors, AppImages } from "../../src/constants/styles";
 import HomeIcon from "../../src/components/icons/home-icon";
 import FieldIcon from "../../src/components/icons/field-icon";
@@ -7,18 +8,41 @@ import CalendarIcon from "../../src/components/icons/calendar-icon";
 import ChatIcon from "../../src/components/icons/chat-icon";
 import BellIcon from "../../src/components/icons/bell-icon";
 
-const Header = () => {
+const HeaderLogo = () => {
   return (
     <View
-      style={{ flexDirection: 'row', alignItems: 'center' }}
+      style={{ flexDirection: "row", alignItems: "center", paddingLeft: 10 }}
     >
       <Image
-        source={require('../../src/assets/logo.png')}
+        source={AppImages.images.logo}
         style={{ width: 50, height: 50, marginRight: 5 }}
       />
       <Text
-        style={{ color: Colors.maastrichtBlue, fontWeight: 600, width: 120, fontSize: 13, lineHeight: 15, fontFamily: "PoppinsMedium", }}
-      >Te Juego una Pichanga</Text>
+        style={{
+          color: Colors.maastrichtBlue,
+          fontWeight: 600,
+          width: 120,
+          fontSize: 13,
+          lineHeight: 15,
+          fontFamily: "PoppinsMedium",
+        }}
+      >
+        Te Juego una Pichanga
+      </Text>
+    </View>
+  );
+};
+
+const HeaderOptions = () => {
+  const router = useRouter();
+
+  return (
+    <View
+      style={{ flexDirection: "row", alignItems: "center", paddingRight: 10 }}
+    >
+      <TouchableOpacity onPress={() => router.push("/options")}>
+        <Text>Opt</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -28,8 +52,8 @@ const TabsLayout = () => {
     <Tabs
       screenOptions={{
         headerShown: true,
-        headerTitle: () => <Header />,
-        headerStyle: { backgroundColor: 'white', borderBottomWidth: 0 },
+        headerLeft: () => <HeaderLogo />,
+        headerStyle: { backgroundColor: "white", borderBottomWidth: 0 },
         tabBarStyle: styles.tabBar,
         tabBarActiveTintColor: "white",
         tabBarInactiveTintColor: Colors.maastrichtBlue,
@@ -38,17 +62,18 @@ const TabsLayout = () => {
       <Tabs.Screen
         name="home"
         options={{
-          title: "INICIO",
+          headerTitle: () => {},
           tabBarLabelStyle: styles.tabBarLabel,
           tabBarIcon: ({ focused, color }) => (
             <HomeIcon active={focused} color={color} />
           ),
+          headerRight: () => <HeaderOptions />,
         }}
       />
       <Tabs.Screen
         name="fields"
         options={{
-          title: "CANCHAS",
+          headerTitle: () => {},
           tabBarLabelStyle: styles.tabBarLabel,
           tabBarIcon: ({ focused, color }) => (
             <FieldIcon active={focused} color={color} />
@@ -58,7 +83,7 @@ const TabsLayout = () => {
       <Tabs.Screen
         name="bookings"
         options={{
-          title: "RESERVAS",
+          headerTitle: () => {},
           tabBarLabelStyle: styles.tabBarLabel,
           tabBarIcon: ({ focused, color }) => (
             <CalendarIcon active={focused} color={color} />
@@ -68,7 +93,7 @@ const TabsLayout = () => {
       <Tabs.Screen
         name="chat"
         options={{
-          title: "CHAT",
+          headerTitle: () => {},
           tabBarLabelStyle: styles.tabBarLabel,
           tabBarIcon: ({ focused, color }) => (
             <ChatIcon active={focused} color={color} />
@@ -78,7 +103,7 @@ const TabsLayout = () => {
       <Tabs.Screen
         name="activity"
         options={{
-          title: "ACTIVIDAD",
+          headerTitle: () => {},
           tabBarLabelStyle: styles.tabBarLabel,
           tabBarIcon: ({ focused, color }) => (
             <BellIcon active={focused} color={color} />

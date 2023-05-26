@@ -1,6 +1,5 @@
 import Svg, { G, Path } from "react-native-svg";
 import { View } from "react-native";
-import React from "react";
 import { Colors, TabStyles } from "../../constants/styles";
 
 const BellIcon = ({ active, color }) => {

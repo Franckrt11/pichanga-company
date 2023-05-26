@@ -1,58 +1,20 @@
 import { Tabs } from "expo-router";
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
-import { useRouter } from "expo-router";
-import { Colors, AppImages } from "../../src/constants/styles";
+import { StyleSheet } from "react-native";
+import { Colors } from "../../src/constants/styles";
 import HomeIcon from "../../src/components/icons/home-icon";
 import FieldIcon from "../../src/components/icons/field-icon";
 import CalendarIcon from "../../src/components/icons/calendar-icon";
 import ChatIcon from "../../src/components/icons/chat-icon";
 import BellIcon from "../../src/components/icons/bell-icon";
-
-const HeaderLogo = () => {
-  return (
-    <View
-      style={{ flexDirection: "row", alignItems: "center", paddingLeft: 10 }}
-    >
-      <Image
-        source={AppImages.images.logo}
-        style={{ width: 50, height: 50, marginRight: 5 }}
-      />
-      <Text
-        style={{
-          color: Colors.maastrichtBlue,
-          fontWeight: 600,
-          width: 120,
-          fontSize: 13,
-          lineHeight: 15,
-          fontFamily: "PoppinsMedium",
-        }}
-      >
-        Te Juego una Pichanga
-      </Text>
-    </View>
-  );
-};
-
-const HeaderOptions = () => {
-  const router = useRouter();
-
-  return (
-    <View
-      style={{ flexDirection: "row", alignItems: "center", paddingRight: 10 }}
-    >
-      <TouchableOpacity onPress={() => router.push("/options")}>
-        <Text>Opt</Text>
-      </TouchableOpacity>
-    </View>
-  );
-};
+import Logo from "../../src/components/header/logo";
+import Options from "../../src/components/header/options";
 
 const TabsLayout = () => {
   return (
     <Tabs
       screenOptions={{
         headerShown: true,
-        headerLeft: () => <HeaderLogo />,
+        headerLeft: () => <Logo />,
         headerStyle: { backgroundColor: "white", borderBottomWidth: 0 },
         tabBarStyle: styles.tabBar,
         tabBarActiveTintColor: "white",
@@ -67,7 +29,7 @@ const TabsLayout = () => {
           tabBarIcon: ({ focused, color }) => (
             <HomeIcon active={focused} color={color} />
           ),
-          headerRight: () => <HeaderOptions />,
+          headerRight: () => <Options />,
         }}
       />
       <Tabs.Screen

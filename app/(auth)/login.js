@@ -5,35 +5,41 @@ import {
   KeyboardAvoidingView,
   Text,
   View,
-  ActivityIndicator
-} from 'react-native';
-import { useState } from 'react';
-import { useRouter } from "expo-router";
+  ActivityIndicator,
+} from "react-native";
+import { useState } from "react";
+import { Stack, useRouter } from "expo-router";
 import { useAuth } from "../../src/context/auth";
-import { LayoutStyles, LoginStyles, AppImages } from "../../src/constants/styles";
+import {
+  LayoutStyles,
+  LoginStyles,
+  AppImages,
+} from "../../src/constants/styles";
 import Input from "../../src/components/input";
 
 const Login = () => {
   const router = useRouter();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const { signIn, loading, errors } = useAuth();
 
   return (
     <KeyboardAvoidingView
       style={LayoutStyles.blueContainer}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      <Image
-        style={LoginStyles.logo}
-        source={AppImages.images.logo}
+      <Stack.Screen
+        options={{
+          headerShown: false,
+        }}
       />
+      <Image style={LoginStyles.logo} source={AppImages.images.logo} />
 
       <View style={LoginStyles.inputContainer}>
         <Input
           placeholder="Correo"
           value={email}
-          onChangeText={text => setEmail(text)}
+          onChangeText={(text) => setEmail(text)}
           styles={LoginStyles.input}
           theme="dark"
           error={errors ? errors.email : null}
@@ -41,7 +47,7 @@ const Login = () => {
         <Input
           placeholder="Contraseña"
           value={password}
-          onChangeText={text => setPassword(text)}
+          onChangeText={(text) => setPassword(text)}
           styles={LoginStyles.input}
           theme="dark"
           password={true}
@@ -50,16 +56,16 @@ const Login = () => {
       </View>
 
       <View style={LoginStyles.buttonContainer}>
-      {loading ? (
-        <ActivityIndicator style={{marginBottom:10}} size={"large"} />
-      ) : (
-        <TouchableOpacity
-          onPress={() => signIn(email, password)}
-          style={LoginStyles.button}
-        >
-          <Text style={LoginStyles.buttonText}>INGRESAR</Text>
-        </TouchableOpacity>
-      )}
+        {loading ? (
+          <ActivityIndicator style={{ marginBottom: 10 }} size={"large"} />
+        ) : (
+          <TouchableOpacity
+            onPress={() => signIn(email, password)}
+            style={LoginStyles.button}
+          >
+            <Text style={LoginStyles.buttonText}>INGRESAR</Text>
+          </TouchableOpacity>
+        )}
         <TouchableOpacity
           style={LoginStyles.buttonOutline}
           onPress={() => router.push("/register")}
@@ -68,7 +74,7 @@ const Login = () => {
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
-  )
+  );
 };
 
 export default Login;

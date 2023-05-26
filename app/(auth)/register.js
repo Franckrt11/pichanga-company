@@ -9,7 +9,6 @@ import {
 import { useState } from "react";
 import { Stack, useRouter, Link } from "expo-router";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useAuth } from "../../src/context/auth";
 import {
   LayoutStyles,
@@ -17,6 +16,7 @@ import {
   Colors,
 } from "../../src/constants/styles";
 import Input from "../../src/components/input";
+import ArrowLeftIcon from "../../src/components/icons/arrowleft-icon";
 
 const CheckboxText = () => {
   return (
@@ -54,16 +54,20 @@ const Register = () => {
       style={LayoutStyles.whiteContainer}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      <View>
-        <Icon
-          onPress={() => router.back()}
-          name={"arrow-left-thick"}
-          style={{
-            color: Colors.maastrichtBlue,
-            fontSize: 30,
-          }}
-        />
-      </View>
+      <Stack.Screen
+        options={{
+          headerShown: true,
+          headerTitle: () => {},
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => router.back()}
+              style={{ paddingLeft: 10 }}
+            >
+              <ArrowLeftIcon />
+            </TouchableOpacity>
+          ),
+        }}
+      />
       <View style={RegisterStyles.inputContainer}>
         <Text style={RegisterStyles.inputTitle}>REGISTRO</Text>
         <Input

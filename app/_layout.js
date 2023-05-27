@@ -1,4 +1,4 @@
-import { Slot } from "expo-router";
+import { Slot, Stack } from "expo-router";
 import { useCallback, useState } from "react";
 import { Provider } from "../src/context/auth";
 import * as SplashScreen from "expo-splash-screen";
@@ -28,7 +28,16 @@ const Root = () => {
 
   return (
     <Provider onLayout={onLayoutRootView}>
-      <Slot />
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          headerStyle: {
+            backgroundColor: "white",
+            height: 30,
+          },
+          headerShadowVisible: false
+        }}
+      />
     </Provider>
   );
 };

@@ -2,7 +2,7 @@
   "expo": {
     "name": "pichanga-company",
     "slug": "pichanga-company",
-    "version": "0.2.0",
+    "version": "0.2.3",
     "orientation": "portrait",
     "icon": "./src/assets/icon.png",
     "userInterfaceStyle": "light",

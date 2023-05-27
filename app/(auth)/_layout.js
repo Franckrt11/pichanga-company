@@ -6,9 +6,9 @@ export default function Layout() {
       screenOptions={{
         headerStyle: {
           backgroundColor: "white",
-          borderBottomWidth: 0,
           height: 30,
         },
+        headerShadowVisible: false
       }}
     />
   );

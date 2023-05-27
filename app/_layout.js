@@ -1,28 +1,33 @@
 import { Slot } from "expo-router";
-import { useState } from 'react';
+import { useCallback, useState } from "react";
 import { Provider } from "../src/context/auth";
-import AppLoading from "expo-app-loading";
+import * as SplashScreen from "expo-splash-screen";
 import { useFonts } from "../src/models/useFont";
 
+SplashScreen.preventAutoHideAsync();
+
 const Root = () => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [appIsReady, setAppIsReady] = useState(false);
 
   const LoadFonts = async () => {
     await useFonts();
+    setAppIsReady(true);
   };
 
-  if (!isLoading) {
-    return (
-      <AppLoading
-        startAsync={LoadFonts}
-        onFinish={() => setIsLoading(true)}
-        onError={() => {}}
-      />
-    );
+  LoadFonts();
+
+  const onLayoutRootView = useCallback(async () => {
+    if (appIsReady) {
+      await SplashScreen.hideAsync();
+    }
+  }, [appIsReady]);
+
+  if (!appIsReady) {
+    return null;
   }
 
   return (
-    <Provider>
+    <Provider onLayout={onLayoutRootView}>
       <Slot />
     </Provider>
   );

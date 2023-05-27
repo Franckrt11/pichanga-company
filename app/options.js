@@ -10,6 +10,9 @@ import { useState } from "react";
 import { Stack, useRouter } from "expo-router";
 import { LayoutStyles, RegisterStyles, Colors } from "../src/constants/styles";
 import ArrowLeftIcon from "../src/components/icons/arrowleft-icon";
+import UserBlockedIcon from "../src/components/icons/user-blocked-icon";
+import TermsIcon from "../src/components/icons/terms-icon";
+import HelpIcon from "../src/components/icons/help-icon";
 
 const Options = () => {
   const router = useRouter();
@@ -66,12 +69,15 @@ const Options = () => {
       </View>
       <View style={styles.container}>
         <TouchableOpacity style={styles.buttom}>
+          <UserBlockedIcon size={18} />
           <Text style={styles.buttomText}>Bloqueo de usuarios</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.buttom}>
+          <TermsIcon size={18} />
           <Text style={styles.buttomText}>Términos y condiciones</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.buttom}>
+          <HelpIcon size={18} />
           <Text style={styles.buttomText}>Ayuda</Text>
         </TouchableOpacity>
       </View>
@@ -104,10 +110,13 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     alignItems: "center",
     marginBottom: 15,
+    flexDirection: "row",
+    justifyContent: "center"
   },
   buttomText: {
     color: Colors.maastrichtBlue,
     fontSize: 16,
     fontFamily: "PoppinsMedium",
+    marginLeft: 10
   },
 });

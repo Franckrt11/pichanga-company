@@ -4,16 +4,12 @@ import { LayoutStyles } from '../../src/constants/styles';
 import { useAuth } from "../../src/context/auth";
 
 const Home = () => {
-  const { signOut, user } = useAuth();
+  const { user } = useAuth();
 
   return (
     <View style={ LayoutStyles.whiteContainer }>
       <Text>Home</Text>
       <Text>{ user ? user.name : '' }</Text>
-      <Button
-        title="Salir"
-        onPress={() => signOut()}
-      />
     </View>
   );
 };

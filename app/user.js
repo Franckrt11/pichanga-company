@@ -13,6 +13,8 @@ import { LayoutStyles, Colors } from "../src/constants/styles";
 import Back from "../src/components/header/back";
 import Input from "../src/components/input";
 import PencilIcon from "../src/components/icons/pencil-icon";
+import ExitIcon from "../src/components/icons/exit-icon";
+import TrashIcon from "../src/components/icons/trash-icon";
 
 const User = () => {
   const { signOut, user, errors } = useAuth();
@@ -66,7 +68,7 @@ const User = () => {
             </Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.buttonOutline}>
-            <PencilIcon />
+            <TrashIcon />
             <Text
               style={{
                 fontFamily: "PoppinsMedium",
@@ -115,6 +117,7 @@ const User = () => {
             </Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => signOut()} style={styles.button}>
+            <ExitIcon />
             <Text style={{ fontFamily: "PoppinsMedium", color: Colors.white }}>
               Cerrar sesión
             </Text>

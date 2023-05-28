@@ -1,7 +1,17 @@
-import { Text, KeyboardAvoidingView, View, StyleSheet } from "react-native";
+import {
+  Text,
+  KeyboardAvoidingView,
+  View,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
 import { Stack } from "expo-router";
+import * as Linking from "expo-linking";
 import { LayoutStyles, Colors } from "../src/constants/styles";
 import Back from "../src/components/header/back";
+
+const mailUrl = "mailto:soporte@tejuegounapichanga.com";
+const telUrl = "tel:982984877";
 
 const Help = () => {
   return (
@@ -21,8 +31,26 @@ const Help = () => {
       <View style={{ width: "90%" }}>
         <Text style={styles.title}>AYUDA</Text>
         <Text style={styles.content}>Puedes comunicarte al</Text>
-        <Text style={[styles.content, { fontSize: 17, fontFamily: "PoppinsSemiBold",}]}>soporte@tejuegounapichanga.com</Text>
-        <Text style={[styles.content, { fontSize: 17, fontFamily: "PoppinsSemiBold",}]}>(+51) 982 984 877</Text>
+        <TouchableOpacity onPress={() => Linking.openURL(mailUrl)}>
+          <Text
+            style={[
+              styles.content,
+              { fontSize: 17, fontFamily: "PoppinsSemiBold" },
+            ]}
+          >
+            soporte@tejuegounapichanga.com
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => Linking.openURL(telUrl)}>
+          <Text
+            style={[
+              styles.content,
+              { fontSize: 17, fontFamily: "PoppinsSemiBold" },
+            ]}
+          >
+            (+51) 982 984 877
+          </Text>
+        </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
   );
@@ -43,6 +71,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontFamily: "PoppinsMedium",
     marginBottom: 10,
-    textAlign: "left"
+    textAlign: "left",
   },
 });

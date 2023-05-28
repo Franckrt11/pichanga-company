@@ -1,7 +1,7 @@
-// import { API_URL } from "@env";
+import { API_URL } from "@env";
 import * as Device from "expo-device";
 
-const API_URL = "https://api.tejuegounapichanga.com/";
+// const API_URL = "https://api.tejuegounapichanga.com/";
 
 const fetchHeaders = {
   Accept: "application/json",

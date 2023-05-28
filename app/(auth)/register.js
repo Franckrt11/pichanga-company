@@ -16,7 +16,7 @@ import {
   Colors,
 } from "../../src/constants/styles";
 import Input from "../../src/components/input";
-import Back from "../src/components/header/back";
+import Back from "../../src/components/header/back";
 
 const CheckboxText = () => {
   return (

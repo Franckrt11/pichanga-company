@@ -9,7 +9,7 @@ import {
 import { useState } from "react";
 import { Stack, useRouter } from "expo-router";
 import { LayoutStyles, RegisterStyles, Colors } from "../src/constants/styles";
-import ArrowLeftIcon from "../src/components/icons/arrowleft-icon";
+import Back from "../src/components/header/back";
 import UserBlockedIcon from "../src/components/icons/user-blocked-icon";
 import TermsIcon from "../src/components/icons/terms-icon";
 import HelpIcon from "../src/components/icons/help-icon";
@@ -32,14 +32,7 @@ const Options = () => {
         options={{
           headerShown: true,
           headerTitle: () => {},
-          headerLeft: () => (
-            <TouchableOpacity
-              onPress={() => router.back()}
-              style={{ paddingLeft: 10 }}
-            >
-              <ArrowLeftIcon />
-            </TouchableOpacity>
-          ),
+          headerLeft: () => <Back />,
         }}
       />
       <View style={styles.container}>
@@ -68,15 +61,24 @@ const Options = () => {
         </View>
       </View>
       <View style={styles.container}>
-        <TouchableOpacity style={styles.buttom}>
+        {/* <TouchableOpacity
+          onPress={() => router.push("/blockusers")}
+          style={styles.buttom}
+        >
           <UserBlockedIcon size={18} />
           <Text style={styles.buttomText}>Bloqueo de usuarios</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.buttom}>
+        </TouchableOpacity> */}
+        <TouchableOpacity
+          onPress={() => router.push("/terms")}
+          style={styles.buttom}
+        >
           <TermsIcon size={18} />
           <Text style={styles.buttomText}>Términos y condiciones</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.buttom}>
+        <TouchableOpacity
+          onPress={() => router.push("/help")}
+          style={styles.buttom}
+        >
           <HelpIcon size={18} />
           <Text style={styles.buttomText}>Ayuda</Text>
         </TouchableOpacity>
@@ -111,12 +113,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 15,
     flexDirection: "row",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   buttomText: {
     color: Colors.maastrichtBlue,
     fontSize: 16,
     fontFamily: "PoppinsMedium",
-    marginLeft: 10
+    marginLeft: 10,
   },
 });

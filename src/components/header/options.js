@@ -23,7 +23,10 @@ const Options = () => {
       >
         <GearIcon />
       </TouchableOpacity>
-      <TouchableOpacity style={{ position: "relative" }} onPress={() => {}}>
+      <TouchableOpacity
+        style={{ position: "relative" }}
+        onPress={() => router.push("/user")}
+      >
         <Image
           source={require("../../assets/user-default.jpg")}
           style={{ height: 50, width: 50, borderRadius: 60 }}

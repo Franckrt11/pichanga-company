@@ -7,7 +7,7 @@ import {
   Platform,
 } from "react-native";
 import { useState } from "react";
-import { Stack, useRouter, Link } from "expo-router";
+import { Stack, Link } from "expo-router";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { useAuth } from "../../src/context/auth";
 import {
@@ -16,7 +16,7 @@ import {
   Colors,
 } from "../../src/constants/styles";
 import Input from "../../src/components/input";
-import ArrowLeftIcon from "../../src/components/icons/arrowleft-icon";
+import Back from "../src/components/header/back";
 
 const CheckboxText = () => {
   return (
@@ -30,7 +30,7 @@ const CheckboxText = () => {
     >
       Estoy de acuerdo con los
       <Link
-        href="/terminos"
+        href="/terms"
         style={{ color: Colors.metallicGreen, marginLeft: 4 }}
       >
         Términos y condiciones
@@ -46,7 +46,6 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [password_confirmation, setPasswordConfirmation] = useState("");
   const [checkbox, setCheckbox] = useState(false);
-  const router = useRouter();
   const { signUp, loading, errors } = useAuth();
 
   return (
@@ -58,14 +57,7 @@ const Register = () => {
         options={{
           headerShown: true,
           headerTitle: () => {},
-          headerLeft: () => (
-            <TouchableOpacity
-              onPress={() => router.back()}
-              style={{ paddingLeft: 10 }}
-            >
-              <ArrowLeftIcon />
-            </TouchableOpacity>
-          ),
+          headerLeft: () => <Back />,
         }}
       />
       <View style={RegisterStyles.inputContainer}>

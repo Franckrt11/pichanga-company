@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { useState, useEffect } from "react";
 import { Stack, useRouter } from "expo-router";
+import * as ImagePicker from "expo-image-picker";
 import { useAuth } from "../src/context/auth";
 import { LayoutStyles, Colors } from "../src/constants/styles";
 import Back from "../src/components/header/back";
@@ -15,13 +16,34 @@ import Input from "../src/components/input";
 import PencilIcon from "../src/components/icons/pencil-icon";
 import ExitIcon from "../src/components/icons/exit-icon";
 import TrashIcon from "../src/components/icons/trash-icon";
+import ImageViewer from "../src/components/image-viewer";
 
 const User = () => {
   const { signOut, user, errors } = useAuth();
+  const [image, setImage] = useState(null);
   const [ruc, setRuc] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const router = useRouter();
+
+  const pickImageAsync = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.5,
+    });
+
+    if (!result.canceled) {
+      console.log("ImagePicker", result.assets);
+      setImage(result.assets[0].uri);
+    } else {
+      alert("You did not select any image.");
+    }
+  };
+
+  const removeImage = () => {
+    setImage(null);
+  };
 
   useEffect(() => {
     setRuc(user ? user.ruc : "");
@@ -44,39 +66,21 @@ const User = () => {
         }}
       />
       <View style={{ width: "90%", alignItems: "center" }}>
-        <Image
-          source={require("../src/assets/user-default.jpg")}
-          style={{
-            height: 120,
-            width: 120,
-            borderRadius: 60,
-            marginLeft: "auto",
-            marginRight: "auto",
-            marginBottom: 20,
-          }}
+        <ImageViewer
+          placeholderImageSource={require("../src/assets/user-default.jpg")}
+          selectedImage={image}
         />
         <View style={{ flexDirection: "row", gap: 10, marginBottom: 15 }}>
-          <TouchableOpacity style={styles.buttonOutline}>
+          <TouchableOpacity
+            onPress={pickImageAsync}
+            style={styles.buttonOutline}
+          >
             <PencilIcon />
-            <Text
-              style={{
-                fontFamily: "PoppinsMedium",
-                color: Colors.maastrichtBlue,
-              }}
-            >
-              Editar foto
-            </Text>
+            <Text style={styles.buttonOutlineText}>Editar foto</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.buttonOutline}>
+          <TouchableOpacity onPress={removeImage} style={styles.buttonOutline}>
             <TrashIcon />
-            <Text
-              style={{
-                fontFamily: "PoppinsMedium",
-                color: Colors.maastrichtBlue,
-              }}
-            >
-              Borrar foto
-            </Text>
+            <Text style={styles.buttonOutlineText}>Borrar foto</Text>
           </TouchableOpacity>
         </View>
         <View style={{ width: "100%" }}>
@@ -163,6 +167,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 10,
     flexGrow: 1,
+  },
+  buttonOutlineText: {
+    fontFamily: "PoppinsMedium",
+    color: Colors.maastrichtBlue,
   },
   button: {
     backgroundColor: Colors.maastrichtBlue,

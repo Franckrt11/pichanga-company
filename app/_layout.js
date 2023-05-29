@@ -1,7 +1,7 @@
 import { Stack } from "expo-router";
 import { useCallback, useState } from "react";
-import { Provider } from "../src/context/auth";
 import * as SplashScreen from "expo-splash-screen";
+import { Provider } from "../src/context/auth";
 import { useFonts } from "../src/models/useFont";
 
 SplashScreen.preventAutoHideAsync();

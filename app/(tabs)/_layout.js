@@ -26,6 +26,7 @@ const TabsLayout = () => {
         options={{
           headerTitle: () => {},
           tabBarLabelStyle: styles.tabBarLabel,
+          tabBarLabel: "INICIO",
           tabBarIcon: ({ focused, color }) => (
             <HomeIcon active={focused} color={color} />
           ),
@@ -37,6 +38,7 @@ const TabsLayout = () => {
         options={{
           headerTitle: () => {},
           tabBarLabelStyle: styles.tabBarLabel,
+          tabBarLabel: "CANCHAS",
           tabBarIcon: ({ focused, color }) => (
             <FieldIcon active={focused} color={color} />
           ),
@@ -47,6 +49,7 @@ const TabsLayout = () => {
         options={{
           headerTitle: () => {},
           tabBarLabelStyle: styles.tabBarLabel,
+          tabBarLabel: "RESERVAS",
           tabBarIcon: ({ focused, color }) => (
             <CalendarIcon active={focused} color={color} />
           ),
@@ -57,6 +60,7 @@ const TabsLayout = () => {
         options={{
           headerTitle: () => {},
           tabBarLabelStyle: styles.tabBarLabel,
+          tabBarLabel: "CHAT",
           tabBarIcon: ({ focused, color }) => (
             <ChatIcon active={focused} color={color} />
           ),
@@ -67,6 +71,7 @@ const TabsLayout = () => {
         options={{
           headerTitle: () => {},
           tabBarLabelStyle: styles.tabBarLabel,
+          tabBarLabel: "ACTIVIDAD",
           tabBarIcon: ({ focused, color }) => (
             <BellIcon active={focused} color={color} />
           ),
@@ -80,13 +85,10 @@ const styles = StyleSheet.create({
   tabIcon: {
     color: Colors.maastrichtBlue,
     backgroundColor: "white",
-    fontSize: 22,
-    marginTop: -25,
     borderRadius: 20,
     height: 30,
     width: 30,
     textAlign: "center",
-    paddingTop: 3,
     borderColor: Colors.maastrichtBlue,
     borderWidth: 1,
   },
@@ -96,8 +98,9 @@ const styles = StyleSheet.create({
   },
   tabBarLabel: {
     color: "white",
-    marginBottom: 5,
+    marginBottom: 10,
     fontSize: 9,
+    fontFamily: "PoppinsMedium",
   },
 });
 

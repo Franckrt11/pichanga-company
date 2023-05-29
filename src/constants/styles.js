@@ -124,7 +124,7 @@ export const TabStyles = StyleSheet.create({
   tabIcon: {
     alignItems: "center",
     justifyContent: "center",
-    marginTop: -25,
+    marginTop: -22,
     borderRadius: 20,
     borderWidth: 1,
     height: 30,

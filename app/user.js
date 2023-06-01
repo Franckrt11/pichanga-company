@@ -3,12 +3,17 @@ import {
   KeyboardAvoidingView,
   TouchableOpacity,
   View,
-  Image,
   StyleSheet,
 } from "react-native";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { Stack, useRouter } from "expo-router";
 import * as ImagePicker from "expo-image-picker";
+import {
+  BottomSheetView,
+  BottomSheetModal,
+  BottomSheetModalProvider,
+  BottomSheetBackdrop,
+} from "@gorhom/bottom-sheet";
 import { useAuth } from "../src/context/auth";
 import { LayoutStyles, Colors } from "../src/constants/styles";
 import Back from "../src/components/header/back";
@@ -26,6 +31,12 @@ const User = () => {
   const [email, setEmail] = useState("");
   const router = useRouter();
 
+  const bottomSheetModalRef = useRef(null);
+  const snapPoints = useMemo(() => ["20"], []);
+  const handlePresentModalPress = useCallback(() => {
+    bottomSheetModalRef.current.present();
+  }, []);
+
   const pickImageAsync = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
@@ -34,10 +45,21 @@ const User = () => {
     });
 
     if (!result.canceled) {
-      console.log("ImagePicker", result.assets);
+      console.log("pickImageAsync", result.assets);
       setImage(result.assets[0].uri);
-    } else {
-      alert("You did not select any image.");
+    }
+  };
+
+  const pickCameraAsync = async () => {
+    let result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.5,
+    });
+
+    if (!result.canceled) {
+      console.log("pickCameraAsync", result.assets);
+      setImage(result.assets[0].uri);
     }
   };
 
@@ -51,106 +73,192 @@ const User = () => {
     setEmail(user ? user.email : "");
   }, []);
 
-  return (
-    <KeyboardAvoidingView
-      style={[
-        LayoutStyles.whiteContainer,
-        { justifyContent: "flex-start", paddingTop: 20 },
-      ]}
-    >
-      <Stack.Screen
-        options={{
-          headerShown: true,
-          headerTitle: () => {},
-          headerLeft: () => <Back />,
-        }}
+  const renderBackdrop = useCallback(
+    (props) => (
+      <BottomSheetBackdrop
+        {...props}
+        disappearsOnIndex={-1}
+        appearsOnIndex={0}
+        opacity={0.2}
       />
-      <View style={{ width: "90%", alignItems: "center" }}>
-        <ImageViewer
-          placeholderImageSource={require("../src/assets/user-default.jpg")}
-          selectedImage={image}
+    ),
+    []
+  );
+
+  return (
+    <BottomSheetModalProvider>
+      <KeyboardAvoidingView
+        style={[
+          LayoutStyles.whiteContainer,
+          { justifyContent: "flex-start", paddingTop: 20 },
+        ]}
+      >
+        <Stack.Screen
+          options={{
+            headerShown: true,
+            headerTitle: () => {},
+            headerLeft: () => <Back />,
+          }}
         />
-        <View style={{ flexDirection: "row", gap: 10, marginBottom: 15 }}>
-          <TouchableOpacity
-            onPress={pickImageAsync}
-            style={styles.buttonOutline}
+        <View
+          style={{
+            width: "90%",
+            alignItems: "center",
+          }}
+        >
+          <BottomSheetModal
+            ref={bottomSheetModalRef}
+            index={0}
+            snapPoints={snapPoints}
+            style={{
+              shadowColor: "#000",
+              shadowOffset: {
+                width: 0,
+                height: 12,
+              },
+              shadowOpacity: 0.58,
+              shadowRadius: 16.0,
+              elevation: 24,
+            }}
+            handleStyle={{ backgroundColor: "#E6E6E6" }}
+            backdropComponent={renderBackdrop}
           >
-            <PencilIcon />
-            <Text style={styles.buttonOutlineText}>Editar foto</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={removeImage} style={styles.buttonOutline}>
-            <TrashIcon />
-            <Text style={styles.buttonOutlineText}>Borrar foto</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={{ width: "100%" }}>
-          <Input
-            placeholder="Razón social"
-            value={name}
-            onChangeText={(text) => setName(text)}
-            styles={styles.input}
-            theme="light"
-            error={errors ? errors.name : null}
-          />
-          <Input
-            placeholder="R.U.C."
-            value={ruc}
-            onChangeText={(text) => setRuc(text)}
-            styles={styles.input}
-            theme="light"
-            keyboardType="numeric"
-            error={errors ? errors.ruc : null}
-          />
-          <Input
-            placeholder="Correo electrónico"
-            value={email}
-            onChangeText={(text) => setEmail(text)}
-            styles={styles.input}
-            theme="light"
-            keyboardType="email-address"
-            error={errors ? errors.email : null}
-          />
-        </View>
-        <View style={{ width: "80%", marginBottom: 40 }}>
-          <TouchableOpacity
-            onPress={() => router.push("/password")}
-            style={styles.button}
-          >
-            <Text style={{ fontFamily: "PoppinsMedium", color: Colors.white }}>
-              Cambiar contraseña
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => signOut()} style={styles.button}>
-            <ExitIcon />
-            <Text style={{ fontFamily: "PoppinsMedium", color: Colors.white }}>
-              Cerrar sesión
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.button, { backgroundColor: Colors.white }]}
-          >
-            <Text
+            <BottomSheetView
               style={{
-                color: Colors.metallicGreen,
-                textDecorationLine: "underline",
-                fontFamily: "PoppinsMedium",
+                flex: 1,
+                alignItems: "center",
               }}
             >
-              Eliminar cuenta
-            </Text>
-          </TouchableOpacity>
+              <View
+                style={{
+                  flexDirection: "row",
+                  gap: 30,
+                  marginBottom: 15,
+                  width: "70%",
+                  marginLeft: "auto",
+                  marginRight: "auto",
+                  paddingTop: 30,
+                }}
+              >
+                <TouchableOpacity
+                  onPress={pickCameraAsync}
+                  style={[
+                    styles.buttonOutline,
+                    { backgroundColor: Colors.white },
+                  ]}
+                >
+                  <PencilIcon />
+                  <Text style={styles.buttonOutlineText}>Cámara</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={pickImageAsync}
+                  style={[
+                    styles.buttonOutline,
+                    { backgroundColor: Colors.white },
+                  ]}
+                >
+                  <TrashIcon />
+                  <Text style={styles.buttonOutlineText}>Galería</Text>
+                </TouchableOpacity>
+              </View>
+            </BottomSheetView>
+          </BottomSheetModal>
+
+          <ImageViewer
+            placeholderImageSource={require("../src/assets/user-default.jpg")}
+            selectedImage={image}
+          />
+          <View style={{ flexDirection: "row", gap: 10, marginBottom: 15 }}>
+            <TouchableOpacity
+              onPress={handlePresentModalPress}
+              style={styles.buttonOutline}
+            >
+              <PencilIcon />
+              <Text style={styles.buttonOutlineText}>Editar foto</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={removeImage}
+              style={styles.buttonOutline}
+            >
+              <TrashIcon />
+              <Text style={styles.buttonOutlineText}>Borrar foto</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={{ width: "100%" }}>
+            <Input
+              placeholder="Razón social"
+              value={name}
+              onChangeText={(text) => setName(text)}
+              styles={styles.input}
+              theme="light"
+              error={errors ? errors.name : null}
+            />
+            <Input
+              placeholder="R.U.C."
+              value={ruc}
+              onChangeText={(text) => setRuc(text)}
+              styles={styles.input}
+              theme="light"
+              keyboardType="numeric"
+              error={errors ? errors.ruc : null}
+            />
+            <Input
+              placeholder="Correo electrónico"
+              value={email}
+              onChangeText={(text) => setEmail(text)}
+              styles={styles.input}
+              theme="light"
+              keyboardType="email-address"
+              error={errors ? errors.email : null}
+            />
+          </View>
+          <View style={{ width: "80%", marginBottom: 40 }}>
+            <TouchableOpacity
+              onPress={() => router.push("/password")}
+              style={styles.button}
+            >
+              <Text
+                style={{ fontFamily: "PoppinsMedium", color: Colors.white }}
+              >
+                Cambiar contraseña
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => signOut()} style={styles.button}>
+              <ExitIcon />
+              <Text
+                style={{ fontFamily: "PoppinsMedium", color: Colors.white }}
+              >
+                Cerrar sesión
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.button, { backgroundColor: Colors.white }]}
+            >
+              <Text
+                style={{
+                  color: Colors.metallicGreen,
+                  textDecorationLine: "underline",
+                  fontFamily: "PoppinsMedium",
+                }}
+              >
+                Eliminar cuenta
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View style={{ width: "100%" }}>
+            <TouchableOpacity
+              style={[styles.button, { backgroundColor: Colors.metallicGreen }]}
+            >
+              <Text
+                style={{ fontFamily: "PoppinsMedium", color: Colors.white }}
+              >
+                GUARDAR
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
-        <View style={{ width: "100%" }}>
-          <TouchableOpacity
-            style={[styles.button, { backgroundColor: Colors.metallicGreen }]}
-          >
-            <Text style={{ fontFamily: "PoppinsMedium", color: Colors.white }}>
-              GUARDAR
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </BottomSheetModalProvider>
   );
 };
 

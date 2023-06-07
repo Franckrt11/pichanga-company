@@ -1,7 +1,7 @@
 import React, { createContext, useEffect } from "react";
 import { useRouter, useSegments } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { fetchLogin, fetchRegister } from "../models/auth";
+import { fetchLogin, fetchRegister, fetchUser } from "../models/auth";
 
 const AuthContext = createContext(null);
 
@@ -26,7 +26,7 @@ const useProtectedRoute = (user) => {
 
 export const Provider = (props) => {
   const [loading, setLoading] = React.useState(false);
-  const [user, setUser] = React.useState(null);
+  const [userData, setUserData] = React.useState(null);
   const [token, setToken] = React.useState(null);
   const [errors, setErrors] = React.useState(null);
 
@@ -41,10 +41,10 @@ export const Provider = (props) => {
       const response = await fetchLogin(email, password);
 
       if (response.status) {
-        setUser(response.user);
+        setUserData(response.user);
         setToken(response.token);
-        AsyncStorage.setItem("token", response.token);
-        AsyncStorage.setItem("user", JSON.stringify(response.user));
+        await AsyncStorage.setItem("token", response.token);
+        await AsyncStorage.setItem("userId", response.user.id.toString());
       } else {
         setErrors(response.messages);
         console.log('Error', response.messages);
@@ -57,10 +57,10 @@ export const Provider = (props) => {
 
   const signOut = () => {
     setLoading(true);
-    setUser(null);
+    setUserData(null);
     setToken(null);
     AsyncStorage.removeItem("token");
-    AsyncStorage.removeItem("user");
+    AsyncStorage.removeItem("userId");
     setLoading(false);
   };
 
@@ -84,10 +84,10 @@ export const Provider = (props) => {
       });
 
       if (response.status) {
-        setUser(response.user);
+        setUserData(response.user);
         setToken(response.token);
-        AsyncStorage.setItem("token", response.token);
-        AsyncStorage.setItem("user", JSON.stringify(response.user));
+        await AsyncStorage.setItem("token", response.token);
+        await AsyncStorage.setItem("userId", response.user.id.toString());
       } else {
         setErrors(response.messages);
         console.log('Error', response.messages);
@@ -101,14 +101,15 @@ export const Provider = (props) => {
   const isLoggedIn = async () => {
     try {
       let userToken = await AsyncStorage.getItem("token");
-      let userData = await AsyncStorage.getItem("user");
+      let userId = await AsyncStorage.getItem("userId");
 
       if (userToken !== null && typeof userToken !== 'undefined') {
         setToken(userToken);
       }
 
-      if (userData !== null && typeof userData !== 'undefined') {
-        setUser(JSON.parse(userData));
+      if (userId !== null && typeof userId !== 'undefined') {
+        const response = await fetchUser(userId, userToken);
+        setUserData(response.data);
       }
     } catch (error) {
       console.log("🚩 ~ auth.js ~ isLoggedIn() ~ error:", error);
@@ -119,7 +120,7 @@ export const Provider = (props) => {
     isLoggedIn();
   }, []);
 
-  useProtectedRoute(user);
+  useProtectedRoute(userData);
 
   return (
     <AuthContext.Provider
@@ -128,7 +129,7 @@ export const Provider = (props) => {
         signOut,
         signUp,
         token,
-        user,
+        userData,
         loading,
         errors
       }}

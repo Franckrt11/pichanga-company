@@ -10,7 +10,8 @@ export const Colors = {
 
 export const AppImages = {
   images: {
-    logo: require('../assets/logo.png')
+    logo: require('../assets/logo.png'),
+    avatarDefault: require('../assets/user-default.jpg'),
   }
 };
 

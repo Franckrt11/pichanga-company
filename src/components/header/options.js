@@ -1,11 +1,14 @@
-import { View, TouchableOpacity, Image } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
-import { Colors } from "../../constants/styles";
+import { useAuth } from "../../context/auth";
+import { Colors, AppImages } from "../../constants/styles";
 import GearIcon from "../../components/icons/gear-icon";
 import PencilIcon from "../../components/icons/pencil-icon";
+import CachedImage from "../../components/cached-image";
 
 const Options = () => {
   const router = useRouter();
+  const { userData } = useAuth();
 
   return (
     <View
@@ -27,9 +30,11 @@ const Options = () => {
         style={{ position: "relative" }}
         onPress={() => router.push("/user")}
       >
-        <Image
-          source={require("../../assets/user-default.jpg")}
-          style={{ height: 50, width: 50, borderRadius: 60 }}
+        <CachedImage
+          size={50}
+          defaultImage={AppImages.images.avatarDefault}
+          name={ userData ? userData.photo : false }
+          styles={{borderRadius: 60}}
         />
         <View
           style={{

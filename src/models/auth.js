@@ -1,7 +1,5 @@
-import { API_URL } from "@env";
+import API_URL from "../constants/constants";
 import * as Device from "expo-device";
-
-// const API_URL = "https://api.tejuegounapichanga.com/";
 
 const fetchHeaders = {
   Accept: "application/json",
@@ -35,6 +33,18 @@ export const fetchRegister = async (data) => {
       status: true,
       device: Device.brand ? Device.brand : 'myweb'
     }),
+  });
+
+  return await response.json();
+};
+
+export const fetchUser = async (id, token) => {
+  const response = await fetch(`${API_URL}api/company/user/${id}`, {
+    method: "GET",
+    headers: {
+      ...fetchHeaders,
+      'Authorization': `Bearer ${token}`
+    }
   });
 
   return await response.json();

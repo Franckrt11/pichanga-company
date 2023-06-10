@@ -9,22 +9,22 @@ export const useAuth = () => {
   return useContext(AuthContext);
 };
 
-const useProtectedRoute = (user) => {
+const useProtectedRoute = (token) => {
   const segments = useSegments();
   const router = useRouter();
 
   useEffect(() => {
     const inAuthGroup = segments[0] === "(auth)";
 
-    if (!user && !inAuthGroup) {
+    if (!token && !inAuthGroup) {
       router.replace("/login");
-    } else if (user && inAuthGroup) {
+    } else if (token && inAuthGroup) {
       router.replace("/(tabs)/home");
     }
-  }, [user, segments]);
+  }, [token, segments]);
 };
 
-export const Provider = (props) => {
+export const AuthProvider = (props) => {
   const [loading, setLoading] = useState(false);
   const [userData, setUserData] = useState(null);
   const [token, setToken] = useState(null);
@@ -114,8 +114,9 @@ export const Provider = (props) => {
         setToken(userToken);
       }
 
-      if (userId !== null && typeof userId !== "undefined") {
-        await reloadUser(userId, userToken);
+      if (userId !== null && typeof userId !== 'undefined') {
+        const response = await fetchUser(userId, userToken);
+        setUserData(response.data);
       }
     } catch (error) {
       console.log("🚩 ~ auth.js ~ isLoggedIn() ~ error:", error);
@@ -126,7 +127,7 @@ export const Provider = (props) => {
     isLoggedIn();
   }, []);
 
-  useProtectedRoute(userData);
+  useProtectedRoute(token);
 
   return (
     <AuthContext.Provider

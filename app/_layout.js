@@ -1,7 +1,8 @@
 import { Stack } from "expo-router";
 import { useCallback, useState } from "react";
 import * as SplashScreen from "expo-splash-screen";
-import { Provider } from "../src/context/auth";
+import { AuthProvider } from "../src/context/auth";
+import { UserProvider } from "../src/context/user";
 import { useFonts } from "../src/models/useFont";
 
 SplashScreen.preventAutoHideAsync();
@@ -27,18 +28,20 @@ const Root = () => {
   }
 
   return (
-    <Provider onLayout={onLayoutRootView}>
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          headerStyle: {
-            backgroundColor: "white",
-            height: 30,
-          },
-          headerShadowVisible: false
-        }}
-      />
-    </Provider>
+    <AuthProvider onLayout={onLayoutRootView}>
+      <UserProvider>
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            headerStyle: {
+              backgroundColor: "white",
+              height: 30,
+            },
+            headerShadowVisible: false
+          }}
+        />
+      </UserProvider>
+    </AuthProvider>
   );
 };
 

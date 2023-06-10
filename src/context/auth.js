@@ -1,4 +1,4 @@
-import React, { createContext, useEffect } from "react";
+import { createContext, useEffect, useContext, useState } from "react";
 import { useRouter, useSegments } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { fetchLogin, fetchRegister, fetchUser } from "../models/auth";
@@ -6,7 +6,7 @@ import { fetchLogin, fetchRegister, fetchUser } from "../models/auth";
 const AuthContext = createContext(null);
 
 export const useAuth = () => {
-  return React.useContext(AuthContext);
+  return useContext(AuthContext);
 };
 
 const useProtectedRoute = (user) => {
@@ -25,10 +25,10 @@ const useProtectedRoute = (user) => {
 };
 
 export const Provider = (props) => {
-  const [loading, setLoading] = React.useState(false);
-  const [userData, setUserData] = React.useState(null);
-  const [token, setToken] = React.useState(null);
-  const [errors, setErrors] = React.useState(null);
+  const [loading, setLoading] = useState(false);
+  const [userData, setUserData] = useState(null);
+  const [token, setToken] = useState(null);
+  const [errors, setErrors] = useState(null);
 
   const signIn = async (email, password) => {
     if (!email || !password) {
@@ -47,7 +47,7 @@ export const Provider = (props) => {
         await AsyncStorage.setItem("userId", response.user.id.toString());
       } else {
         setErrors(response.messages);
-        console.log('Error', response.messages);
+        console.log("Error", response.messages);
       }
     } catch (error) {
       console.log("🚩 ~ auth.js ~ signIn() ~ error:", error);
@@ -64,7 +64,14 @@ export const Provider = (props) => {
     setLoading(false);
   };
 
-  const signUp = async (name, ruc, email, password, password_confirmation, checkbox) => {
+  const signUp = async (
+    name,
+    ruc,
+    email,
+    password,
+    password_confirmation,
+    checkbox
+  ) => {
     if (!checkbox) {
       alert("Aceptar terminos");
       return;
@@ -90,7 +97,7 @@ export const Provider = (props) => {
         await AsyncStorage.setItem("userId", response.user.id.toString());
       } else {
         setErrors(response.messages);
-        console.log('Error', response.messages);
+        console.log("Error", response.messages);
       }
     } catch (error) {
       console.log("🚩 ~ auth.js ~ signOut() ~ error:", error);
@@ -103,13 +110,12 @@ export const Provider = (props) => {
       let userToken = await AsyncStorage.getItem("token");
       let userId = await AsyncStorage.getItem("userId");
 
-      if (userToken !== null && typeof userToken !== 'undefined') {
+      if (userToken !== null && typeof userToken !== "undefined") {
         setToken(userToken);
       }
 
-      if (userId !== null && typeof userId !== 'undefined') {
-        const response = await fetchUser(userId, userToken);
-        setUserData(response.data);
+      if (userId !== null && typeof userId !== "undefined") {
+        await reloadUser(userId, userToken);
       }
     } catch (error) {
       console.log("🚩 ~ auth.js ~ isLoggedIn() ~ error:", error);
@@ -131,7 +137,7 @@ export const Provider = (props) => {
         token,
         userData,
         loading,
-        errors
+        errors,
       }}
     >
       {props.children}

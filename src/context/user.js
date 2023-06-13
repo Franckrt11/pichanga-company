@@ -1,21 +1,60 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useReducer } from "react";
 
 const UserContext = createContext(null);
+const UserDispatchContext = createContext(null);
+
+const initialState = {
+  id: 0,
+  name: "",
+  ruc: "",
+  email: "",
+  status: false,
+  photo: null,
+};
+
+const UserReducer = (state, action) => {
+  switch (action.type) {
+    case "change": {
+      return {
+        id: action.payload.id,
+        name: action.payload.name,
+        ruc: action.payload.ruc,
+        email: action.payload.email,
+        status: action.payload.status,
+        photo: action.payload.photo,
+      };
+    }
+    case "delete": {
+      return initialState;
+    }
+    case "change-avatar": {
+      return {
+        ...state,
+        photo: action.payload.photo,
+      };
+    }
+    default: {
+      throw Error("Unknown action: " + action.type);
+    }
+  }
+};
 
 export const useUserContext = () => {
   return useContext(UserContext);
 };
 
+export const useUserDispatch = () => {
+  return useContext(UserDispatchContext);
+};
+
 export const UserProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [state, dispatch] = useReducer(UserReducer, initialState);
 
   return (
-    <UserContext.Provider
-      value={{
-        user,
-      }}
-    >
-      {children}
+    <UserContext.Provider value={state}>
+      <UserDispatchContext.Provider value={dispatch}>
+        {children}
+      </UserDispatchContext.Provider>
     </UserContext.Provider>
   );
 };

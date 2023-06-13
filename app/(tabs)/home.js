@@ -1,15 +1,15 @@
 import { StyleSheet, Text, View, Button } from "react-native";
 import React from "react";
-import { LayoutStyles } from '../../src/constants/styles';
-import { useAuth } from "../../src/context/auth";
+import { LayoutStyles } from "../../src/constants/styles";
+import { useUserContext } from "../../src/context/user";
 
 const Home = () => {
-  const { userData } = useAuth();
+  const state = useUserContext();
 
   return (
-    <View style={ LayoutStyles.whiteContainer }>
+    <View style={LayoutStyles.whiteContainer}>
       <Text>Home</Text>
-      <Text>{ userData ? userData.name : '' }</Text>
+      <Text>{state?.name}</Text>
     </View>
   );
 };

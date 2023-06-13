@@ -28,8 +28,8 @@ const Root = () => {
   }
 
   return (
-    <AuthProvider onLayout={onLayoutRootView}>
-      <UserProvider>
+    <UserProvider>
+      <AuthProvider onLayout={onLayoutRootView}>
         <Stack
           screenOptions={{
             headerShown: false,
@@ -37,11 +37,11 @@ const Root = () => {
               backgroundColor: "white",
               height: 30,
             },
-            headerShadowVisible: false
+            headerShadowVisible: false,
           }}
         />
-      </UserProvider>
-    </AuthProvider>
+      </AuthProvider>
+    </UserProvider>
   );
 };
 

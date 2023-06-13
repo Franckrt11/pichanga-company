@@ -6,7 +6,7 @@ import { useUserDispatch } from "./user";
 
 const AuthContext = createContext(null);
 
-export const useAuth = () => {
+export const useAuthContext = () => {
   return useContext(AuthContext);
 };
 

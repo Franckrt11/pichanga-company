@@ -9,7 +9,7 @@ import {
 import { useState } from "react";
 import { Stack, Link } from "expo-router";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-import { useAuth } from "../../src/context/auth";
+import { useAuthContext } from "../../src/context/auth";
 import {
   LayoutStyles,
   RegisterStyles,
@@ -46,7 +46,7 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [password_confirmation, setPasswordConfirmation] = useState("");
   const [checkbox, setCheckbox] = useState(false);
-  const { signUp, loading, errors } = useAuth();
+  const { signUp, loading, errors } = useAuthContext();
 
   return (
     <KeyboardAvoidingView

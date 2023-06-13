@@ -15,7 +15,8 @@ import {
   BottomSheetBackdrop,
 } from "@gorhom/bottom-sheet";
 import Icon from "react-native-vector-icons/Feather";
-import { useAuth } from "../src/context/auth";
+import { useAuthContext } from "../src/context/auth";
+import { useUserContext } from "../src/context/user";
 import { LayoutStyles, Colors, AppImages } from "../src/constants/styles";
 import Back from "../src/components/header/back";
 import Input from "../src/components/input";
@@ -27,7 +28,7 @@ import { pickImageAsync, pickCameraAsync } from "../src/models/imagePicker";
 import API_URL from "../src/constants/constants";
 
 const User = () => {
-  const { signOut, userData, token, errors } = useAuth();
+  const { signOut, userData, token, errors } = useAuthContext();
   const [image, setImage] = useState(false);
   const [ruc, setRuc] = useState("");
   const [name, setName] = useState("");

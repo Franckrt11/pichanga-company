@@ -1,6 +1,6 @@
 import { View, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
-import { useAuth } from "../../context/auth";
+import { useAuthContext } from "../../context/auth";
 import { Colors, AppImages } from "../../constants/styles";
 import GearIcon from "../../components/icons/gear-icon";
 import PencilIcon from "../../components/icons/pencil-icon";
@@ -8,7 +8,7 @@ import CachedImage from "../../components/cached-image";
 
 const Options = () => {
   const router = useRouter();
-  const { userData } = useAuth();
+  const { userData } = useAuthContext();
 
   return (
     <View

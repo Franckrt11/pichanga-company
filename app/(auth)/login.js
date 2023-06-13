@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { useState } from "react";
 import { Stack, useRouter } from "expo-router";
-import { useAuth } from "../../src/context/auth";
+import { useAuthContext } from "../../src/context/auth";
 import {
   LayoutStyles,
   LoginStyles,
@@ -21,7 +21,7 @@ const Login = () => {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { signIn, loading, errors } = useAuth();
+  const { signIn, loading, errors } = useAuthContext();
 
   return (
     <KeyboardAvoidingView

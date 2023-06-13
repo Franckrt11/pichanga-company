@@ -38,7 +38,7 @@ const CachedImage = ({ size, defaultImage, name = null, styles }) => {
 
   useEffect(() => {
     if (name) saveInCache();
-  }, []);
+  }, [name]);
 
   return (
     <Image

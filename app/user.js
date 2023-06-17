@@ -16,7 +16,7 @@ import {
 } from "@gorhom/bottom-sheet";
 import Icon from "react-native-vector-icons/Feather";
 import { useAuthContext } from "../src/context/auth";
-import { useUserContext } from "../src/context/user";
+import { useUserContext, useUserDispatch } from "../src/context/user";
 import { LayoutStyles, Colors, AppImages } from "../src/constants/styles";
 import Back from "../src/components/header/back";
 import Input from "../src/components/input";
@@ -25,15 +25,22 @@ import ExitIcon from "../src/components/icons/exit-icon";
 import TrashIcon from "../src/components/icons/trash-icon";
 import CachedImage from "../src/components/cached-image";
 import { pickImageAsync, pickCameraAsync } from "../src/models/imagePicker";
-import API_URL from "../src/constants/constants";
+import {
+  saveUserProfile,
+  saveUserAvatar,
+  removeUserAvatar,
+} from "../src/models/user";
 
 const User = () => {
-  const { signOut, userData, token, errors } = useAuthContext();
-  const [image, setImage] = useState(false);
+  const { signOut, token, errors } = useAuthContext();
+  const state = useUserContext();
+  const dispatch = useUserDispatch();
+  const router = useRouter();
+
   const [ruc, setRuc] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const router = useRouter();
+  const [avatar, setAvatar] = useState(null);
 
   const bottomSheetModalRef = useRef(null);
   const snapPoints = useMemo(() => ["20"], []);
@@ -47,8 +54,12 @@ const User = () => {
   const pickImage = async () => {
     let image = await pickImageAsync();
     if (image) {
-      // setImage(image);
-      await saveAvatar(image);
+      const photo = await saveAvatar(image);
+      await dispatch({
+        type: "change-avatar",
+        payload: photo,
+      });
+      setAvatar(photo);
       await handleClosePress();
     }
   };
@@ -56,8 +67,12 @@ const User = () => {
   const pickCamera = async () => {
     let image = await pickCameraAsync();
     if (image) {
-      // setImage(image);
-      await saveAvatar(image);
+      const photo = await saveAvatar(image);
+      await dispatch({
+        type: "change-avatar",
+        payload: photo,
+      });
+      setAvatar(photo);
       await handleClosePress();
     }
   };
@@ -67,93 +82,42 @@ const User = () => {
   };
 
   const saveProfile = async () => {
-    try {
-      const response = await fetch(
-        `${API_URL}api/company/profile/update/${userData.id}`,
-        {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name: name,
-            email: email,
-            ruc: ruc,
-          }),
-        }
-      );
-      console.log("saveProfile", await response.json());
-      // return await response.json();
-      Alert.alert("Profile guardado.");
-    } catch (error) {
-      console.log("🚩 ~ user.js ~ saveProfile() ~ error:", error);
-    }
+    const profile = await saveUserProfile(
+      { name, email, ruc },
+      token,
+      state.id
+    );
+    Alert.alert("Profile guardado.");
+    await dispatch({
+      type: "change",
+      payload: profile,
+    });
   };
 
   const saveAvatar = async (imageUri) => {
-    try {
-      const response = await fetch(
-        `${API_URL}api/company/avatar/update/${userData.id}`,
-        {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ photo: imageUri }),
-        }
-      );
-      const result = await response.json();
-
-      if (result.status) {
-        // reloadUser(userData.id, token);
-        Alert.alert(result.message);
-      } else {
-        Alert.alert("No se pudo guardar la imagen.");
-      }
-
-      return;
-    } catch (error) {
-      console.log("🚩 ~ user.js ~ saveAvatar() ~ error:", error);
-    }
+    const avatar = await saveUserAvatar(imageUri, token, state.id);
+    Alert.alert("Imagen de perfil guardada.");
+    await dispatch({
+      type: "change-avatar",
+      payload: avatar,
+    });
   };
 
   const removeAvatar = async () => {
-    try {
-      const response = await fetch(
-        `${API_URL}api/company/avatar/remove/${userData.id}`,
-        {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const result = await response.json();
-
-      if (result.status) {
-        // reloadUser(userData.id, token);
-        Alert.alert(result.message);
-      } else {
-        Alert.alert(result.message);
-      }
-
-      return;
-    } catch (error) {
-      console.log("🚩 ~ user.js ~ removeAvatar() ~ error:", error);
-    }
+    const response = await removeUserAvatar(token, state.id);
+    Alert.alert(response);
+    await dispatch({
+      type: "change-avatar",
+      payload: null,
+    });
   };
 
   useEffect(() => {
-    setRuc(userData ? userData.ruc : "");
-    setName(userData ? userData.name : "");
-    setEmail(userData ? userData.email : "");
-  }, []);
+    setRuc(state.ruc);
+    setName(state.name);
+    setEmail(state.email);
+    setAvatar(state.photo);
+  }, [state]);
 
   const renderBackdrop = useCallback(
     (props) => (
@@ -229,7 +193,7 @@ const User = () => {
           <CachedImage
             size={120}
             defaultImage={AppImages.images.avatarDefault}
-            name={userData ? userData.photo : false}
+            name={avatar}
             styles={{
               borderRadius: 60,
               marginLeft: "auto",

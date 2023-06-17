@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Button } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { LayoutStyles } from "../../src/constants/styles";
 import { useUserContext } from "../../src/context/user";

@@ -30,7 +30,7 @@ const UserReducer = (state, action) => {
     case "change-avatar": {
       return {
         ...state,
-        photo: action.payload.photo,
+        photo: action.payload,
       };
     }
     default: {

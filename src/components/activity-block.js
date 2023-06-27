@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from "react-native";
 import { Colors } from "../constants/styles";
 
-const ActivityBlock = ({max}) => {
+const ActivityBlock = ({ max = false }) => {
   const activityLog = [
     {
       title: "Pedro Parker solicitó reserva Cancha 1 para las 6:00 pm del 29 Dic 2023",
@@ -25,7 +25,7 @@ const ActivityBlock = ({max}) => {
     }
   ];
 
-  const limitLog = activityLog.slice(0, max);
+  const limitLog = max ? activityLog.slice(0, max) : activityLog;
 
   return (
     <View>

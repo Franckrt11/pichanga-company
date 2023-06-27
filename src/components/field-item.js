@@ -51,7 +51,16 @@ const FieldItem = ({ name, active }) => {
             </View>
           </View>
         </View>
-        <View style={styles.footer}>
+        <View
+          style={[
+            styles.footer,
+            {
+              backgroundColor: active
+                ? Colors.maastrichtBlue
+                : Colors.silverSand,
+            },
+          ]}
+        >
           <TouchableOpacity
             onPress={() => console.log("View comments")}
             style={styles.buttom}
@@ -139,7 +148,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   footer: {
-    backgroundColor: Colors.maastrichtBlue,
     flexDirection: "row",
     paddingVertical: 10,
     paddingHorizontal: 20,

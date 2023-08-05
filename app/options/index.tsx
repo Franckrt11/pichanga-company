@@ -67,14 +67,14 @@ const Options = () => {
               <Text style={styles.buttomText}>Bloqueo de usuarios</Text>
             </Pressable> */}
             <Pressable
-              onPress={() => router.push("/terms")}
+              onPress={() => router.push("/options/terms")}
               style={styles.buttom}
             >
               <TermsIcon size={18} />
               <Text style={styles.buttomText}>Términos y condiciones</Text>
             </Pressable>
             <Pressable
-              onPress={() => router.push("/help")}
+              onPress={() => router.push("/options/help")}
               style={styles.buttom}
             >
               <HelpIcon size={18} />

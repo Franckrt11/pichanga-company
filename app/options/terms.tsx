@@ -8,7 +8,7 @@ import {
 import { Stack } from "expo-router";
 import { LayoutStyles } from "@/src/utils/Styles";
 import Colors from "@/src/utils/Colors";
-import Back from "../src/components/header/back";
+import Back from "@/src/components/header/back";
 
 const Terms = () => {
   return (

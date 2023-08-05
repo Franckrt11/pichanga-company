@@ -190,7 +190,7 @@ const User = () => {
           </View>
           <View style={{ width: "80%", marginBottom: 40, marginHorizontal: "auto" }}>
             <Pressable
-              onPress={() => router.push("/password")}
+              onPress={() => router.push("/user/password")}
               style={styles.button}
             >
               <Text
@@ -209,7 +209,7 @@ const User = () => {
             </Pressable>
             <Pressable
               style={[styles.button, { backgroundColor: Colors.white }]}
-              onPress={() => router.push("/delete")}
+              onPress={() => router.push("/user/delete")}
             >
               <Text
                 style={{

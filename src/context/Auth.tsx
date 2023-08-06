@@ -2,13 +2,14 @@ import { createContext, useEffect, useContext, useState } from "react";
 import { router, useSegments } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useUserContext } from "./User";
-import { fetchLogin, fetchRegister, fetchUser } from "@/src/models/Auth";
+import { fetchLogin, fetchRegister, fetchUser, fetchNewPassword } from "@/src/models/Auth";
 import { UserData, FetchUserData, ProviderProps } from "@/src/utils/Types";
 
 interface IAuthContext {
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => void;
   signUp: (data: FetchUserData) => Promise<void>;
+  newPassword: (email: string, oldPassword: string, newPassword: string) => Promise<void>;
   token: string | null;
   loading: boolean;
   errors: any; // Revisar type de Errores del API
@@ -109,6 +110,17 @@ export const AuthProvider = ({ children }: ProviderProps) => {
     setLoading(false);
   };
 
+  const newPassword = async (email: string, oldPassword: string, newPassword: string) => {
+    try {
+      let userToken = await AsyncStorage.getItem("token");
+      let userId = await AsyncStorage.getItem("userId");
+
+      const response = await fetchNewPassword(email, oldPassword, newPassword);
+    } catch (error) {
+      console.log("🚩 ~ auth.js ~ newPassword() ~ error:", error);
+    }
+  };
+
   const isLoggedIn = async () => {
     try {
       let userToken = await AsyncStorage.getItem("token");
@@ -142,6 +154,7 @@ export const AuthProvider = ({ children }: ProviderProps) => {
         signIn,
         signOut,
         signUp,
+        newPassword,
         token,
         loading,
         errors,

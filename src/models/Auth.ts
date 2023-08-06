@@ -1,6 +1,6 @@
 import * as Device from "expo-device";
 import { API_URL } from "@/src/utils/Constants";
-import { UserData } from "@/src/utils/Types";
+import { FetchUserData } from "@/src/utils/Types";
 
 const fetchHeaders = {
   Accept: "application/json",
@@ -21,7 +21,7 @@ export const fetchLogin = async (email: string, password: string) => {
   return await response.json();
 };
 
-export const fetchRegister = async (data: UserData) => {
+export const fetchRegister = async (data: FetchUserData) => {
   const response = await fetch(`${API_URL}api/company/register`, {
     method: "POST",
     headers: fetchHeaders,
@@ -46,6 +46,20 @@ export const fetchUser = async (id: string, token: string | null) => {
       ...fetchHeaders,
       Authorization: `Bearer ${token}`,
     },
+  });
+
+  return await response.json();
+};
+
+export const fetchNewPassword = async (email: string, oldPassword: string, newPassword: string) => {
+  const response = await fetch(`${API_URL}api/company/reset-password`, {
+    method: "POST",
+    headers: fetchHeaders,
+    body: JSON.stringify({
+      email,
+      password: oldPassword,
+      new_password: newPassword,
+    }),
   });
 
   return await response.json();

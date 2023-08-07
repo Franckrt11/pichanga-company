@@ -36,3 +36,30 @@ export const LayoutStyles = StyleSheet.create({
     marginBottom: 30,
   },
 });
+
+export const PageStyles = StyleSheet.create({
+  input: {
+    color: Colors.maastrichtBlue,
+    backgroundColor: Colors.white,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderColor: Colors.silverSand,
+    borderWidth: 2,
+    borderRadius: 10,
+    fontFamily: "PoppinsMedium",
+    marginBottom: 5
+  },
+  button: {
+    backgroundColor: Colors.metallicGreen,
+    width: "100%",
+    padding: 10,
+    borderRadius: 10,
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  buttonText: {
+    color: Colors.white,
+    fontSize: 16,
+    fontFamily: "PoppinsMedium",
+  }
+});

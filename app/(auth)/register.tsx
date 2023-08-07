@@ -12,7 +12,7 @@ import { useState } from "react";
 import { Stack, Link } from "expo-router";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { useAuthContext } from "@/src/context/Auth";
-import { LayoutStyles } from "@/src/utils/Styles";
+import { LayoutStyles, PageStyles } from "@/src/utils/Styles";
 import Colors from "@/src/utils/Colors";
 import Input from "@/src/components/input";
 import Back from "@/src/components/header/back";
@@ -65,7 +65,7 @@ const Register = () => {
               placeholder="Razón social"
               value={name}
               onChangeText={(text: string) => setName(text)}
-              styles={RegisterStyles.input}
+              styles={PageStyles.input}
               theme="light"
               error={errors ? errors.name : null}
             />
@@ -73,7 +73,7 @@ const Register = () => {
               placeholder="R.U.C."
               value={ruc}
               onChangeText={(text: string) => setRuc(text)}
-              styles={RegisterStyles.input}
+              styles={PageStyles.input}
               theme="light"
               keyboardType="numeric"
               error={errors ? errors.ruc : null}
@@ -82,7 +82,7 @@ const Register = () => {
               placeholder="Correo electrónico"
               value={email}
               onChangeText={(text: string) => setEmail(text)}
-              styles={RegisterStyles.input}
+              styles={PageStyles.input}
               theme="light"
               keyboardType="email-address"
               error={errors ? errors.email : null}
@@ -91,7 +91,7 @@ const Register = () => {
               placeholder="Contraseña"
               value={password}
               onChangeText={(text: string) => setPassword(text)}
-              styles={RegisterStyles.input}
+              styles={PageStyles.input}
               theme="light"
               password={true}
               error={errors ? errors.password : null}
@@ -100,7 +100,7 @@ const Register = () => {
               placeholder="Repetir contraseña"
               value={password_confirmation}
               onChangeText={(text: string) => setPasswordConfirmation(text)}
-              styles={RegisterStyles.input}
+              styles={PageStyles.input}
               theme="light"
               password={true}
             />
@@ -125,11 +125,13 @@ const Register = () => {
                     password,
                     password_confirmation,
                     checkbox,
+                    status: false,
+                    photo: null
                   })
                 }
-                style={RegisterStyles.button}
+                style={PageStyles.button}
               >
-                <Text style={RegisterStyles.buttonText}>REGISTRAR</Text>
+                <Text style={PageStyles.buttonText}>REGISTRAR</Text>
               </Pressable>
             )}
           </View>
@@ -140,37 +142,3 @@ const Register = () => {
 };
 
 export default Register;
-
-const RegisterStyles = StyleSheet.create({
-  inputTitle: {
-    color: Colors.maastrichtBlue,
-    fontWeight: "700",
-    fontSize: 30,
-    marginBottom: 20,
-    textAlign: "center",
-    fontFamily: "PoppinsSemiBold",
-  },
-  input: {
-    color: Colors.maastrichtBlue,
-    backgroundColor: Colors.white,
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    borderColor: Colors.silverSand,
-    borderWidth: 2,
-    borderRadius: 10,
-    fontFamily: "PoppinsMedium",
-  },
-  button: {
-    backgroundColor: Colors.metallicGreen,
-    width: "100%",
-    padding: 10,
-    borderRadius: 10,
-    alignItems: "center",
-    marginBottom: 10,
-  },
-  buttonText: {
-    color: Colors.white,
-    fontSize: 16,
-    fontFamily: "PoppinsMedium",
-  },
-});

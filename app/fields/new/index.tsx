@@ -1,0 +1,187 @@
+import { StyleSheet, Text, View, SafeAreaView, ScrollView, Pressable } from "react-native";
+import { useState } from "react";
+import { Stack, router } from "expo-router";
+import { Picker } from '@react-native-picker/picker';
+import { LayoutStyles, PageStyles } from "@/src/utils/Styles";
+import Colors from "@/src/utils/Colors";
+import Back from "@/src/components/header/back";
+import Input from "@/src/components/input";
+import ButtonCheckbox from "@/src/components/button-checkbox";
+
+const NewField = () => {
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [mobile, setMobile] = useState("");
+  const [parking, setParking] = useState("");
+  const [size, setSize] = useState("");
+  const [type, setType] = useState("");
+
+  const [modes, setMode] = useState({ "5v5": false, "6v6": false, "7v7": false, "8v8": false, "9v9": false, "10v10": false, "11v11": false });
+
+  const [country, setCountry] = useState("");
+  const [city, setCity] = useState("");
+  const [district, setDistrict] = useState("");
+  const [address, setAddress] = useState("");
+
+  const changeModeState = (state: boolean, mode: string) => {
+    setMode({...modes, [mode]: state});
+  };
+
+  const nextStep = () => {
+    const filteredModes = Object.keys(modes).map(key => {
+      if (modes[key]) return key;
+    }).filter(element => element !== undefined);
+
+    console.log('modes names', filteredModes);
+  };
+
+  return (
+    <SafeAreaView
+      style={LayoutStyles.whiteContainer}
+    >
+      <Stack.Screen
+        options={{
+          headerShown: true,
+          headerTitle: () => <></>,
+          headerLeft: () => <Back />,
+        }}
+      />
+      <ScrollView style={{ paddingTop: 20, paddingBottom: 60 }}>
+        <View style={LayoutStyles.scrollContainer}>
+          <Text style={LayoutStyles.pageTitle}>NUEVA CANCHA</Text>
+          <View style={{ width: "80%", marginHorizontal: "auto", marginBottom: 10 }}>
+            <Input
+              placeholder="Nombre de la cancha"
+              value={name}
+              onChangeText={(text: string) => setName(text)}
+              styles={PageStyles.input}
+              theme="light"
+            />
+            <Input
+              placeholder="Teléfono fijo"
+              value={phone}
+              onChangeText={(text: string) => setPhone(text)}
+              styles={PageStyles.input}
+              theme="light"
+            />
+            <Input
+              placeholder="Celular o Whatsapp"
+              value={mobile}
+              onChangeText={(text: string) => setMobile(text)}
+              styles={PageStyles.input}
+              theme="light"
+            />
+            <Input
+              placeholder="Cantidad de estacionamientos"
+              value={parking}
+              onChangeText={(text: string) => setParking(text)}
+              styles={PageStyles.input}
+              theme="light"
+            />
+            <Input
+              placeholder="Medida de cancha"
+              value={size}
+              onChangeText={(text: string) => setSize(text)}
+              styles={PageStyles.input}
+              theme="light"
+            />
+            <Picker
+              style={{
+                marginBottom: 5,
+                backgroundColor: Colors.white,
+                borderColor: Colors.silverSand,
+                borderWidth: 2,
+                borderRadius: 10,
+                paddingHorizontal: 15,
+                paddingVertical: 10,
+                fontFamily: "PoppinsMedium",
+                borderStyle: "solid"
+              }}
+              selectedValue={type}
+              onValueChange={(value, itemIndex) => setType(value)}
+            >
+              <Picker.Item fontFamily="PoppinsMedium" label="Grass" value="Grass" />
+              <Picker.Item fontFamily="PoppinsMedium" label="Cemento" value="Cemento" />
+            </Picker>
+          </View>
+          <View style={{ marginBottom: 20 }}>
+            <Text style={styles.subtitle}>Modos de juego disponibles:</Text>
+            <View style={{ flexDirection: "row", gap: 15, marginBottom: 10 }}>
+              <ButtonCheckbox checked={modes["5v5"]} mode="5v5" text="5 vs 5" onChangeMode={changeModeState} />
+              <ButtonCheckbox checked={modes["6v6"]} mode="6v6" text="6 vs 6" onChangeMode={changeModeState} />
+              <ButtonCheckbox checked={modes["7v7"]} mode="7v7" text="7 vs 7" onChangeMode={changeModeState} />
+            </View>
+            <View style={{ flexDirection: "row", gap: 15, marginBottom: 10 }}>
+              <ButtonCheckbox checked={modes["8v8"]} mode="8v8" text="8 vs 8" onChangeMode={changeModeState}/>
+              <ButtonCheckbox checked={modes["9v9"]} mode="9v9" text="9 vs 9" onChangeMode={changeModeState} />
+              <ButtonCheckbox checked={modes["10v10"]} mode="10v10" text="10 vs 10" onChangeMode={changeModeState} />
+            </View>
+            <View style={{ flexDirection: "row", gap: 15 }}>
+              <ButtonCheckbox checked={modes["11v11"]} mode="11v11" text="11 vs 11" onChangeMode={changeModeState}/>
+              <View style={styles.pseudoButton}></View>
+              <View style={styles.pseudoButton}></View>
+            </View>
+          </View>
+          <View style={{ width: "80%", marginHorizontal: "auto" }}>
+            <Input
+              placeholder="País"
+              value={country}
+              onChangeText={(text: string) => setCountry(text)}
+              styles={PageStyles.input}
+              theme="light"
+            />
+            <Input
+              placeholder="Ciudad"
+              value={city}
+              onChangeText={(text: string) => setCity(text)}
+              styles={PageStyles.input}
+              theme="light"
+            />
+            <Input
+              placeholder="Distrito"
+              value={district}
+              onChangeText={(text: string) => setDistrict(text)}
+              styles={PageStyles.input}
+              theme="light"
+            />
+            <Input
+              placeholder="Dirección"
+              value={address}
+              onChangeText={(text: string) => setAddress(text)}
+              styles={PageStyles.input}
+              theme="light"
+            />
+          </View>
+          <View style={{ marginBottom: 50 }}>
+            <Text>Mapa</Text>
+          </View>
+          <Pressable
+            onPress={() => nextStep()}
+            style={[PageStyles.button, { width: "80%", marginHorizontal: "auto" }]}
+          >
+            <Text style={PageStyles.buttonText}>SIGUIENTE</Text>
+          </Pressable>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  )
+};
+
+export default NewField;
+
+const styles = StyleSheet.create({
+  subtitle: {
+    color: Colors.maastrichtBlue,
+    fontSize: 18,
+    fontFamily: "PoppinsSemiBold",
+    marginBottom: 20,
+  },
+  pseudoButton: {
+    flex:1,
+    borderWidth: 2,
+    padding: 8,
+    borderRadius: 25,
+    borderColor: Colors.white
+  }
+});
+

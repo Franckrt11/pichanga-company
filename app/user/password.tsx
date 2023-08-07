@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Stack } from "expo-router";
 import { useUserContext } from "@/src/context/User";
 import { useAuthContext } from "@/src/context/Auth";
-import { LayoutStyles } from "@/src/utils/Styles";
+import { LayoutStyles, PageStyles } from "@/src/utils/Styles";
 import Colors from "@/src/utils/Colors";
 import Back from "@/src/components/header/back";
 import Input from "@/src/components/input";
@@ -41,7 +41,7 @@ const Password = () => {
               placeholder="Contraseña actual"
               value={old}
               onChangeText={(text: string) => setOld(text)}
-              styles={styles.input}
+              styles={PageStyles.input}
               theme="light"
               password={true}
             />
@@ -49,7 +49,7 @@ const Password = () => {
               placeholder="Contraseña nueva"
               value={password}
               onChangeText={(text: string) => setPassword(text)}
-              styles={styles.input}
+              styles={PageStyles.input}
               theme="light"
               password={true}
             />
@@ -57,7 +57,7 @@ const Password = () => {
               placeholder="Repetir contraseña nueva"
               value={confirm}
               onChangeText={(text: string) => setConfirm(text)}
-              styles={styles.input}
+              styles={PageStyles.input}
               theme="light"
               password={true}
             />
@@ -77,17 +77,6 @@ const Password = () => {
 export default Password;
 
 const styles = StyleSheet.create({
-  input: {
-    color: Colors.maastrichtBlue,
-    backgroundColor: Colors.white,
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    borderColor: Colors.silverSand,
-    borderWidth: 2,
-    borderRadius: 10,
-    fontFamily: "PoppinsMedium",
-    marginBottom: 5
-  },
   button: {
     backgroundColor: Colors.metallicGreen,
     width: "80%",

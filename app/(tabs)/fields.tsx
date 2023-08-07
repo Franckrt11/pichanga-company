@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   ScrollView,
 } from "react-native";
+import { router } from "expo-router";
 import React from "react";
 import { LayoutStyles } from "@/src/utils/Styles";
 import Colors from "@/src/utils/Colors";
@@ -23,7 +24,7 @@ const Fields = () => {
           <FieldItem name={"Cancha 3"} active={true} />
           <View style={{ marginVertical: 30 }}>
             <Pressable
-              onPress={() => console.log("Add Field")}
+              onPress={() => router.push("/fields/new")}
               style={[
                 styles.button,
                 { backgroundColor: Colors.metallicGreen, width: "80%" },

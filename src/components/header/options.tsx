@@ -1,4 +1,5 @@
 import { View, Pressable, Image } from "react-native";
+import { useState, useEffect } from "react";
 import { Link } from "expo-router";
 import { useUserContext } from "@/src/context/User";
 import Images from "@/src/utils/Images";
@@ -6,9 +7,15 @@ import Colors from "@/src/utils/Colors";
 import GearIcon from "@/src/components/icons/gear-icon";
 import PencilIcon from "@/src/components/icons/pencil-icon";
 import CachedImage from "@/src/components/cached-image";
+import { getAvatarUrl } from "@/src/utils/Helpers";
 
 const Options = () => {
   const { state } = useUserContext();
+  const [avatar, setAvatar] = useState<string | undefined | null>(undefined);
+
+  useEffect(() => {
+    setAvatar(getAvatarUrl(state.photo));
+  }, [state]);
 
   return (
     <View
@@ -16,7 +23,6 @@ const Options = () => {
     >
       <Link href="/options" asChild>
         <Pressable
-          // onPress={() => router.push("/options")}
           style={{
             borderColor: Colors.silverSand,
             borderRadius: 8,
@@ -31,7 +37,6 @@ const Options = () => {
       <Link href="/user" asChild>
         <Pressable
           style={{ position: "relative" }}
-          // onPress={() => router.push("/user")}
         >
           {/* <CachedImage
             size={50}
@@ -40,7 +45,8 @@ const Options = () => {
             style={{ borderRadius: 60 }}
           /> */}
           <Image
-            source={Images.avatarDefault}
+            source={{uri: avatar ? avatar : ""}}
+            defaultSource={Images.avatarDefault}
             style={{ borderRadius: 60, height: 50, width: 50 }}
           />
           <View

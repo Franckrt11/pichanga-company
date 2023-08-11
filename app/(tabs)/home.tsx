@@ -6,7 +6,7 @@ import {
   SafeAreaView,
   ScrollView,
 } from "react-native";
-import React from "react";
+import { router } from "expo-router";
 import Icon from "react-native-vector-icons/Fontisto";
 import { LayoutStyles } from "@/src/utils/Styles";
 import Colors from "@/src/utils/Colors";
@@ -71,7 +71,7 @@ const Home = () => {
                   marginBottom: 10,
                 },
               ]}
-              onPress={() => console.log("Add Field")}
+              onPress={() => router.push("/fields/new")}
             >
               <Text
                 style={[

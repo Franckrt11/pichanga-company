@@ -41,7 +41,7 @@ export const saveUserAvatar = async (
   imageUri: string | boolean,
   token: string | null,
   id?: number
-): Promise<string | void> => {
+): Promise<string | undefined> => {
   try {
     const response = await fetch(`${API_URL}api/company/avatar/update/${id}`, {
       method: "POST",

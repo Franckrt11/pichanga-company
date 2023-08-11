@@ -3,7 +3,7 @@ import { router, useSegments } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useUserContext } from "./User";
 import { fetchLogin, fetchRegister, fetchUser, fetchNewPassword } from "@/src/models/Auth";
-import { UserData, FetchUserData, ProviderProps } from "@/src/utils/Types";
+import { FetchUserData, ProviderProps } from "@/src/utils/Types";
 
 interface IAuthContext {
   signIn: (email: string, password: string) => Promise<void>;

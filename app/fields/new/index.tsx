@@ -8,6 +8,8 @@ import Back from "@/src/components/header/back";
 import Input from "@/src/components/input";
 import ButtonCheckbox from "@/src/components/button-checkbox";
 
+// import MapView from 'react-native-maps';
+
 const NewField = () => {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -33,6 +35,7 @@ const NewField = () => {
     }).filter(element => element !== undefined);
 
     console.log('modes names', filteredModes);
+    router.push("/fields/new/photos");
   };
 
   return (
@@ -153,7 +156,7 @@ const NewField = () => {
             />
           </View>
           <View style={{ marginBottom: 50 }}>
-            <Text>Mapa</Text>
+            {/* <MapView style={{ width: '100%', height: 50 }} /> */}
           </View>
           <Pressable
             onPress={() => nextStep()}

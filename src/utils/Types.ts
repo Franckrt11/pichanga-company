@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 
 export interface PhotoData {
-  photo: string | null;
+  photo: string | undefined | null;
 }
 
 export interface UserData extends PhotoData {

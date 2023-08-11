@@ -3,7 +3,8 @@ import { UserData, PhotoData, ProviderProps } from "@/src/utils/Types";
 
 interface Action {
   type: string;
-  payload: UserData | null;
+  payload?: UserData | null;
+  photoload?: string | null;
 }
 
 const initialState: UserData = {
@@ -39,7 +40,7 @@ const UserReducer = (state: UserData, action: Action): UserData => {
     case "change-avatar": {
       return {
         ...state,
-        photo: action.payload!.photo,
+        photo: action.photoload,
       };
     }
     default: {

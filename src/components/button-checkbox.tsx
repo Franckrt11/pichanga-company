@@ -2,7 +2,7 @@ import { StyleSheet, Text, Pressable } from "react-native";
 import { useState } from "react";
 import Colors from "@/src/utils/Colors";
 
-const ButtonCheckbox = ({ text, mode, checked, onChangeMode }: { text: string, mode: string, checked: boolean, onChangeMode: any }) => {
+const ButtonCheckbox = ({ radius, color, text, mode, checked, onChangeMode }: { radius: number, color: string, text: string, mode: string, checked: boolean, onChangeMode: any }) => {
   const [active, setActive] = useState(checked);
 
   const changeState = () => {
@@ -12,7 +12,7 @@ const ButtonCheckbox = ({ text, mode, checked, onChangeMode }: { text: string, m
 
   return (
     <Pressable
-      style={[styles.button, active ? { backgroundColor: Colors.metallicGreen, borderColor: Colors.metallicGreen } : { backgroundColor: Colors.white, borderColor: Colors.silverSand }]}
+      style={[{ borderRadius: radius },styles.button, active ? { backgroundColor: color, borderColor: color } : { backgroundColor: Colors.white, borderColor: Colors.silverSand }]}
       onPress={() => changeState()}
     >
       <Text style={[styles.buttonText, active ? { color: Colors.white } : { color: Colors.maastrichtBlue }]}>{text}</Text>
@@ -27,8 +27,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     flex: 1,
     alignItems: "center",
-    padding: 8,
-    borderRadius: 25,
+    padding: 8
   },
   buttonText: {
     fontSize: 16,

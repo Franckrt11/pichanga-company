@@ -212,6 +212,7 @@ const User = () => {
             <UploadPhoto
               onRemovePhoto={removeAvatar}
               onModalPress={handlePresentModalPress}
+              position="Horizontal"
             />
             <View style={{ width: "100%", marginBottom: 20 }}>
               <Input

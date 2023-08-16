@@ -3,7 +3,21 @@ import Colors from "@/src/utils/Colors";
 import PencilIcon from "@/src/components/icons/pencil-icon";
 import TrashIcon from "@/src/components/icons/trash-icon";
 
-const UploadPhoto = ({ onRemovePhoto, onModalPress }: { onRemovePhoto: any, onModalPress: any }) => {
+interface IPositions {
+  Horizontal: string;
+  Vertical: string;
+}
+
+type IFlexDirection = "column" | "row" | "column-reverse" | "row-reverse" | undefined;
+
+const positions: IPositions = {
+  Horizontal: "row",
+  Vertical: "column"
+};
+
+const UploadPhoto = ({ onRemovePhoto, onModalPress, position }: { onRemovePhoto: any, onModalPress: any, position: string }) => {
+  const direction: string = positions[position as keyof IPositions];
+
   const launchModal = () => {
     onModalPress();
   };
@@ -13,10 +27,10 @@ const UploadPhoto = ({ onRemovePhoto, onModalPress }: { onRemovePhoto: any, onMo
   };
 
   return (
-    <View style={{ flexDirection: "row", gap: 10, marginBottom: 15, width: "90%", marginHorizontal: "auto" }}>
+    <View style={{ flexDirection: direction as IFlexDirection, gap: 10, marginBottom: 15, width: "90%", marginHorizontal: "auto" }}>
       <Pressable
         onPress={launchModal}
-        style={styles.buttonOutline}
+        style={[styles.buttonOutline, { marginBottom: direction === "column" ? 20 : 0 }]}
       >
         <PencilIcon />
         <Text style={styles.buttonOutlineText}>Editar foto</Text>

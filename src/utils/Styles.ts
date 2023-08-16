@@ -35,6 +35,12 @@ export const LayoutStyles = StyleSheet.create({
     fontFamily: "PoppinsSemiBold",
     marginBottom: 30,
   },
+  subtitle: {
+    color: Colors.maastrichtBlue,
+    fontSize: 18,
+    fontFamily: "PoppinsSemiBold",
+    marginBottom: 20,
+  },
 });
 
 export const PageStyles = StyleSheet.create({
@@ -61,5 +67,16 @@ export const PageStyles = StyleSheet.create({
     color: Colors.white,
     fontSize: 16,
     fontFamily: "PoppinsMedium",
+  },
+  picker: {
+    marginBottom: 5,
+    backgroundColor: Colors.white,
+    borderColor: Colors.silverSand,
+    borderWidth: 2,
+    borderRadius: 10,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    fontFamily: "PoppinsMedium",
+    borderStyle: "solid"
   }
 });

@@ -26,7 +26,7 @@ const NewField = () => {
   const [address, setAddress] = useState("");
 
   const changeModeState = (state: boolean, mode: string) => {
-    setMode({...modes, [mode]: state});
+    setMode({ ...modes, [mode]: state });
   };
 
   const nextStep = () => {
@@ -108,19 +108,67 @@ const NewField = () => {
             </Picker>
           </View>
           <View style={{ marginBottom: 20 }}>
-            <Text style={styles.subtitle}>Modos de juego disponibles:</Text>
+            <Text style={LayoutStyles.subtitle}>Modos de juego disponibles:</Text>
             <View style={{ flexDirection: "row", gap: 15, marginBottom: 10 }}>
-              <ButtonCheckbox checked={modes["5v5"]} mode="5v5" text="5 vs 5" onChangeMode={changeModeState} />
-              <ButtonCheckbox checked={modes["6v6"]} mode="6v6" text="6 vs 6" onChangeMode={changeModeState} />
-              <ButtonCheckbox checked={modes["7v7"]} mode="7v7" text="7 vs 7" onChangeMode={changeModeState} />
+              <ButtonCheckbox
+                radius={25}
+                color={Colors.metallicGreen}
+                checked={modes["5v5"]}
+                mode="5v5"
+                text="5 vs 5"
+                onChangeMode={changeModeState}
+              />
+              <ButtonCheckbox
+                radius={25}
+                color={Colors.metallicGreen}
+                checked={modes["6v6"]}
+                mode="6v6"
+                text="6 vs 6"
+                onChangeMode={changeModeState}
+              />
+              <ButtonCheckbox
+                radius={25}
+                color={Colors.metallicGreen}
+                checked={modes["7v7"]}
+                mode="7v7"
+                text="7 vs 7"
+                onChangeMode={changeModeState}
+              />
             </View>
             <View style={{ flexDirection: "row", gap: 15, marginBottom: 10 }}>
-              <ButtonCheckbox checked={modes["8v8"]} mode="8v8" text="8 vs 8" onChangeMode={changeModeState}/>
-              <ButtonCheckbox checked={modes["9v9"]} mode="9v9" text="9 vs 9" onChangeMode={changeModeState} />
-              <ButtonCheckbox checked={modes["10v10"]} mode="10v10" text="10 vs 10" onChangeMode={changeModeState} />
+              <ButtonCheckbox
+                radius={25}
+                color={Colors.metallicGreen}
+                checked={modes["8v8"]}
+                mode="8v8"
+                text="8 vs 8"
+                onChangeMode={changeModeState}
+              />
+              <ButtonCheckbox
+                radius={25}
+                color={Colors.metallicGreen}
+                checked={modes["9v9"]}
+                mode="9v9" text="9 vs 9"
+                onChangeMode={changeModeState}
+              />
+              <ButtonCheckbox
+                radius={25}
+                color={Colors.metallicGreen}
+                checked={modes["10v10"]}
+                mode="10v10"
+                text="10 vs 10"
+                onChangeMode={changeModeState}
+              />
             </View>
             <View style={{ flexDirection: "row", gap: 15 }}>
-              <ButtonCheckbox checked={modes["11v11"]} mode="11v11" text="11 vs 11" onChangeMode={changeModeState}/>
+              <ButtonCheckbox
+                radius={25}
+                color={Colors.metallicGreen}
+                checked={modes["11v11"]}
+                mode="11v11"
+                text="11 vs 11"
+                onChangeMode={changeModeState}
+              />
               <View style={styles.pseudoButton}></View>
               <View style={styles.pseudoButton}></View>
             </View>
@@ -173,14 +221,8 @@ const NewField = () => {
 export default NewField;
 
 const styles = StyleSheet.create({
-  subtitle: {
-    color: Colors.maastrichtBlue,
-    fontSize: 18,
-    fontFamily: "PoppinsSemiBold",
-    marginBottom: 20,
-  },
   pseudoButton: {
-    flex:1,
+    flex: 1,
     borderWidth: 2,
     padding: 8,
     borderRadius: 25,

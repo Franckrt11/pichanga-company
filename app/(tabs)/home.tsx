@@ -87,7 +87,7 @@ const Home = () => {
                 styles.button,
                 { backgroundColor: Colors.ferrariRed, paddingVertical: 8 },
               ]}
-              onPress={() => console.log("Special Hours")}
+              onPress={() => router.push("/fields/special")}
             >
               <Text
                 style={[

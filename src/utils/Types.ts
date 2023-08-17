@@ -31,3 +31,11 @@ export interface SizeIconProps {
   active?: boolean;
   size: number;
 }
+
+export interface ISpecialHour {
+  type: string;
+  day: string;
+  hour: string;
+  field: string;
+  reason: string;
+};

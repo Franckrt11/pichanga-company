@@ -1,11 +1,10 @@
-import { Text, SafeAreaView, ScrollView, View, StyleSheet, Pressable, Alert } from "react-native";
+import { Text, View, StyleSheet, Pressable, Alert } from "react-native";
 import { useState } from "react";
-import { Stack } from "expo-router";
 import { useUserContext } from "@/src/context/User";
 import { useAuthContext } from "@/src/context/Auth";
 import { LayoutStyles, PageStyles } from "@/src/utils/Styles";
 import Colors from "@/src/utils/Colors";
-import Back from "@/src/components/header/back";
+import ChildPage from "@/src/components/layouts/child-page";
 import Input from "@/src/components/input";
 
 const Password = () => {
@@ -15,7 +14,7 @@ const Password = () => {
   const { state } = useUserContext();
   const { newPassword } = useAuthContext();
 
-  const changePassword = async (): Promise<void>  => {
+  const changePassword = async (): Promise<void> => {
     console.log('changePassword');
     const response = await newPassword(state.email, old, password);
     console.log("🚀 ~ file: user.tsx:95 ~ saveProfile ~ change:", response);
@@ -23,54 +22,41 @@ const Password = () => {
   };
 
   return (
-    <SafeAreaView
-      style={LayoutStyles.whiteContainer}
-    >
-      <Stack.Screen
-        options={{
-          headerShown: true,
-          headerTitle: () => <></>,
-          headerLeft: () => <Back />,
-        }}
-      />
-      <ScrollView style={{ paddingTop: 30 }}>
-        <View style={LayoutStyles.scrollContainer}>
-          <Text style={LayoutStyles.pageTitle}>CAMBIAR CONTRASEÑA</Text>
-          <View style={{ width: "80%", marginHorizontal: "auto", marginBottom: 40 }}>
-            <Input
-              placeholder="Contraseña actual"
-              value={old}
-              onChangeText={(text: string) => setOld(text)}
-              styles={PageStyles.input}
-              theme="light"
-              password={true}
-            />
-            <Input
-              placeholder="Contraseña nueva"
-              value={password}
-              onChangeText={(text: string) => setPassword(text)}
-              styles={PageStyles.input}
-              theme="light"
-              password={true}
-            />
-            <Input
-              placeholder="Repetir contraseña nueva"
-              value={confirm}
-              onChangeText={(text: string) => setConfirm(text)}
-              styles={PageStyles.input}
-              theme="light"
-              password={true}
-            />
-          </View>
-          <Pressable
-            onPress={() => changePassword()}
-            style={[styles.button, { width: "80%" }]}
-          >
-            <Text style={styles.buttonText}>GUARDAR</Text>
-          </Pressable>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <ChildPage>
+      <Text style={LayoutStyles.pageTitle}>CAMBIAR CONTRASEÑA</Text>
+      <View style={{ width: "80%", marginHorizontal: "auto", marginBottom: 40 }}>
+        <Input
+          placeholder="Contraseña actual"
+          value={old}
+          onChangeText={(text: string) => setOld(text)}
+          styles={PageStyles.input}
+          theme="light"
+          password={true}
+        />
+        <Input
+          placeholder="Contraseña nueva"
+          value={password}
+          onChangeText={(text: string) => setPassword(text)}
+          styles={PageStyles.input}
+          theme="light"
+          password={true}
+        />
+        <Input
+          placeholder="Repetir contraseña nueva"
+          value={confirm}
+          onChangeText={(text: string) => setConfirm(text)}
+          styles={PageStyles.input}
+          theme="light"
+          password={true}
+        />
+      </View>
+      <Pressable
+        onPress={() => changePassword()}
+        style={[styles.button, { width: "80%" }]}
+      >
+        <Text style={styles.buttonText}>GUARDAR</Text>
+      </Pressable>
+    </ChildPage>
   );
 };
 

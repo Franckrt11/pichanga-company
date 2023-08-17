@@ -1,9 +1,8 @@
-import { Text, SafeAreaView, ScrollView, View, TextInput, StyleSheet, Pressable } from "react-native";
+import { Text, View, TextInput, StyleSheet, Pressable } from "react-native";
 import { useState } from "react";
-import { Stack } from "expo-router";
 import { LayoutStyles } from "@/src/utils/Styles";
 import Colors from "@/src/utils/Colors";
-import Back from "@/src/components/header/back";
+import ChildPage from "@/src/components/layouts/child-page";
 import Input from "@/src/components/input";
 import { useAuthContext } from "@/src/context/Auth";
 
@@ -28,75 +27,61 @@ const Delete = () => {
   };
 
   return (
-    <SafeAreaView
-      style={LayoutStyles.whiteContainer}
-    >
-      <Stack.Screen
-        options={{
-          headerShown: true,
-          headerTitle: () => <></>,
-          headerLeft: () => <Back />,
-        }}
-      />
-      <ScrollView style={{ paddingTop: 30 }}>
-        <View style={LayoutStyles.scrollContainer}>
-          <Text style={[LayoutStyles.pageTitle, { marginBottom: 40 }]}>ELIMINAR CUENTA</Text>
-
-          {(() => {
-            switch (page) {
-              case 0:
-                return (
-                  <View>
-                    <Text style={styles.content}>Escribe el motivo para eliminar la cuenta:</Text>
-                    <TextInput
-                      style={styles.inputArea}
-                      editable
-                      multiline
-                      numberOfLines={9}
-                      onChangeText={text => setValue(text)}
-                      value={value}
-                    />
-                    <Pressable
-                      onPress={() => nextPage()}
-                      style={styles.button}
-                    >
-                      <Text style={styles.buttonText}>SIGUIENTE</Text>
-                    </Pressable>
-                  </View>
-                );
-              case 1:
-                return (
-                  <View style={{width: "80%", marginHorizontal: "auto"}}>
-                    <Input
-                      placeholder="Contraseña"
-                      value={password}
-                      onChangeText={(text: string) => setPassword(text)}
-                      styles={[styles.inputArea, {marginBottom: 20}]}
-                      theme="light"
-                      password={true}
-                      error={errors ? errors.password : null}
-                    />
-                    <Pressable
-                      onPress={() => prevPage()}
-                      style={{ marginHorizontal: "auto", marginBottom: 20 }}
-                    >
-                      <Text style={[styles.buttonText, { color: Colors.metallicGreen, textDecorationLine: 'underline' }]}>Volver</Text>
-                    </Pressable>
-                    <Pressable
-                      onPress={() => deleteAccount()}
-                      style={[styles.button, {width: "100%"}]}
-                    >
-                      <Text style={styles.buttonText}>ELIMINAR CUENTA</Text>
-                    </Pressable>
-                  </View>
-                );
-              default:
-                return null
-            }
-          })()}
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <ChildPage>
+      <Text style={[LayoutStyles.pageTitle, { marginBottom: 40 }]}>ELIMINAR CUENTA</Text>
+      {(() => {
+        switch (page) {
+          case 0:
+            return (
+              <View>
+                <Text style={styles.content}>Escribe el motivo para eliminar la cuenta:</Text>
+                <TextInput
+                  style={styles.inputArea}
+                  editable
+                  multiline
+                  numberOfLines={9}
+                  onChangeText={text => setValue(text)}
+                  value={value}
+                />
+                <Pressable
+                  onPress={() => nextPage()}
+                  style={styles.button}
+                >
+                  <Text style={styles.buttonText}>SIGUIENTE</Text>
+                </Pressable>
+              </View>
+            );
+          case 1:
+            return (
+              <View style={{ width: "80%", marginHorizontal: "auto" }}>
+                <Input
+                  placeholder="Contraseña"
+                  value={password}
+                  onChangeText={(text: string) => setPassword(text)}
+                  styles={[styles.inputArea, { marginBottom: 20 }]}
+                  theme="light"
+                  password={true}
+                  error={errors ? errors.password : null}
+                />
+                <Pressable
+                  onPress={() => prevPage()}
+                  style={{ marginHorizontal: "auto", marginBottom: 20 }}
+                >
+                  <Text style={[styles.buttonText, { color: Colors.metallicGreen, textDecorationLine: 'underline' }]}>Volver</Text>
+                </Pressable>
+                <Pressable
+                  onPress={() => deleteAccount()}
+                  style={[styles.button, { width: "100%" }]}
+                >
+                  <Text style={styles.buttonText}>ELIMINAR CUENTA</Text>
+                </Pressable>
+              </View>
+            );
+          default:
+            return null
+        }
+      })()}
+    </ChildPage>
   );
 };
 

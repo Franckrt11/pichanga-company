@@ -1,31 +1,17 @@
-import { StyleSheet, Text, View, SafeAreaView, ScrollView } from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View } from "react-native"
 import { Stack, router } from "expo-router";
 import { LayoutStyles } from "@/src/utils/Styles";
 import Colors from "@/src/utils/Colors";
-import Back from "@/src/components/header/back";
+import ChildPage from "@/src/components/layouts/child-page";
 
 const EditField = () => {
   return (
-    <SafeAreaView
-      style={LayoutStyles.whiteContainer}
-    >
-      <Stack.Screen
-        options={{
-          headerShown: true,
-          headerTitle: () => <></>,
-          headerLeft: () => <Back />,
-        }}
-      />
-      <ScrollView style={{ paddingTop: 20 }}>
-        <View style={LayoutStyles.scrollContainer}>
-          <Text style={LayoutStyles.pageTitle}>EDITAR CANCHA</Text>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <ChildPage>
+      <Text style={LayoutStyles.pageTitle}>EDITAR CANCHA</Text>
+    </ChildPage>
   )
-}
+};
 
-export default EditField
+export default EditField;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});

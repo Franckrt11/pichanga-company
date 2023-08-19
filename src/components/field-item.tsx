@@ -1,4 +1,5 @@
 import { StyleSheet, Text, View, Image, Switch, Pressable } from "react-native";
+import { router } from "expo-router";
 import { useState } from "react";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Fontisto from "react-native-vector-icons/Fontisto";
@@ -39,7 +40,7 @@ const FieldItem = ({ name, active }: FieldProps) => {
               </View>
             </View>
             <View style={styles.more}>
-              <Pressable onPress={() => console.log("View more detail")}>
+              <Pressable onPress={() => router.push("/fields/edit")}>
                 <Fontisto
                   name="zoom-plus"
                   size={24}

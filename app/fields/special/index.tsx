@@ -1,12 +1,12 @@
-import { StyleSheet, Text, View, SafeAreaView, ScrollView, Pressable } from "react-native";
+import { StyleSheet, Text, View, Pressable } from "react-native";
 import { useState } from "react";
-import { Stack, router } from "expo-router";
+import { router } from "expo-router";
 import { LayoutStyles, PageStyles } from "@/src/utils/Styles";
 import Colors from "@/src/utils/Colors";
-import Back from "@/src/components/header/back";
+import { ISpecialHour } from "@/src/utils/Types";
+import ChildPage from "@/src/components/layouts/child-page";
 import PlusIcon from "@/src/components/icons/plus-icon";
 import SpecialHour from "@/src/components/special-hour";
-import { ISpecialHour } from "@/src/utils/Types";
 
 const Index = () => {
   const [added, setAdded] = useState<ISpecialHour[]>([
@@ -37,40 +37,26 @@ const Index = () => {
   ]);
 
   return (
-    <SafeAreaView
-      style={LayoutStyles.whiteContainer}
-    >
-      <Stack.Screen
-        options={{
-          headerShown: true,
-          headerTitle: () => <></>,
-          headerLeft: () => <Back />,
-        }}
-      />
-      <ScrollView style={{ paddingTop: 30 }}>
-        <View style={LayoutStyles.scrollContainer}>
-          <Text style={LayoutStyles.pageTitle}>HORARIOS ESPECIALES</Text>
+    <ChildPage>
+      <Text style={LayoutStyles.pageTitle}>HORARIOS ESPECIALES</Text>
 
-          <Pressable
-            onPress={() => console.log('Add Special')}
-            style={[PageStyles.button, styles.button, { marginBottom: 40 }]}
-          >
-            <PlusIcon size={14} />
-            <Text style={PageStyles.buttonText}>CONFIGURAR HORARIO ESPECIAL</Text>
-          </Pressable>
+      <Pressable
+        onPress={() => router.push("/fields/special/configure")}
+        style={[PageStyles.button, styles.button, { marginBottom: 40 }]}
+      >
+        <PlusIcon size={14} />
+        <Text style={PageStyles.buttonText}>CONFIGURAR HORARIO ESPECIAL</Text>
+      </Pressable>
 
-          <View>
-          {added.map((day, index) => (
-            <SpecialHour key={index} data={day} />
-          ))}
-          {retired.map((day, index) => (
-            <SpecialHour key={index} data={day} />
-          ))}
-          </View>
-
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+      <View>
+      {added.map((day, index) => (
+        <SpecialHour key={index} data={day} />
+      ))}
+      {retired.map((day, index) => (
+        <SpecialHour key={index} data={day} />
+      ))}
+      </View>
+    </ChildPage>
   )
 };
 

@@ -3,11 +3,12 @@ import { StyleSheet } from "react-native";
 import Colors from "@/src/utils/Colors";
 import HomeIcon from "@/src/components/icons/home-icon";
 import FieldIcon from "@/src/components/icons/field-icon";
-import CalendarIcon from "@/src/components/icons/calendar-icon";
+import CalendarBubble from "@/src/components/icons/calendar-bubble";
 import ChatIcon from "@/src/components/icons/chat-icon";
 import BellIcon from "@/src/components/icons/bell-icon";
 import Logo from "@/src/components/header/logo";
 import Options from "@/src/components/header/options";
+import BookingControl from "@/src/components/header/booking-control";
 
 const TabsLayout = () => {
   return (
@@ -51,8 +52,9 @@ const TabsLayout = () => {
           tabBarLabelStyle: styles.tabBarLabel,
           tabBarLabel: "RESERVAS",
           tabBarIcon: ({ focused, color }) => (
-            <CalendarIcon active={focused} color={color} />
+            <CalendarBubble active={focused} color={color} />
           ),
+          headerRight: () => <BookingControl />,
         }}
       />
       <Tabs.Screen

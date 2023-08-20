@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View, SafeAreaView, ScrollView } from "react-native";
 import React from "react";
 import { LayoutStyles } from "@/src/utils/Styles";
+import Colors from "@/src/utils/Colors";
 
 const Bookings = () => {
   return (
@@ -9,7 +10,7 @@ const Bookings = () => {
     >
       <ScrollView style={{ paddingTop: 10 }}>
         <View style={LayoutStyles.scrollContainer}>
-          <Text>Bookings</Text>
+          <Text style={LayoutStyles.pageTitle}>RESERVAS</Text>
         </View>
       </ScrollView>
     </SafeAreaView>

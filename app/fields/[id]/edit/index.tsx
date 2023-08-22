@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, Pressable } from "react-native"
 import { useState } from "react";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { Picker } from '@react-native-picker/picker';
 import { PageStyles, LayoutStyles } from "@/src/utils/Styles";
 import Colors from "@/src/utils/Colors";
@@ -8,6 +8,7 @@ import ChildPage from "@/src/components/layouts/child-page";
 
 const EditField = () => {
   const [status, setStatus] = useState("active");
+  const params = useLocalSearchParams();
 
   const save = () => {
     console.log("Save Special Hour");
@@ -16,34 +17,34 @@ const EditField = () => {
 
   return (
     <ChildPage style={{ width: "80%" }}>
-      <Text style={LayoutStyles.pageTitle}>EDITAR CANCHA</Text>
+      <Text style={LayoutStyles.pageTitle}>EDITAR CANCHA {params.id}</Text>
 
       <Pressable
-        onPress={() => router.push("/fields/edit/data")}
+        onPress={() => router.push(`/fields/${params.id}/edit/data`)}
         style={[styles.outlineButton]}
       >
         <Text style={styles.outlineButtonText}>DATOS DE CANCHA</Text>
       </Pressable>
       <Pressable
-        onPress={() => router.push("/fields/edit/photos")}
+        onPress={() => router.push(`/fields/${params.id}/edit/photos`)}
         style={[styles.outlineButton]}
       >
         <Text style={styles.outlineButtonText}>FOTOGRAFÍAS</Text>
       </Pressable>
       <Pressable
-        onPress={() => router.push("/fields/edit/days")}
+        onPress={() => router.push(`/fields/${params.id}/edit/days`)}
         style={[styles.outlineButton]}
       >
         <Text style={styles.outlineButtonText}>DÍAS DE ATENCIÓN</Text>
       </Pressable>
       <Pressable
-        onPress={() => router.push("/fields/edit/hours")}
+        onPress={() => router.push(`/fields/${params.id}/edit/hours`)}
         style={[styles.outlineButton]}
       >
         <Text style={styles.outlineButtonText}>HORARIOS</Text>
       </Pressable>
       <Pressable
-        onPress={() => router.push("/fields/edit/price")}
+        onPress={() => router.push(`/fields/${params.id}/edit/price`)}
         style={[styles.outlineButton]}
       >
         <Text style={styles.outlineButtonText}>PRECIOS</Text>

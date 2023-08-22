@@ -8,11 +8,12 @@ import StarIcon from "@/src/components/icons/star-icon";
 import PencilIcon from "@/src/components/icons/pencil-icon";
 
 interface FieldProps {
+  id: number;
   name: string;
   active: boolean;
 }
 
-const FieldItem = ({ name, active }: FieldProps) => {
+const FieldItem = ({ id, name, active }: FieldProps) => {
   const [visible, setVisible] = useState(active);
 
   return (
@@ -40,7 +41,7 @@ const FieldItem = ({ name, active }: FieldProps) => {
               </View>
             </View>
             <View style={styles.more}>
-              <Pressable onPress={() => router.push("/fields/edit")}>
+              <Pressable onPress={() => router.push(`/fields/${id}`)}>
                 <Fontisto
                   name="zoom-plus"
                   size={24}
@@ -61,17 +62,17 @@ const FieldItem = ({ name, active }: FieldProps) => {
           ]}
         >
           <Pressable
-            onPress={() => console.log("View comments")}
+            onPress={() => router.push(`/fields/${id}/comments`)}
             style={styles.buttom}
           >
             <Text style={styles.buttomText}>Comentarios</Text>
           </Pressable>
           <Pressable
-            onPress={() => console.log("Edit field")}
+            onPress={() => router.push(`/fields/${id}/edit`)}
             style={styles.buttom}
           >
             <PencilIcon />
-            <Text style={styles.buttomText}>Editar fotos</Text>
+            <Text style={styles.buttomText}>Editar cancha</Text>
           </Pressable>
           <Switch
             trackColor={{ false: Colors.silverSand, true: Colors.silverSand }}

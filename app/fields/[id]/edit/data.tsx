@@ -5,7 +5,6 @@ import ChildPage from "@/src/components/layouts/child-page";
 
 const Data = () => {
   const save = () => {
-    console.log("Save Special Hour");
     router.back();
   };
 

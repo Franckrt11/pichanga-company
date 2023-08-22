@@ -19,9 +19,9 @@ const Fields = () => {
     >
       <ScrollView style={{ paddingTop: 10 }}>
         <View style={LayoutStyles.scrollContainer}>
-          <FieldItem name={"Cancha 1"} active={true} />
-          <FieldItem name={"Cancha 2"} active={false} />
-          <FieldItem name={"Cancha 3"} active={true} />
+          <FieldItem id={1} name={"Cancha 1"} active={true} />
+          <FieldItem id={2} name={"Cancha 2"} active={false} />
+          <FieldItem id={3} name={"Cancha 3"} active={true} />
           <View style={{ marginVertical: 30 }}>
             <Pressable
               onPress={() => router.push("/fields/new")}
@@ -35,7 +35,7 @@ const Fields = () => {
               </Text>
             </Pressable>
             <Pressable
-              onPress={() => console.log("Special Hours")}
+              onPress={() => router.push("/fields/special")}
               style={[
                 styles.button,
                 { backgroundColor: Colors.ferrariRed, width: "70%" },

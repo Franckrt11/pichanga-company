@@ -1,10 +1,5 @@
-import { API_URL } from "@/src/utils/Constants";
+import { API_URL, FETCH_HEADERS } from "@/src/utils/Constants";
 import { UserData } from "@/src/utils/Types";
-
-const fetchHeaders = {
-  Accept: "application/json",
-  "Content-Type": "application/json",
-};
 
 interface IData {
   name: string;
@@ -21,7 +16,7 @@ export const saveUserProfile = async (
     const response = await fetch(`${API_URL}api/company/profile/update/${id}`, {
       method: "POST",
       headers: {
-        ...fetchHeaders,
+        ...FETCH_HEADERS,
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
@@ -46,7 +41,7 @@ export const saveUserAvatar = async (
     const response = await fetch(`${API_URL}api/company/avatar/update/${id}`, {
       method: "POST",
       headers: {
-        ...fetchHeaders,
+        ...FETCH_HEADERS,
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ photo: imageUri }),
@@ -66,7 +61,7 @@ export const removeUserAvatar = async (
     const response = await fetch(`${API_URL}api/company/avatar/remove/${id}`, {
       method: "POST",
       headers: {
-        ...fetchHeaders,
+        ...FETCH_HEADERS,
         Authorization: `Bearer ${token}`,
       },
     });

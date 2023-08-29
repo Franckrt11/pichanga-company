@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Pressable } from "react-native";
+import { StyleSheet, Text, View, Pressable, Alert } from "react-native";
 import { useState } from "react";
 import { router } from "expo-router";
 import { Picker } from '@react-native-picker/picker';
@@ -8,33 +8,60 @@ import ChildPage from "@/src/components/layouts/child-page";
 import Input from "@/src/components/input";
 import ButtonCheckbox from "@/src/components/button-checkbox";
 // import MapView from 'react-native-maps';
+import { saveField }  from "@/src/models/Field";
+import { useUserContext } from "@/src/context/User";
+import { useAuthContext } from "@/src/context/Auth";
 
 const NewField = () => {
+  const { state } = useUserContext();
+  const { token } = useAuthContext();
+
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [mobile, setMobile] = useState("");
   const [parking, setParking] = useState("");
   const [size, setSize] = useState("");
-  const [type, setType] = useState("");
-
+  const [type, setType] = useState("Grass");
+  const [players, setPlayers] = useState("");
   const [modes, setMode] = useState({ "5v5": false, "6v6": false, "7v7": false, "8v8": false, "9v9": false, "10v10": false, "11v11": false });
-
   const [country, setCountry] = useState("");
   const [city, setCity] = useState("");
   const [district, setDistrict] = useState("");
   const [address, setAddress] = useState("");
+  const [map, setMap] = useState("mapa demo");
 
   const changeModeState = (state: boolean, mode: string) => {
     setMode({ ...modes, [mode]: state });
   };
 
-  const nextStep = () => {
+  const nextStep = async () => {
     const filteredModes = Object.keys(modes).map(key => {
       if (modes[key]) return key;
     }).filter(element => element !== undefined);
 
-    console.log('modes names', filteredModes);
-    router.push("/fields/new/photos");
+    const saved = await saveField(token, {
+      address,
+      city,
+      company_id: state.id!,
+      country,
+      district,
+      games: JSON.stringify(filteredModes),
+      map,
+      mobile,
+      name,
+      parking,
+      phone,
+      players,
+      size,
+      type,
+    });
+
+    if (saved.status) {
+      router.push(`/fields/new/photos?id=${saved.data.id}`);
+    } else {
+      console.log("🚨 ~ file: index.tsx:58 ~ nextStep ~ error", saved);
+      Alert.alert('Error al guardar cancha.');
+    }
   };
 
   return (
@@ -94,6 +121,13 @@ const NewField = () => {
           <Picker.Item fontFamily="PoppinsMedium" label="Grass" value="Grass" />
           <Picker.Item fontFamily="PoppinsMedium" label="Cemento" value="Cemento" />
         </Picker>
+        <Input
+          placeholder="Cantidad máxima de jugadores"
+          value={players}
+          onChangeText={(text: string) => setPlayers(text)}
+          styles={PageStyles.input}
+          theme="light"
+        />
       </View>
       <View style={{ marginBottom: 20 }}>
         <Text style={LayoutStyles.subtitle}>Modos de juego disponibles:</Text>

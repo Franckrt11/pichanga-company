@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, SafeAreaView, ScrollView, Image, Pressable } from "react-native";
 import { useRef, useMemo, useCallback } from "react";
-import { Stack, router } from "expo-router";
+import { Stack, router, useLocalSearchParams } from "expo-router";
 // import { Image } from 'expo-image';
 import Icon from "react-native-vector-icons/Feather";
 import {
@@ -17,6 +17,8 @@ import UploadPhoto from "@/src/components/upload-photo";
 import { pickImageAsync, pickCameraAsync } from "@/src/models/ImagePicker";
 
 const Photos = () => {
+  const params = useLocalSearchParams();
+
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const snapPoints = useMemo(() => [120], []);
 
@@ -67,7 +69,7 @@ const Photos = () => {
   };
 
   const nextStep = () => {
-    router.push("/fields/new/days");
+    router.push(`/fields/new/days?id=${params.id}`);
   };
 
   const renderBackdrop = useCallback(

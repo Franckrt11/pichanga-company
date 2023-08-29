@@ -39,3 +39,23 @@ export interface ISpecialHour {
   field: string;
   reason: string;
 };
+
+export interface FieldData {
+  active?: boolean;
+  address: string;
+  city: string;
+  company_id: number;
+  country: string;
+  district: string;
+  games: string;
+  id?: number;
+  map: string;
+  mobile: string;
+  name: string;
+  parking: string;
+  phone: string;
+  players: string;
+  portrait?: string | null;
+  size: string;
+  type: string;
+};

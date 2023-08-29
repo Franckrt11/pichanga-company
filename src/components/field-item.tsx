@@ -10,10 +10,11 @@ import PencilIcon from "@/src/components/icons/pencil-icon";
 interface FieldProps {
   id: number;
   name: string;
+  district: string;
   active: boolean;
 }
 
-const FieldItem = ({ id, name, active }: FieldProps) => {
+const FieldItem = ({ id, name, district, active }: FieldProps) => {
   const [visible, setVisible] = useState(active);
 
   return (
@@ -30,7 +31,7 @@ const FieldItem = ({ id, name, active }: FieldProps) => {
           <View style={styles.content}>
             <View style={styles.description}>
               <Text style={styles.title}>{name}</Text>
-              <Text style={styles.subtitle}>San Juan de Miraflores</Text>
+              <Text style={styles.subtitle}>{district}</Text>
               <View style={styles.score}>
                 <StarIcon size={24} active={true} />
                 <StarIcon size={24} active={true} />

@@ -1,5 +1,10 @@
 export const API_URL = process.env.EXPO_PUBLIC_LOCAL_API_URL;
 
+export const FETCH_HEADERS = {
+  Accept: "application/json",
+  "Content-Type": "application/json",
+};
+
 export const HOUR_LIST = [
   {
     value: "5:00",

@@ -59,7 +59,7 @@ const NewField = () => {
     if (saved.status) {
       router.push(`/fields/new/photos?id=${saved.data.id}`);
     } else {
-      console.log("🚨 ~ file: index.tsx:58 ~ nextStep ~ error", saved);
+      console.log("🚨 ~ file: index.tsx:37 ~ nextStep ~ error", saved);
       Alert.alert('Error al guardar cancha.');
     }
   };
@@ -105,7 +105,7 @@ const NewField = () => {
         />
         <Picker
           style={{
-            marginBottom: 5,
+            marginBottom: 20,
             backgroundColor: Colors.white,
             borderColor: Colors.silverSand,
             borderWidth: 2,
@@ -120,6 +120,7 @@ const NewField = () => {
         >
           <Picker.Item fontFamily="PoppinsMedium" label="Grass" value="Grass" />
           <Picker.Item fontFamily="PoppinsMedium" label="Cemento" value="Cemento" />
+          <Picker.Item fontFamily="PoppinsMedium" label="Sintético" value="Sintético" />
         </Picker>
         <Input
           placeholder="Cantidad máxima de jugadores"
@@ -226,7 +227,9 @@ const NewField = () => {
         />
       </View>
       <View style={{ marginBottom: 50 }}>
-        {/* <MapView style={{ width: '100%', height: 50 }} /> */}
+
+      {/* <MapView style={{ width: '100%', height: 50 }} /> */}
+
       </View>
       <Pressable
         onPress={() => nextStep()}

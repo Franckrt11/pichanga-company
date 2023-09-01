@@ -59,3 +59,10 @@ export interface FieldData {
   size: string;
   type: string;
 };
+
+export interface FieldPicture {
+  location: string;
+  picture: string | boolean;
+  position: number;
+  field_id: number;
+};

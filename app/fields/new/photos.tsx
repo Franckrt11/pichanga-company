@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, SafeAreaView, ScrollView, Image, Pressable } from "react-native";
-import { useRef, useMemo, useCallback } from "react";
+import { StyleSheet, Text, View, SafeAreaView, ScrollView, Image, Pressable, Alert } from "react-native";
+import { useRef, useMemo, useCallback, useState, useEffect } from "react";
 import { Stack, router, useLocalSearchParams } from "expo-router";
 // import { Image } from 'expo-image';
 import Icon from "react-native-vector-icons/Feather";
@@ -15,57 +15,96 @@ import Images from "@/src/utils/Images";
 import Back from "@/src/components/header/back";
 import UploadPhoto from "@/src/components/upload-photo";
 import { pickImageAsync, pickCameraAsync } from "@/src/models/ImagePicker";
+import { uploadPicture, fetchFieldPictures, removePicture } from "@/src/models/Field";
+import { useUserContext } from "@/src/context/User";
+import { useAuthContext } from "@/src/context/Auth";
+import { getFieldUrl } from "@/src/utils/Helpers";
+import PicturesIcon from "@/src/components/icons/pictures-icon";
+
+interface IPicture {
+  id: number;
+  filename: string;
+  position: number;
+  field_id: number;
+};
 
 const Photos = () => {
   const params = useLocalSearchParams();
+  const { state } = useUserContext();
+  const { token } = useAuthContext();
+
+  const [location, setLocation] = useState<string | null>(null);
+  const [portrait, setPortrait] = useState<string | undefined | null>(undefined);
+  const [pictures, setPictures] = useState<IPicture[]>([]);
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const snapPoints = useMemo(() => [120], []);
 
-  const handlePresentModalPress = useCallback(() => {
+  const handlePresentModalPress = useCallback((type: string | null) => {
+    setLocation(type);
     bottomSheetModalRef.current?.present();
   }, []);
 
   const handleClosePress = () => bottomSheetModalRef.current?.close();
 
+  const savePicture = async (imageUri: string | boolean, location: string): Promise<string | undefined> => {
+    const picture = await uploadPicture({
+      location: location,
+      picture: imageUri,
+      position: pictures.length + 1,
+      field_id: parseInt(params.id as string),
+    }, token, parseInt(params.id as string));
+    Alert.alert("Imagen de perfil guardada.");
+    return picture;
+  };
+
+  const handleSaveImage = async (image: string | boolean): Promise<void> => {
+    if (location === 'portrait') {
+      const picture = await savePicture(image, location);
+      setPortrait(getFieldUrl(picture));
+    }
+
+    if (location === 'gallery') {
+      const picture = await savePicture(image, location);
+      loadPictures();
+    }
+    handleClosePress();
+  };
+
   const pickImage = async (): Promise<void> => {
     let image = await pickImageAsync();
     if (image) {
-      // const photo = await saveAvatar(image);
-      // dispatch({
-      //   type: "change-avatar",
-      //   photoload: photo,
-      // });
-      // setAvatar(getAvatarUrl(photo));
-      handleClosePress();
+      handleSaveImage(image);
     }
   };
 
   const pickCamera = async (): Promise<void> => {
     let image = await pickCameraAsync();
     if (image) {
-      // const photo = await saveAvatar(image);
-      // dispatch({
-      //   type: "change-avatar",
-      //   photoload: photo,
-      // });
-      // setAvatar(getAvatarUrl(photo));
-      handleClosePress();
+      if (image) {
+        handleSaveImage(image);
+      }
     }
   };
 
   const removePortrait = async (): Promise<void> => {
-    // const response: string = await removeUserAvatar(token, state.id);
-    // Alert.alert(response);
-    // dispatch({
-    //   type: "change-avatar",
-    //   photoload: null,
-    // });
-    // setAvatar(undefined);
+    const response = await removePicture(state.id as number, token, 'portrait');
+    Alert.alert(response);
   };
 
-  const removeFieldPicture = async (): Promise<void> => {
-    //
+  const removeFieldPicture = async (id: number): Promise<void> => {
+    const result = await removePicture(id, token, 'gallery');
+    setPictures(result);
+  };
+
+  const addPicture = () => {
+    setLocation('gallery');
+    bottomSheetModalRef.current?.present();
+  };
+
+  const loadPictures = async (): Promise<void> => {
+    const pictures: IPicture[] = await fetchFieldPictures(parseInt(params.id as string), token);
+    setPictures(pictures);
   };
 
   const nextStep = () => {
@@ -83,6 +122,10 @@ const Photos = () => {
     ),
     []
   );
+
+  useEffect(() => {
+    loadPictures();
+  }, []);
 
   return (
     <BottomSheetModalProvider>
@@ -139,38 +182,63 @@ const Photos = () => {
             <Text style={LayoutStyles.pageTitle}>AGREGAR FOTOGRAFÍAS</Text>
             <Text style={LayoutStyles.subtitle}>FOTO PORTADA</Text>
             <Image
-              source={Images.portraitDefault}
+              source={{ uri: portrait ? portrait : "" }}
+              defaultSource={Images.portraitDefault}
               style={{ borderRadius: 20, height: 250, width: "100%", marginBottom: 30 }}
-              // transition={500}
+            // transition={500}
             />
             <View style={{ marginBottom: 20 }}>
               <UploadPhoto
                 onRemovePhoto={removePortrait}
-                onModalPress={handlePresentModalPress}
+                onModalPress={() => handlePresentModalPress('portrait')}
                 position="Horizontal"
               />
             </View>
             <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 20 }}>
-              <Text style={[LayoutStyles.subtitle, {marginBottom: 0, marginRight: 8 }]}>GALERÍA</Text>
-              <Text style={[LayoutStyles.subtitle, {marginBottom: 0, fontSize: 14, fontFamily: "PoppinsMedium", }]}>(max 3 fotos)</Text>
+              <Text style={[LayoutStyles.subtitle, { marginBottom: 0, marginRight: 8 }]}>GALERÍA</Text>
+              <Text style={[LayoutStyles.subtitle, { marginBottom: 0, fontSize: 14, fontFamily: "PoppinsMedium", }]}>(max 3 fotos)</Text>
             </View>
-            <View style={{ flexDirection: "row", gap: 20, marginBottom: 50 }}>
-              <Image
-                source={Images.portraitDefault}
-                style={{ borderRadius: 20, height: 120, width: "100%", flex: 1, flexBasis: "10%" }}
-              />
-              <View style={{ flex: 1, justifyContent: "center" }}>
-                <UploadPhoto
-                  onRemovePhoto={removeFieldPicture}
-                  onModalPress={handlePresentModalPress}
-                  position="Vertical"
+
+            {pictures.map((picture, index) => (
+              <View key={index} style={{ flexDirection: "row", gap: 20, marginBottom: 20 }}>
+                <Image
+                  source={{ uri: getFieldUrl(picture.filename) }}
+                  style={{ borderRadius: 20, height: 120, width: "100%", flex: 1, flexBasis: "10%" }}
                 />
+                <View style={{ flex: 1, justifyContent: "center" }}>
+                  <UploadPhoto
+                    onRemovePhoto={() => removeFieldPicture(picture.id)}
+                    onModalPress={() => handlePresentModalPress('gallery')}
+                    position="Vertical"
+                  />
+                </View>
               </View>
-            </View>
+            ))}
+
+            {pictures.length < 3 &&
+              <Pressable
+                style={[
+                  styles.buttonOutline,
+                  {
+                    backgroundColor: Colors.white,
+                    width: "50%",
+                    marginHorizontal: "auto",
+                    marginBottom: 50,
+                    borderWidth: 2,
+                    paddingVertical: 6,
+                    borderRadius: 20
+                  }
+                ]}
+                onPress={() => addPicture()}
+              >
+                <PicturesIcon size={20} />
+                <Text style={styles.buttonOutlineText}>Agregar fotos</Text>
+              </Pressable>
+            }
 
             <Pressable
               onPress={() => nextStep()}
-              style={[PageStyles.button, { width: "80%", marginHorizontal: "auto" }]}
+              style={[PageStyles.button, { width: "80%", marginHorizontal: "auto", marginTop: 50 }]}
             >
               <Text style={PageStyles.buttonText}>SIGUIENTE</Text>
             </Pressable>

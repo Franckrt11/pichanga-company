@@ -15,7 +15,7 @@ const positions: IPositions = {
   Vertical: "column"
 };
 
-const UploadPhoto = ({ onRemovePhoto, onModalPress, position }: { onRemovePhoto: any, onModalPress: any, position: string }) => {
+const UploadPhoto = ({ onRemovePhoto, onModalPress, position, storage }: { onRemovePhoto: any, onModalPress: any, position: string, storage?: string | null }) => {
   const direction: string = positions[position as keyof IPositions];
 
   const launchModal = () => {
@@ -30,7 +30,7 @@ const UploadPhoto = ({ onRemovePhoto, onModalPress, position }: { onRemovePhoto:
     <View style={{ flexDirection: direction as IFlexDirection, gap: 10, marginBottom: 15, width: "90%", marginHorizontal: "auto" }}>
       <Pressable
         onPress={launchModal}
-        style={[styles.buttonOutline, { marginBottom: direction === "column" ? 20 : 0 }]}
+        style={[styles.buttonOutline, { marginBottom: direction === "column" ? 10 : 0 }]}
       >
         <PencilIcon />
         <Text style={styles.buttonOutlineText}>Editar foto</Text>

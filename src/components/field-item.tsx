@@ -1,11 +1,11 @@
 import { StyleSheet, Text, View, Image, Switch, Pressable } from "react-native";
 import { router } from "expo-router";
 import { useState } from "react";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import Fontisto from "react-native-vector-icons/Fontisto";
 import Colors from "@/src/utils/Colors";
 import StarIcon from "@/src/components/icons/star-icon";
 import PencilIcon from "@/src/components/icons/pencil-icon";
+import ZoomPlusIcon from "@/src/components/icons/zoom-plus-icon";
+import MenuIcon from "@/src/components/icons/menu-icon";
 
 interface FieldProps {
   id: number;
@@ -20,7 +20,7 @@ const FieldItem = ({ id, name, district, active }: FieldProps) => {
   return (
     <View style={styles.container}>
       <Pressable onPress={() => console.log("Change order")}>
-        <Ionicons name="menu" size={32} color={Colors.silverSand} />
+        <MenuIcon size={32} />
       </Pressable>
       <View style={styles.wrapper}>
         <View style={styles.header}>
@@ -43,8 +43,7 @@ const FieldItem = ({ id, name, district, active }: FieldProps) => {
             </View>
             <View style={styles.more}>
               <Pressable onPress={() => router.push(`/fields/${id}`)}>
-                <Fontisto
-                  name="zoom-plus"
+                <ZoomPlusIcon
                   size={24}
                   color={Colors.maastrichtBlue}
                 />

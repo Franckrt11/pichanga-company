@@ -7,10 +7,10 @@ import {
   ScrollView,
 } from "react-native";
 import { router } from "expo-router";
-import Icon from "react-native-vector-icons/Fontisto";
 import { LayoutStyles } from "@/src/utils/Styles";
 import Colors from "@/src/utils/Colors";
 import ActivityBlock from "@/src/components/activity-block";
+import ZoomPlusIcon from "@/src/components/icons/zoom-plus-icon";
 
 const Home = () => {
 
@@ -57,7 +57,7 @@ const Home = () => {
               </View>
             </View>
             <View style={styles.matchIcon}>
-              <Icon name="zoom-plus" size={20} color={Colors.white} />
+              <ZoomPlusIcon size={20} color={Colors.white} />
             </View>
           </Pressable>
 

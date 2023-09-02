@@ -1,12 +1,19 @@
-import { StyleSheet, Text, View, Pressable } from "react-native"
+import { StyleSheet, Text, View, Image, Switch, FlatList, Pressable } from "react-native"
 import { router, useLocalSearchParams } from "expo-router";
 import { useState, useEffect } from "react";
 import { PageStyles, LayoutStyles } from "@/src/utils/Styles";
 import Colors from "@/src/utils/Colors";
-import { FieldData } from "@/src/utils/Types";
+import { FieldData, FieldPictureData } from "@/src/utils/Types";
 import ChildPage from "@/src/components/layouts/child-page";
+import PencilIcon from "@/src/components/icons/pencil-icon";
 import { useAuthContext } from "@/src/context/Auth";
-import { fetchField }  from "@/src/models/Field";
+import { fetchField, fetchFieldPictures }  from "@/src/models/Field";
+import ImageCarousel from "@/src/components/image-carousel";
+
+interface PictureList {
+  id: number;
+  filename: string | null;
+};
 
 const ContentRow = ({ label, data }: { label: string, data: string | undefined }) => {
   return (
@@ -20,17 +27,23 @@ const ContentRow = ({ label, data }: { label: string, data: string | undefined }
 const FieldDetails = () => {
   const params = useLocalSearchParams();
   const { token } = useAuthContext();
-  const [ field, setField ] = useState<FieldData>();
+  const [ field, setField ] = useState<FieldData | null>(null);
+  const [ pictures, setPictures ] = useState<PictureList[]>([]);
 
   const getField = async () => {
-    const response = await fetchField(params.id as unknown as number, token);
-    console.log('getField', response.data)
-    setField(response.data);
-    showGames(response.data.games);
+    const response:FieldData = await fetchField(params.id as unknown as number, token);
+    setField(response);
+    const pictures = await getPictures();
+    await setPictures([{id: 0, filename: response.portrait }, ...pictures]);
   };
 
-  const showGames = ( json:string | undefined ) => {
-    const decode: string[] = JSON.parse(json!);
+  const getPictures = async (): Promise<FieldPictureData[]> => {
+    const pictures: FieldPictureData[] = await fetchFieldPictures(parseInt(params.id as string), token);
+    return pictures;
+  };
+
+  const showGames = ( json:string ) => {
+    const decode: string[] = JSON.parse(json);
     const replaced = decode.map(value => value.replace('v', ' vs '));
     return replaced.join(", ");
   };
@@ -43,10 +56,31 @@ const FieldDetails = () => {
     <ChildPage style={{ width: "80%" }}>
       <Text style={LayoutStyles.pageTitle}>{field?.name}</Text>
 
-      {/*
-      Slide de portrait + fotos
-      Botones: Comentario - Editar fotos - Active
-      */}
+      <ImageCarousel data={pictures} />
+
+      <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+        <Pressable
+          onPress={() => router.push(`/fields/${params.id}/comments`)}
+          style={styles.buttom}
+        >
+          <Text style={styles.buttomText}>Ver comentarios</Text>
+        </Pressable>
+        <Pressable
+          onPress={() => router.push(`/fields/${params.id}/edit/photos`)}
+          style={styles.buttom}
+        >
+          <PencilIcon />
+          <Text style={styles.buttomText}>Editar fotos</Text>
+        </Pressable>
+        <Switch
+          trackColor={{ false: Colors.silverSand, true: Colors.silverSand }}
+          thumbColor={field?.active ? Colors.greenLizard : Colors.maastrichtBlue}
+          ios_backgroundColor={Colors.maastrichtBlue}
+          onValueChange={() => console.log("Switch visible field")}
+          value={field?.active}
+        />
+      </View>
+
       <View style={styles.divider}/>
       <ContentRow
         label="Teléfono fijo"
@@ -74,7 +108,7 @@ const FieldDetails = () => {
       />
       <ContentRow
         label="Modos de juego"
-        data={showGames(field?.games)}
+        data={field ? showGames(field.games) : ''}
       />
       <ContentRow
         label="País"
@@ -124,5 +158,27 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     fontFamily: "PoppinsSemiBold",
     fontSize: 22
-  }
+  },
+  buttom: {
+    backgroundColor: Colors.white,
+    borderRadius: 20,
+    borderColor: Colors.silverSand,
+    borderWidth: 2,
+    paddingVertical: 4,
+    paddingHorizontal: 25,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+  },
+  buttomText: {
+    color: Colors.maastrichtBlue,
+    fontFamily: "PoppinsMedium",
+  },
+  slider: {
+    flex: 1,
+  },
+  slidePage: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });

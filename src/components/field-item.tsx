@@ -2,19 +2,22 @@ import { StyleSheet, Text, View, Image, Switch, Pressable } from "react-native";
 import { router } from "expo-router";
 import { useState } from "react";
 import Colors from "@/src/utils/Colors";
+import Images from "@/src/utils/Images";
 import StarIcon from "@/src/components/icons/star-icon";
 import PencilIcon from "@/src/components/icons/pencil-icon";
 import ZoomPlusIcon from "@/src/components/icons/zoom-plus-icon";
 import MenuIcon from "@/src/components/icons/menu-icon";
+import { getFieldUrl } from "@/src/utils/Helpers";
 
 interface FieldProps {
   id: number;
   name: string;
   district: string;
   active: boolean;
+  portrait: string | null
 }
 
-const FieldItem = ({ id, name, district, active }: FieldProps) => {
+const FieldItem = ({ id, name, district, active, portrait }: FieldProps) => {
   const [visible, setVisible] = useState(active);
 
   return (
@@ -25,7 +28,8 @@ const FieldItem = ({ id, name, district, active }: FieldProps) => {
       <View style={styles.wrapper}>
         <View style={styles.header}>
           <Image
-            source={require("@/src/assets/images/cancha-lorem.jpg")}
+            source={{uri: portrait ? getFieldUrl(portrait) : ""}}
+            defaultSource={Images.portraitDefault}
             style={styles.image}
           />
           <View style={styles.content}>

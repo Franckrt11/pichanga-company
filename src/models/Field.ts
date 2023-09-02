@@ -14,15 +14,20 @@ export const fetchAllFields = async (id: number, token: string | null)  => {
 };
 
 export const fetchField = async (fid: number, token: string | null)  => {
-  const response = await fetch(`${API_URL}api/company/field/${fid}`, {
-    method: "GET",
-    headers: {
-      ...FETCH_HEADERS,
-      Authorization: `Bearer ${token}`,
-    }
-  });
+  try {
+    const response = await fetch(`${API_URL}api/company/field/${fid}`, {
+      method: "GET",
+      headers: {
+        ...FETCH_HEADERS,
+        Authorization: `Bearer ${token}`,
+      }
+    });
 
-  return await response.json();
+    const result = await response.json();
+    return result.data;
+  } catch (error) {
+    console.log("🚩 ~ models/Field.ts ~ fetchField() ~ error:", error);
+  }
 };
 
 export const saveField = async (token: string | null, data: FieldData) => {

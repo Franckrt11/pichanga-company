@@ -43,6 +43,7 @@ const Fields = () => {
             id={field.id as number}
             name={field.name}
             district={field.district}
+            portrait={field.portrait}
             active={field.active as boolean}
           />
         ))}

@@ -20,13 +20,7 @@ import { useUserContext } from "@/src/context/User";
 import { useAuthContext } from "@/src/context/Auth";
 import { getFieldUrl } from "@/src/utils/Helpers";
 import PicturesIcon from "@/src/components/icons/pictures-icon";
-
-interface IPicture {
-  id: number;
-  filename: string;
-  position: number;
-  field_id: number;
-};
+import { FieldPictureData } from "@/src/utils/Types";
 
 const Photos = () => {
   const params = useLocalSearchParams();
@@ -35,7 +29,7 @@ const Photos = () => {
 
   const [location, setLocation] = useState<string | null>(null);
   const [portrait, setPortrait] = useState<string | undefined | null>(undefined);
-  const [pictures, setPictures] = useState<IPicture[]>([]);
+  const [pictures, setPictures] = useState<FieldPictureData[]>([]);
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const snapPoints = useMemo(() => [120], []);
@@ -103,7 +97,7 @@ const Photos = () => {
   };
 
   const loadPictures = async (): Promise<void> => {
-    const pictures: IPicture[] = await fetchFieldPictures(parseInt(params.id as string), token);
+    const pictures: FieldPictureData[] = await fetchFieldPictures(parseInt(params.id as string), token);
     setPictures(pictures);
   };
 

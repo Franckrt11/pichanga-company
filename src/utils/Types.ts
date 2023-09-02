@@ -55,7 +55,7 @@ export interface FieldData {
   parking: string;
   phone: string;
   players: string;
-  portrait?: string | null;
+  portrait: string | null;
   size: string;
   type: string;
 };
@@ -63,6 +63,13 @@ export interface FieldData {
 export interface FieldPicture {
   location: string;
   picture: string | boolean;
+  position: number;
+  field_id: number;
+};
+
+export interface FieldPictureData {
+  id: number;
+  filename: string;
   position: number;
   field_id: number;
 };

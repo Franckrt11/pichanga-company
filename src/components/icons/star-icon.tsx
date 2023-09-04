@@ -8,9 +8,9 @@ const StarIcon = ({ active, size }: SizeIconProps) => {
         <ClipPath id="clipPath3247">
           <Path d="m-291.88 257.98h540v-1170h-540z" />
         </ClipPath>
-        <clipPath id="clipPath3241-2">
+        <ClipPath id="clipPath3241-2">
           <Path d="m-291.88 257.98h540v-1170h-540z" />
-        </clipPath>
+        </ClipPath>
       </Defs>
       <G transform="translate(-120.05 -50.852)">
         <Path

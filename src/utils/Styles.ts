@@ -25,8 +25,8 @@ export const LayoutStyles = StyleSheet.create({
     flex: 1
   },
   scrollContainer: {
+    alignItems: "center",
     width: "90%",
-    marginHorizontal: "auto"
   },
   pageTitle: {
     textAlign: "center",

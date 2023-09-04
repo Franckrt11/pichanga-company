@@ -1,5 +1,6 @@
-import { StyleSheet, FlatList, View, Dimensions, Image, ViewToken } from "react-native";
+import { StyleSheet, FlatList, View, Dimensions, ViewToken } from "react-native";
 import { useState, useEffect, useRef } from "react";
+import { Image } from 'expo-image';
 import { getFieldUrl } from "@/src/utils/Helpers";
 import Colors from "@/src/utils/Colors";
 import Images from "@/src/utils/Images";
@@ -9,17 +10,17 @@ const ITEM_LENGTH = width * 0.8;
 
 interface ImageCarouselItem {
   id: number;
-  filename: string | null;
+  filename: string | undefined;
 };
 
 interface ImageCarouselProps {
   data: ImageCarouselItem[];
 };
 
-const Item = ({ url }: { url: string | null }) => (
+const Item = ({ url }: { url: string | undefined }) => (
   <Image
-    source={{ uri: url ? url : '' }}
-    defaultSource={Images.portraitDefault}
+    source={{ uri: url }}
+    placeholder={Images.portraitDefault}
     style={{ borderRadius: 20, height: ITEM_LENGTH / 1.6, width: ITEM_LENGTH }}
   />
 );

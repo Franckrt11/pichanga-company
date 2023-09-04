@@ -2,7 +2,7 @@ import { StyleSheet, Text, TextInput, View, Pressable } from "react-native";
 import { useState } from "react";
 import { router } from "expo-router";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-import DateTimePicker from '@react-native-community/datetimepicker';
+// import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
 import Icon from "react-native-vector-icons/Entypo";
 import { HOUR_LIST } from "@/src/utils/Constants";
@@ -93,13 +93,13 @@ const Configure = () => {
           <Text style={styles.checkboxText}>Fecha de horario</Text>
         </View>
         <View>
-          <DateTimePicker
+          {/* <DateTimePicker
             testID="dateTimePicker"
             value={date}
             mode={'date'}
             is24Hour={true}
             onChange={(event, selectedDate) => selectedDate ? setDate(selectedDate) : false}
-          />
+          /> */}
         </View>
       </View>
 

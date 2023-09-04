@@ -27,7 +27,7 @@ const UploadPhoto = ({ onRemovePhoto, onModalPress, position, storage }: { onRem
   };
 
   return (
-    <View style={{ flexDirection: direction as IFlexDirection, gap: 10, marginBottom: 15, width: "90%", marginHorizontal: "auto" }}>
+    <View style={{ flexDirection: direction as IFlexDirection, gap: 10, marginBottom: 15, width: "90%" }}>
       <Pressable
         onPress={launchModal}
         style={[styles.buttonOutline, { marginBottom: direction === "column" ? 10 : 0 }]}

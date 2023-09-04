@@ -8,7 +8,10 @@ const Activity = () => {
     <SafeAreaView
       style={LayoutStyles.whiteContainer}
     >
-      <ScrollView style={{ paddingTop: 10 }}>
+      <ScrollView
+        style={{ paddingTop: 10 }}
+        contentContainerStyle={{ alignItems: "center"}}
+      >
         <View style={LayoutStyles.scrollContainer}>
           <Text style={styles.title}>ACTIVIDAD</Text>
           <ActivityBlock />

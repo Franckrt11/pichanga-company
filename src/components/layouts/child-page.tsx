@@ -12,11 +12,14 @@ const ChildPage = ({ style, children }: { style?: StyleProp<ViewStyle>, children
       <Stack.Screen
         options={{
           headerShown: true,
-          headerTitle: () => <></>,
+          title: '',
           headerLeft: () => <Back />,
         }}
       />
-      <ScrollView style={{ paddingTop: 20 }}>
+      <ScrollView
+        style={{ paddingTop: 20 }}
+        contentContainerStyle={{ alignItems: "center"}}
+      >
         <View style={[LayoutStyles.scrollContainer, style]}>
           {children}
         </View>

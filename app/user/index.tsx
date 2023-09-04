@@ -5,12 +5,11 @@ import {
   Pressable,
   View,
   StyleSheet,
-  Alert,
-  Image
+  Alert
 } from "react-native";
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { Stack, router } from "expo-router";
-// import { Image } from 'expo-image';
+import { Image } from 'expo-image';
 import Icon from "react-native-vector-icons/Feather";
 import {
   BottomSheetView,
@@ -42,7 +41,7 @@ const User = () => {
   const [ruc, setRuc] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [avatar, setAvatar] = useState<string | undefined | null>(undefined);
+  const [avatar, setAvatar] = useState<string | undefined>(undefined);
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const snapPoints = useMemo(() => [120], []);
@@ -57,11 +56,12 @@ const User = () => {
     let image = await pickImageAsync();
     if (image) {
       const photo = await saveAvatar(image);
+      console.log("🚀 ~ file: index.tsx:59 ~ pickImage ~ photo:", photo);
+      setAvatar(getAvatarUrl(photo));
       dispatch({
         type: "change-avatar",
         photoload: photo,
       });
-      setAvatar(getAvatarUrl(photo));
       handleClosePress();
     }
   };
@@ -139,11 +139,14 @@ const User = () => {
         <Stack.Screen
           options={{
             headerShown: true,
-            headerTitle: () => <></>,
+            title: '',
             headerLeft: () => <Back />,
           }}
         />
-        <ScrollView style={{ paddingTop: 20 }}>
+        <ScrollView
+          style={{ paddingTop: 20 }}
+          contentContainerStyle={{ alignItems: "center"}}
+        >
           <BottomSheetModal
             ref={bottomSheetModalRef}
             index={0}
@@ -184,20 +187,9 @@ const User = () => {
           </BottomSheetModal>
 
           <View style={[LayoutStyles.scrollContainer, { width: "80%" }]}>
-            {/* <CachedImage
-              size={120}
-              defaultImage={Images.avatarDefault}
-              name={avatar}
-              styles={{
-                borderRadius: 60,
-                marginLeft: "auto",
-                marginRight: "auto",
-                marginBottom: 20,
-              }}
-            /> */}
             <Image
-              source={{uri: avatar ? avatar : ""}}
-              defaultSource={Images.avatarDefault}
+              source={{uri: avatar}}
+              placeholder={Images.avatarDefault}
               style={{
                 borderRadius: 60,
                 marginLeft: "auto",
@@ -206,8 +198,7 @@ const User = () => {
                 height: 120,
                 width: 120,
               }}
-              // contentFit="cover"
-              // transition={500}
+              transition={300}
             />
             <UploadPhoto
               onRemovePhoto={removeAvatar}

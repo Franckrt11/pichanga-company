@@ -12,7 +12,7 @@ import ImageCarousel from "@/src/components/image-carousel";
 
 interface PictureList {
   id: number;
-  filename: string | null;
+  filename: string | undefined;
 };
 
 const ContentRow = ({ label, data }: { label: string, data: string | undefined }) => {
@@ -34,7 +34,7 @@ const FieldDetails = () => {
     const response:FieldData = await fetchField(params.id as unknown as number, token);
     setField(response);
     const pictures = await getPictures();
-    await setPictures([{id: 0, filename: response.portrait }, ...pictures]);
+    await setPictures([{id: 0, filename: response.portrait as string | undefined }, ...pictures]);
   };
 
   const getPictures = async (): Promise<FieldPictureData[]> => {
@@ -152,12 +152,14 @@ const styles = StyleSheet.create({
   contentLabel: {
     fontFamily: "PoppinsMedium",
     fontSize: 18,
-    marginBottom: 10
+    marginBottom: 10,
+    color: Colors.maastrichtBlue
   },
   contentData: {
     marginLeft: 20,
     fontFamily: "PoppinsSemiBold",
-    fontSize: 22
+    fontSize: 22,
+    color: Colors.maastrichtBlue
   },
   buttom: {
     backgroundColor: Colors.white,

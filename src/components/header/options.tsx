@@ -1,17 +1,17 @@
-import { View, Pressable, Image } from "react-native";
+import { View, Pressable } from "react-native";
 import { useState, useEffect } from "react";
 import { Link } from "expo-router";
+import { Image } from 'expo-image';
 import { useUserContext } from "@/src/context/User";
 import Images from "@/src/utils/Images";
 import Colors from "@/src/utils/Colors";
 import GearIcon from "@/src/components/icons/gear-icon";
 import PencilIcon from "@/src/components/icons/pencil-icon";
-import CachedImage from "@/src/components/cached-image";
 import { getAvatarUrl } from "@/src/utils/Helpers";
 
 const Options = () => {
   const { state } = useUserContext();
-  const [avatar, setAvatar] = useState<string | undefined | null>(undefined);
+  const [avatar, setAvatar] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     setAvatar(getAvatarUrl(state.photo));
@@ -38,16 +38,11 @@ const Options = () => {
         <Pressable
           style={{ position: "relative" }}
         >
-          {/* <CachedImage
-            size={50}
-            defaultImage={Images.avatarDefault}
-            filename={state.photo}
-            style={{ borderRadius: 60 }}
-          /> */}
           <Image
-            source={{uri: avatar ? avatar : ""}}
-            defaultSource={Images.avatarDefault}
+            source={{uri: avatar}}
+            placeholder={Images.avatarDefault}
             style={{ borderRadius: 60, height: 50, width: 50 }}
+            transition={200}
           />
           <View
             style={{

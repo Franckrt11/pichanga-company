@@ -54,3 +54,16 @@ const RootLayoutProvider = () => {
     </UserProvider>
   );
 };
+
+/*
+*   Resolve on next expo-router update:
+*   node_modules\expo-router\src\views\Screen.tsx
+*   Line 49:
+*
+*   ``
+*   useDeprecated(
+*     "The `redirect` prop on <Screen /> is deprecated and will be removed. Please use `router.redirect` instead",
+*     redirect != null
+*   );
+*   ``
+*/

@@ -1,6 +1,7 @@
-import { StyleSheet, Text, View, Image, Switch, Pressable } from "react-native";
-import { router } from "expo-router";
+import { StyleSheet, Text, View, Switch, Pressable } from "react-native";
 import { useState } from "react";
+import { router } from "expo-router";
+import { Image } from 'expo-image';
 import Colors from "@/src/utils/Colors";
 import Images from "@/src/utils/Images";
 import StarIcon from "@/src/components/icons/star-icon";
@@ -23,32 +24,35 @@ const FieldItem = ({ id, name, district, active, portrait }: FieldProps) => {
   return (
     <View style={styles.container}>
       <Pressable onPress={() => console.log("Change order")}>
-        <MenuIcon size={32} />
+        <MenuIcon size={20} />
       </Pressable>
       <View style={styles.wrapper}>
         <View style={styles.header}>
           <Image
-            source={{uri: portrait ? getFieldUrl(portrait) : ""}}
-            defaultSource={Images.portraitDefault}
-            style={styles.image}
+            source={{uri: getFieldUrl(portrait)}}
+            placeholder={Images.portraitDefault}
+            style={{ width: 80, height: 125 }}
+            contentFit="none"
+            contentPosition={{ top: "50%", left: "50%" }}
+            transition={200}
           />
           <View style={styles.content}>
             <View style={styles.description}>
               <Text style={styles.title}>{name}</Text>
               <Text style={styles.subtitle}>{district}</Text>
               <View style={styles.score}>
-                <StarIcon size={24} active={true} />
-                <StarIcon size={24} active={true} />
-                <StarIcon size={24} active={true} />
-                <StarIcon size={24} active={false} />
-                <StarIcon size={24} active={false} />
+                <StarIcon size={15} active={true} />
+                <StarIcon size={15} active={true} />
+                <StarIcon size={15} active={true} />
+                <StarIcon size={15} active={false} />
+                <StarIcon size={15} active={false} />
                 <Text style={styles.countScore}>(50)</Text>
               </View>
             </View>
             <View style={styles.more}>
               <Pressable onPress={() => router.push(`/fields/${id}`)}>
                 <ZoomPlusIcon
-                  size={24}
+                  size={20}
                   color={Colors.maastrichtBlue}
                 />
               </Pressable>
@@ -112,10 +116,10 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: Colors.silverSand,
   },
-  image: {
-    height: 150,
-    width: 100,
-  },
+  // image: {
+  //   height: 120,
+  //   width: 80,
+  // },
   content: {
     flexDirection: "row",
     paddingVertical: 12,
@@ -131,21 +135,23 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
   },
   title: {
-    fontSize: 24,
-    fontFamily: "PoppinsMedium",
+    fontSize: 18,
+    fontFamily: "PoppinsSemiBold",
   },
   subtitle: {
-    fontSize: 18,
+    fontSize: 16,
     fontFamily: "PoppinsMedium",
   },
   score: {
     flexDirection: "row",
     gap: 5,
     marginTop: 8,
+    alignItems: "center"
   },
   countScore: {
-    fontSize: 18,
+    fontSize: 12,
     fontFamily: "PoppinsMedium",
+    paddingTop: 4
   },
   more: {
     justifyContent: "center",
@@ -153,8 +159,7 @@ const styles = StyleSheet.create({
   },
   footer: {
     flexDirection: "row",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
     alignItems: "center",
     justifyContent: "space-between",
   },
@@ -170,5 +175,6 @@ const styles = StyleSheet.create({
   buttomText: {
     color: Colors.maastrichtBlue,
     fontFamily: "PoppinsMedium",
+    fontSize: 10
   },
 });

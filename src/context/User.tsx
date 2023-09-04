@@ -40,7 +40,7 @@ const UserReducer = (state: UserData, action: Action): UserData => {
     case "change-avatar": {
       return {
         ...state,
-        photo: action.photoload,
+        photo: action.photoload!,
       };
     }
     default: {

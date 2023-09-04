@@ -31,9 +31,14 @@ const Login = () => {
           headerShown: false,
         }}
       />
-      <ScrollView style={{ paddingTop: 50 }}>
-        <View style={[LayoutStyles.scrollContainer,{ width: "70%" }]}>
-          <Image style={LoginStyles.logo} source={Images.logo} />
+      <ScrollView
+        style={{ paddingTop: 60 }}
+        contentContainerStyle={{ alignItems: "center"}}
+      >
+        <View style={[LayoutStyles.scrollContainer, { width: "80%", alignItems: "stretch" }]}>
+          <View style={{ flex: 1, alignItems: "center", marginBottom: 50 }}>
+            <Image style={LoginStyles.logo} source={Images.logo} />
+          </View>
           <View style={{ marginBottom: 20 }}>
             <Input
               placeholder="Correo"
@@ -82,9 +87,7 @@ export default Login;
 const LoginStyles = StyleSheet.create({
   logo: {
     height: 150,
-    width: 140,
-    marginBottom: 50,
-    marginHorizontal: "auto"
+    width: 140
   },
   input: {
     color: Colors.maastrichtBlue,

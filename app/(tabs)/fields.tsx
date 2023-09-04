@@ -34,7 +34,10 @@ const Fields = () => {
     <SafeAreaView
       style={LayoutStyles.whiteContainer}
     >
-      <ScrollView style={{ paddingTop: 10 }}>
+      <ScrollView
+        style={{ paddingTop: 10 }}
+        contentContainerStyle={{ alignItems: "center"}}
+      >
         <View style={LayoutStyles.scrollContainer}>
 
         {fields.map((field, index) => (
@@ -47,16 +50,15 @@ const Fields = () => {
             active={field.active as boolean}
           />
         ))}
-
-          <View style={{ marginVertical: 30 }}>
+          <View style={{ marginVertical: 30, width: "80%" }}>
             <Pressable
               onPress={() => router.push("/fields/new")}
               style={[
                 styles.button,
-                { backgroundColor: Colors.metallicGreen, width: "80%" },
+                { backgroundColor: Colors.metallicGreen },
               ]}
             >
-              <Text style={[styles.buttonText, { fontSize: 22 }]}>
+              <Text style={styles.buttonText}>
                 AGREGAR CANCHA
               </Text>
             </Pressable>
@@ -64,15 +66,14 @@ const Fields = () => {
               onPress={() => router.push("/fields/special")}
               style={[
                 styles.button,
-                { backgroundColor: Colors.ferrariRed, width: "70%" },
+                { backgroundColor: Colors.ferrariRed },
               ]}
             >
-              <Text style={[styles.buttonText, { fontSize: 18 }]}>
+              <Text style={styles.buttonText}>
                 HORARIOS ESPECIALES
               </Text>
             </Pressable>
           </View>
-
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -84,13 +85,13 @@ export default Fields;
 const styles = StyleSheet.create({
   button: {
     borderRadius: 10,
-    marginHorizontal: "auto",
-    paddingVertical: 10,
-    marginBottom: 20,
+    paddingVertical: 8,
+    marginBottom: 10,
   },
   buttonText: {
     color: Colors.white,
+    fontFamily: "PoppinsSemiBold",
+    fontSize: 18,
     textAlign: "center",
-    fontFamily: "PoppinsMedium",
   },
 });

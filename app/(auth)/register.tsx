@@ -25,7 +25,7 @@ const CheckboxText = () => {
     >
       Estoy de acuerdo con los
       <Link
-        href={"/terms"}
+        href={"/(auth)/terms"}
         style={{ color: Colors.metallicGreen, marginLeft: 4 }}
       >
         Términos y condiciones

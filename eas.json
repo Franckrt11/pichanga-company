@@ -1,0 +1,28 @@
+{
+  "cli": {
+    "version": ">= 3.13.2"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal"
+    },
+    "preview": {
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      },
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://www.tejuegounapichanga.com/"
+      }
+    },
+    "production": {
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://www.tejuegounapichanga.com/"
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}

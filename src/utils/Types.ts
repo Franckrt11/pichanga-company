@@ -55,7 +55,7 @@ export interface FieldData {
   parking: string;
   phone: string;
   players: string;
-  portrait: string | null;
+  portrait?: string | null;
   size: string;
   type: string;
 };

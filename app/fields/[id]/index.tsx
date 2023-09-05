@@ -53,7 +53,7 @@ const FieldDetails = () => {
   },[]);
 
   return (
-    <ChildPage style={{ width: "80%" }}>
+    <ChildPage style={{ width: "80%", alignItems: "flex-start", flex: 1 }}>
       <Text style={LayoutStyles.pageTitle}>{field?.name}</Text>
 
       <ImageCarousel data={pictures} />

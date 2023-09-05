@@ -7,7 +7,7 @@ import Colors from "@/src/utils/Colors";
 import ChildPage from "@/src/components/layouts/child-page";
 import Input from "@/src/components/input";
 import ButtonCheckbox from "@/src/components/button-checkbox";
-// import MapView from 'react-native-maps';
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import { saveField }  from "@/src/models/Field";
 import { useUserContext } from "@/src/context/User";
 import { useAuthContext } from "@/src/context/Auth";
@@ -36,7 +36,7 @@ const NewField = () => {
 
   const nextStep = async () => {
     const filteredModes = Object.keys(modes).map(key => {
-      if (modes[key]) return key;
+      if (modes[key as keyof typeof modes]) return key;
     }).filter(element => element !== undefined);
 
     const saved = await saveField(token, {
@@ -65,7 +65,7 @@ const NewField = () => {
   };
 
   return (
-    <ChildPage>
+    <ChildPage style={{ marginBottom: 80 }}>
       <Text style={LayoutStyles.pageTitle}>NUEVA CANCHA</Text>
       <View style={{ width: "80%", marginHorizontal: "auto", marginBottom: 10 }}>
         <Input
@@ -103,25 +103,27 @@ const NewField = () => {
           styles={PageStyles.input}
           theme="light"
         />
-        <Picker
-          style={{
-            marginBottom: 20,
-            backgroundColor: Colors.white,
-            borderColor: Colors.silverSand,
-            borderWidth: 2,
-            borderRadius: 10,
-            paddingHorizontal: 15,
-            paddingVertical: 10,
-            fontFamily: "PoppinsMedium",
-            borderStyle: "solid"
-          }}
-          selectedValue={type}
-          onValueChange={(value, itemIndex) => setType(value)}
-        >
-          <Picker.Item fontFamily="PoppinsMedium" label="Grass" value="Grass" />
-          <Picker.Item fontFamily="PoppinsMedium" label="Cemento" value="Cemento" />
-          <Picker.Item fontFamily="PoppinsMedium" label="Sintético" value="Sintético" />
-        </Picker>
+        <View style={{
+          backgroundColor: Colors.white,
+          borderColor: Colors.silverSand,
+          borderWidth: 2,
+          borderRadius: 10,
+          marginBottom: 20,
+        }}>
+          <Picker
+            style={{
+              paddingHorizontal: 15,
+              paddingVertical: 10,
+              fontFamily: "PoppinsMedium"
+            }}
+            selectedValue={type}
+            onValueChange={(value, itemIndex) => setType(value)}
+          >
+            <Picker.Item fontFamily="PoppinsMedium" label="Grass" value="Grass" />
+            <Picker.Item fontFamily="PoppinsMedium" label="Cemento" value="Cemento" />
+            <Picker.Item fontFamily="PoppinsMedium" label="Sintético" value="Sintético" />
+          </Picker>
+        </View>
         <Input
           placeholder="Cantidad máxima de jugadores"
           value={players}
@@ -228,7 +230,16 @@ const NewField = () => {
       </View>
       <View style={{ marginBottom: 50 }}>
 
-      {/* <MapView style={{ width: '100%', height: 50 }} /> */}
+        <MapView
+          provider={PROVIDER_GOOGLE}
+          style={{ width: '100%', height: 80 }}
+          region={{
+            latitude: 37.78825,
+            longitude: -122.4324,
+            latitudeDelta: 0.015,
+            longitudeDelta: 0.0121,
+          }}
+        />
 
       </View>
       <Pressable

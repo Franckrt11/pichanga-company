@@ -32,8 +32,8 @@ const Login = () => {
         }}
       />
       <ScrollView
-        style={{ paddingTop: 60 }}
-        contentContainerStyle={{ alignItems: "center"}}
+        style={{ paddingTop: 120 }}
+        contentContainerStyle={{ alignItems: "center" }}
       >
         <View style={[LayoutStyles.scrollContainer, { width: "80%", alignItems: "stretch" }]}>
           <View style={{ flex: 1, alignItems: "center", marginBottom: 50 }}>

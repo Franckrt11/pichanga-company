@@ -28,7 +28,7 @@ const Photos = () => {
   const { token } = useAuthContext();
 
   const [location, setLocation] = useState<string | null>(null);
-  const [portrait, setPortrait] = useState<string | undefined | null>(undefined);
+  const [portrait, setPortrait] = useState<string | undefined>(undefined);
   const [pictures, setPictures] = useState<FieldPictureData[]>([]);
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
@@ -66,14 +66,14 @@ const Photos = () => {
   };
 
   const pickImage = async (): Promise<void> => {
-    let image = await pickImageAsync();
+    let image = await pickImageAsync([8,5]);
     if (image) {
       handleSaveImage(image);
     }
   };
 
   const pickCamera = async (): Promise<void> => {
-    let image = await pickCameraAsync();
+    let image = await pickCameraAsync([8,5]);
     if (image) {
       if (image) {
         handleSaveImage(image);
@@ -129,7 +129,7 @@ const Photos = () => {
         <Stack.Screen
           options={{
             headerShown: true,
-            headerTitle: () => <></>,
+            title: '',
             headerLeft: () => <Back />,
           }}
         />

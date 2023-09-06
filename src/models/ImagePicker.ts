@@ -11,11 +11,11 @@ const pickerOptions: PickerOption = {
   allowsEditing: true,
   aspect: [1, 1],
   base64: true,
-  quality: 0.5,
+  quality: 0.7,
 };
 
-export const pickImageAsync = async (): Promise<string | boolean> => {
-  let result = await ImagePicker.launchImageLibraryAsync(pickerOptions);
+export const pickImageAsync = async (ratio: [number, number]): Promise<string | boolean> => {
+  let result = await ImagePicker.launchImageLibraryAsync({...pickerOptions, aspect: ratio});
 
   if (!result.canceled) {
     return result.assets[0].base64!;
@@ -24,8 +24,8 @@ export const pickImageAsync = async (): Promise<string | boolean> => {
   }
 };
 
-export const pickCameraAsync = async (): Promise<string | boolean>  => {
-  let result = await ImagePicker.launchCameraAsync(pickerOptions);
+export const pickCameraAsync = async (ratio: [number, number]): Promise<string | boolean>  => {
+  let result = await ImagePicker.launchCameraAsync({...pickerOptions, aspect: ratio});
 
   if (!result.canceled) {
     return result.assets[0].base64!;

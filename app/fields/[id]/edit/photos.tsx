@@ -1,28 +1,298 @@
-import { StyleSheet, Text, View, Pressable } from "react-native"
-import { router } from "expo-router";
+import { StyleSheet, Text, View, Pressable, SafeAreaView, ScrollView, Alert } from "react-native";
+import { useRef, useMemo, useCallback, useState, useEffect } from "react";
+import { router, Stack, useLocalSearchParams } from "expo-router";
+import { Image } from 'expo-image';
+import {
+  BottomSheetView,
+  BottomSheetModal,
+  BottomSheetModalProvider,
+  BottomSheetBackdrop
+} from '@gorhom/bottom-sheet';
+import Icon from "react-native-vector-icons/Feather";
+import Back from "@/src/components/header/back";
+import UploadPhoto from "@/src/components/upload-photo";
 import { PageStyles, LayoutStyles } from "@/src/utils/Styles";
-import ChildPage from "@/src/components/layouts/child-page";
+import Colors from "@/src/utils/Colors";
+import Images from "@/src/utils/Images";
+import { pickImageAsync, pickCameraAsync } from "@/src/models/ImagePicker";
+import { fetchField, uploadPicture, fetchFieldPictures, removePicture } from "@/src/models/Field";
+import { useUserContext } from "@/src/context/User";
+import { useAuthContext } from "@/src/context/Auth";
+import { getFieldUrl } from "@/src/utils/Helpers";
+import PicturesIcon from "@/src/components/icons/pictures-icon";
+import { FieldData, FieldPictureData } from "@/src/utils/Types";
 
 const Photos = () => {
-  const save = () => {
-    console.log("Save Special Hour");
-    router.back();
+  const params = useLocalSearchParams();
+  const { state } = useUserContext();
+  const { token } = useAuthContext();
+
+  const [location, setLocation] = useState<string | null>(null);
+  const [portrait, setPortrait] = useState<string | undefined>(undefined);
+  const [pictures, setPictures] = useState<FieldPictureData[]>([]);
+
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const snapPoints = useMemo(() => [120], []);
+
+  const handlePresentModalPress = useCallback((type: string | null) => {
+    setLocation(type);
+    bottomSheetModalRef.current?.present();
+  }, []);
+
+  const handleClosePress = () => bottomSheetModalRef.current?.close();
+
+  const savePicture = async (imageUri: string | boolean, location: string): Promise<string | undefined> => {
+    const picture = await uploadPicture({
+      location: location,
+      picture: imageUri,
+      position: pictures.length + 1,
+      field_id: parseInt(params.id as string),
+    }, token, parseInt(params.id as string));
+    Alert.alert("Imagen de perfil guardada.");
+    return picture;
   };
 
-  return (
-    <ChildPage>
-      <Text style={LayoutStyles.pageTitle}>FOTOGRAFÍAS</Text>
+  const handleSaveImage = async (image: string | boolean): Promise<void> => {
+    if (location === 'portrait') {
+      const picture = await savePicture(image, location);
+      setPortrait(getFieldUrl(picture));
+    }
 
-      <Pressable
-        onPress={() => save()}
-        style={[PageStyles.button, { width: "80%", marginHorizontal: "auto" }]}
+    if (location === 'gallery') {
+      const picture = await savePicture(image, location);
+      loadPictures();
+    }
+    handleClosePress();
+  };
+
+  const pickImage = async (): Promise<void> => {
+    let image = await pickImageAsync([8,5]);
+    if (image) {
+      handleSaveImage(image);
+    }
+  };
+
+  const pickCamera = async (): Promise<void> => {
+    let image = await pickCameraAsync([8,5]);
+    if (image) {
+      if (image) {
+        handleSaveImage(image);
+      }
+    }
+  };
+
+  const removePortrait = async (): Promise<void> => {
+    const response = await removePicture(state.id as number, token, 'portrait');
+    Alert.alert(response);
+    setPortrait(undefined);
+  };
+
+  const removeFieldPicture = async (id: number): Promise<void> => {
+    const result = await removePicture(id, token, 'gallery');
+    setPictures(result);
+  };
+
+  const addPicture = () => {
+    setLocation('gallery');
+    bottomSheetModalRef.current?.present();
+  };
+
+  const loadPictures = async (): Promise<void> => {
+    const pictures: FieldPictureData[] = await fetchFieldPictures(parseInt(params.id as string), token);
+    setPictures(pictures);
+  };
+
+  const loadPortrait = async (): Promise<void> => {
+    const response:FieldData = await fetchField(params.id as unknown as number, token);
+    setPortrait(getFieldUrl(response.portrait) as string | undefined);
+  };
+
+  // const save = () => {
+  //   console.log("Save Special Hour");
+  //   router.back();
+  // };
+
+  const renderBackdrop = useCallback(
+    (props: any) => (
+      <BottomSheetBackdrop
+        {...props}
+        disappearsOnIndex={-1}
+        appearsOnIndex={0}
+        opacity={0.6}
+      />
+    ),
+    []
+  );
+
+  useEffect( () => {
+    loadPortrait();
+    loadPictures();
+  }, []);
+
+  return (
+    <BottomSheetModalProvider>
+      <SafeAreaView
+        style={LayoutStyles.whiteContainer}
       >
-        <Text style={PageStyles.buttonText}>GUARDAR</Text>
-      </Pressable>
-    </ChildPage>
+        <Stack.Screen
+          options={{
+            headerShown: true,
+            title: '',
+            headerLeft: () => <Back />,
+          }}
+        />
+        <BottomSheetModal
+          ref={bottomSheetModalRef}
+          index={0}
+          snapPoints={snapPoints}
+          style={styles.modal}
+          handleStyle={{ backgroundColor: "#E6E6E6" }}
+          backdropComponent={renderBackdrop}
+        >
+          <BottomSheetView
+            style={{
+              flex: 1,
+              alignItems: "center",
+            }}
+          >
+            <View style={styles.modalContent}>
+              <Pressable
+                onPress={pickCamera}
+                style={[
+                  styles.buttonOutline,
+                  { backgroundColor: Colors.white },
+                ]}
+              >
+                <Icon name="camera" size={15} color={Colors.maastrichtBlue} />
+                <Text style={styles.buttonOutlineText}>Cámara</Text>
+              </Pressable>
+              <Pressable
+                onPress={pickImage}
+                style={[
+                  styles.buttonOutline,
+                  { backgroundColor: Colors.white },
+                ]}
+              >
+                <Icon name="image" size={15} color={Colors.maastrichtBlue} />
+                <Text style={styles.buttonOutlineText}>Galería</Text>
+              </Pressable>
+            </View>
+          </BottomSheetView>
+        </BottomSheetModal>
+        <ScrollView
+          style={{ paddingTop: 20 }}
+          contentContainerStyle={{ alignItems: "center"}}
+        >
+          <View style={[LayoutStyles.scrollContainer, { paddingBottom: 60 }]}>
+            <Text style={[LayoutStyles.pageTitle, { marginBottom: 5 }]}>FOTOGRAFÍAS</Text>
+            <Text style={[LayoutStyles.subtitle, { marginBottom: 5 }]}>FOTO PORTADA</Text>
+            <View style={{ marginBottom: 30, overflow: "hidden", borderRadius: 20 }}>
+              <Image
+                source={{ uri: portrait }}
+                placeholder={Images.portraitDefault}
+                style={{ height: 200, width: 330 }}
+                transition={300}
+              />
+            </View>
+            <View style={{ marginBottom: 20 }}>
+              <UploadPhoto
+                onRemovePhoto={removePortrait}
+                onModalPress={() => handlePresentModalPress('portrait')}
+                position="Horizontal"
+              />
+            </View>
+            <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 20 }}>
+              <Text style={[LayoutStyles.subtitle, { marginBottom: 0, marginRight: 8 }]}>GALERÍA</Text>
+              <Text style={[LayoutStyles.subtitle, { marginBottom: 0, fontSize: 14, fontFamily: "PoppinsMedium", }]}>(max 3 fotos)</Text>
+            </View>
+
+            {pictures.map((picture, index) => (
+              <View key={index} style={{ flexDirection: "row", gap: 20, marginBottom: 20 }}>
+                <Image
+                  source={{ uri: getFieldUrl(picture.filename) }}
+                  style={{ borderRadius: 20, height: 120, width: "100%", flex: 1, flexBasis: "10%" }}
+                />
+                <View style={{ flex: 1, justifyContent: "center" }}>
+                  <UploadPhoto
+                    onRemovePhoto={() => removeFieldPicture(picture.id)}
+                    onModalPress={() => handlePresentModalPress('gallery')}
+                    position="Vertical"
+                  />
+                </View>
+              </View>
+            ))}
+
+            {pictures.length < 3 &&
+              <Pressable
+                style={[
+                  styles.buttonOutline,
+                  {
+                    backgroundColor: Colors.white,
+                    width: "50%",
+                    marginHorizontal: "auto",
+                    marginBottom: 50,
+                    borderWidth: 2,
+                    paddingVertical: 6,
+                    borderRadius: 20
+                  }
+                ]}
+                onPress={() => addPicture()}
+              >
+                <PicturesIcon size={20} />
+                <Text style={styles.buttonOutlineText}>Agregar fotos</Text>
+              </Pressable>
+            }
+
+            {/* <Pressable
+              onPress={() => save()}
+              style={[PageStyles.button, { width: "80%", marginHorizontal: "auto", marginTop: 50 }]}
+            >
+              <Text style={PageStyles.buttonText}>GUARDAR</Text>
+            </Pressable> */}
+
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    </BottomSheetModalProvider>
   )
 };
 
 export default Photos;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  modal: {
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 12,
+    },
+    shadowOpacity: 0.58,
+    shadowRadius: 16.0,
+    elevation: 24,
+  },
+  modalContent: {
+    flexDirection: "row",
+    gap: 30,
+    marginBottom: 15,
+    width: "70%",
+    marginLeft: "auto",
+    marginRight: "auto",
+    paddingTop: 30,
+  },
+  buttonOutline: {
+    borderColor: Colors.silverSand,
+    borderWidth: 1,
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 15,
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
+    gap: 10,
+    flexGrow: 1,
+  },
+  buttonOutlineText: {
+    fontFamily: "PoppinsMedium",
+    color: Colors.maastrichtBlue,
+  },
+});

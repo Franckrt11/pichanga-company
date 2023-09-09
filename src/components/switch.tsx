@@ -24,7 +24,7 @@ const Switch = ({ value, onValueChange }: { value: boolean, onValueChange:any}) 
 
   useEffect(() => {
     translate.value = value ? 27 : 0;
-  },[]);
+  },[value]);
 
   return (
     <Pressable

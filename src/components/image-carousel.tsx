@@ -61,13 +61,13 @@ const ImageCarousel = ({ data }: ImageCarouselProps) => {
   }, [data]);
 
   return (
-    <View style={{ paddingBottom: 20 }}>
+    <View style={{ paddingBottom: 20, height: 240 }}>
       <FlatList
         data={dataWithUri}
         renderItem={({ item }) => <Item url={item.filename} />}
         keyExtractor={item => 'picture-'+item.id.toString()}
         horizontal
-        // pagingEnabled
+        pagingEnabled
         snapToAlignment="center"
         onViewableItemsChanged={handleOnViewableItemsChanged}
         viewabilityConfig={viewabilityConfig}

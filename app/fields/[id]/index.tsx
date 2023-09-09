@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, Switch, FlatList, Pressable } from "react-native"
+import { StyleSheet, Text, View, Image, FlatList, Pressable } from "react-native"
 import { router, useLocalSearchParams } from "expo-router";
 import { useState, useEffect } from "react";
 import { PageStyles, LayoutStyles } from "@/src/utils/Styles";
@@ -7,8 +7,9 @@ import { FieldData, FieldPictureData } from "@/src/utils/Types";
 import ChildPage from "@/src/components/layouts/child-page";
 import PencilIcon from "@/src/components/icons/pencil-icon";
 import { useAuthContext } from "@/src/context/Auth";
-import { fetchField, fetchFieldPictures }  from "@/src/models/Field";
+import { fetchField, fetchFieldPictures, updateFieldStatus }  from "@/src/models/Field";
 import ImageCarousel from "@/src/components/image-carousel";
+import Switch from "@/src/components/switch";
 
 interface PictureList {
   id: number;
@@ -29,12 +30,14 @@ const FieldDetails = () => {
   const { token } = useAuthContext();
   const [ field, setField ] = useState<FieldData | null>(null);
   const [ pictures, setPictures ] = useState<PictureList[]>([]);
+  const [ visible, setVisible ] = useState(false);
 
   const getField = async () => {
     const response:FieldData = await fetchField(params.id as unknown as number, token);
     setField(response);
     const pictures = await getPictures();
-    await setPictures([{id: 0, filename: response.portrait as string | undefined }, ...pictures]);
+    setPictures([{id: 0, filename: response.portrait as string | undefined }, ...pictures]);
+    setVisible(response.active);
   };
 
   const getPictures = async (): Promise<FieldPictureData[]> => {
@@ -48,17 +51,24 @@ const FieldDetails = () => {
     return replaced.join(", ");
   };
 
+  const toggleVisible = async(): Promise<void> => {
+    const response = await updateFieldStatus(field!.id, token, !visible);
+    if (response.status) {
+      setVisible(!visible);
+    }
+  };
+
   useEffect(() => {
     getField();
   },[]);
 
   return (
-    <ChildPage style={{ width: "80%", alignItems: "flex-start", flex: 1 }}>
+    <ChildPage style={{ width: "80%", alignItems: "flex-start", marginBottom: 80 }}>
       <Text style={LayoutStyles.pageTitle}>{field?.name}</Text>
 
       <ImageCarousel data={pictures} />
 
-      <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+      <View style={{ flexDirection: "row", width: "100%", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
         <Pressable
           onPress={() => router.push(`/fields/${params.id}/comments`)}
           style={styles.buttom}
@@ -73,11 +83,8 @@ const FieldDetails = () => {
           <Text style={styles.buttomText}>Editar fotos</Text>
         </Pressable>
         <Switch
-          trackColor={{ false: Colors.silverSand, true: Colors.silverSand }}
-          thumbColor={field?.active ? Colors.greenLizard : Colors.maastrichtBlue}
-          ios_backgroundColor={Colors.maastrichtBlue}
-          onValueChange={() => console.log("Switch visible field")}
-          value={field?.active}
+          onValueChange={toggleVisible}
+          value={visible}
         />
       </View>
 
@@ -166,8 +173,8 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderColor: Colors.silverSand,
     borderWidth: 2,
-    paddingVertical: 4,
-    paddingHorizontal: 25,
+    paddingVertical: 2,
+    paddingHorizontal: 15,
     flexDirection: "row",
     alignItems: "center",
     gap: 5,
@@ -175,6 +182,7 @@ const styles = StyleSheet.create({
   buttomText: {
     color: Colors.maastrichtBlue,
     fontFamily: "PoppinsMedium",
+    fontSize: 12
   },
   slider: {
     flex: 1,

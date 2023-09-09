@@ -5,7 +5,7 @@ import { Picker } from '@react-native-picker/picker';
 import { PageStyles, LayoutStyles } from "@/src/utils/Styles";
 import Colors from "@/src/utils/Colors";
 import { FieldData } from "@/src/utils/Types";
-import { fetchField }  from "@/src/models/Field";
+import { fetchField, updateFieldStatus }  from "@/src/models/Field";
 import { useAuthContext } from "@/src/context/Auth";
 import ChildPage from "@/src/components/layouts/child-page";
 
@@ -21,9 +21,13 @@ const EditField = () => {
     setStatus(response.active as boolean);
   };
 
-  const save = () => {
-    console.log("Save Special Hour");
-    router.back();
+  const save = async () => {
+    const response = await updateFieldStatus(params.id as unknown as number, token, status);
+    if (response.status) {
+      router.replace("/(tabs)/fields");
+    } else {
+      console.log("error");
+    }
   };
 
   useEffect(() => {
@@ -81,10 +85,7 @@ const EditField = () => {
               fontFamily: "PoppinsMedium"
             }}
             selectedValue={status}
-            onValueChange={(value, itemIndex) => {
-              console.log('value', value.toString(), itemIndex);
-              setStatus(value);
-            }}
+            onValueChange={(value, itemIndex) => setStatus(value)}
           >
             <Picker.Item fontFamily="PoppinsMedium" label="Habilitado" value={true} />
             <Picker.Item fontFamily="PoppinsMedium" label="Inhabilitado" value={false} />

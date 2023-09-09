@@ -97,3 +97,35 @@ export const removePicture = async ( id: number, token: string | null, location:
     console.log("🚩 ~ models/Field.ts ~ removePicture() ~ error:", error);
   }
 };
+
+export const updateField = async ( id: number, token: string | null,  data: FieldData) => {
+  try {
+    const response = await fetch(`${API_URL}api/company/field/${id}`, {
+      method: "PUT",
+      headers: {
+        ...FETCH_HEADERS,
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
+    });
+    return await response.json();
+  } catch (error) {
+    console.log("🚩 ~ models/Field.ts ~ updateField() ~ error:", error);
+  }
+};
+
+export const updateFieldStatus = async ( id: number, token: string | null,  data: boolean) => {
+  try {
+    const response = await fetch(`${API_URL}api/company/field/${id}/status`, {
+      method: "PATCH",
+      headers: {
+        ...FETCH_HEADERS,
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ active: data }),
+    });
+    return await response.json();
+  } catch (error) {
+    console.log("🚩 ~ models/Field.ts ~ updateFieldStatus() ~ error:", error);
+  }
+};

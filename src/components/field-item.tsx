@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Switch, Pressable } from "react-native";
+import { StyleSheet, Text, View, Pressable } from "react-native";
 import { useState } from "react";
 import { router } from "expo-router";
 import { Image } from 'expo-image';
@@ -8,7 +8,10 @@ import StarIcon from "@/src/components/icons/star-icon";
 import PencilIcon from "@/src/components/icons/pencil-icon";
 import ZoomPlusIcon from "@/src/components/icons/zoom-plus-icon";
 import MenuIcon from "@/src/components/icons/menu-icon";
+import Switch from "@/src/components/switch";
 import { getFieldUrl } from "@/src/utils/Helpers";
+import { updateFieldStatus }  from "@/src/models/Field";
+import { useAuthContext } from "@/src/context/Auth";
 
 interface FieldProps {
   id: number;
@@ -19,7 +22,16 @@ interface FieldProps {
 }
 
 const FieldItem = ({ id, name, district, active, portrait }: FieldProps) => {
+  const { token } = useAuthContext();
   const [visible, setVisible] = useState(active);
+
+  const toggleVisible = async(): Promise<void> => {
+    const response = await updateFieldStatus(id, token, !visible);
+    if (response.status) {
+      console.log("Change visible to:", !visible.toString());
+      setVisible(!visible);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -28,14 +40,14 @@ const FieldItem = ({ id, name, district, active, portrait }: FieldProps) => {
       </Pressable>
       <View style={styles.wrapper}>
         <View style={styles.header}>
-          <Image
-            source={{uri: getFieldUrl(portrait)}}
-            placeholder={Images.portraitDefault}
-            style={{ width: 80, height: 125 }}
-            contentFit="none"
-            contentPosition={{ top: "50%", left: "50%" }}
-            transition={200}
-          />
+          <View style={{ width: 80, overflow: "hidden" }}>
+            <Image
+              source={{uri: getFieldUrl(portrait)}}
+              placeholder={Images.portraitDefault}
+              style={{ width: 200, height: 125, right: "70%" }}
+              transition={200}
+            />
+          </View>
           <View style={styles.content}>
             <View style={styles.description}>
               <Text style={styles.title}>{name}</Text>
@@ -83,10 +95,7 @@ const FieldItem = ({ id, name, district, active, portrait }: FieldProps) => {
             <Text style={styles.buttomText}>Editar cancha</Text>
           </Pressable>
           <Switch
-            trackColor={{ false: Colors.silverSand, true: Colors.silverSand }}
-            thumbColor={visible ? Colors.greenLizard : Colors.maastrichtBlue}
-            ios_backgroundColor={Colors.maastrichtBlue}
-            onValueChange={() => console.log("Switch visible field")}
+            onValueChange={toggleVisible}
             value={visible}
           />
         </View>
@@ -159,7 +168,8 @@ const styles = StyleSheet.create({
   },
   footer: {
     flexDirection: "row",
-    paddingHorizontal: 10,
+    paddingHorizontal: 15,
+    paddingVertical: 4,
     alignItems: "center",
     justifyContent: "space-between",
   },
@@ -167,7 +177,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     borderRadius: 15,
     paddingVertical: 3,
-    paddingHorizontal: 20,
+    paddingHorizontal: 15,
     flexDirection: "row",
     alignItems: "center",
     gap: 5,

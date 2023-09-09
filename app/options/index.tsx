@@ -2,7 +2,6 @@ import {
   Text,
   View,
   Pressable,
-  Switch,
   StyleSheet,
 } from "react-native";
 import { useState } from "react";
@@ -13,23 +12,26 @@ import ChildPage from "@/src/components/layouts/child-page";
 import UserBlockedIcon from "@/src/components/icons/user-blocked-icon";
 import TermsIcon from "@/src/components/icons/terms-icon";
 import HelpIcon from "@/src/components/icons/help-icon";
+import Switch from "@/src/components/switch";
 
 const Options = () => {
   const [isPush, setIsPush] = useState(false);
   const [isMail, setIsMail] = useState(false);
-  const togglePush = () => setIsPush((previousState) => !previousState);
-  const toggleMail = () => setIsMail((previousState) => !previousState);
+  const togglePush = () => {
+    setIsPush((previousState) => !previousState);
+  };
+
+  const toggleMail = () => {
+    setIsMail((previousState) => !previousState);
+  };
 
   return (
-    <ChildPage style={{ width: "80%" }}>
+    <ChildPage style={{ width: "80%", alignItems: "stretch" }}>
       <Text style={LayoutStyles.pageTitle}>OPCIONES</Text>
       <View style={{ marginBottom: 30 }}>
         <View style={styles.inputGroup}>
           <Text style={styles.inputLabel}>Notificaciones PUSH</Text>
           <Switch
-            trackColor={{ false: Colors.silverSand, true: Colors.silverSand }}
-            thumbColor={isPush ? Colors.greenLizard : Colors.maastrichtBlue}
-            ios_backgroundColor={Colors.maastrichtBlue}
             onValueChange={togglePush}
             value={isPush}
           />
@@ -37,9 +39,6 @@ const Options = () => {
         <View style={styles.inputGroup}>
           <Text style={styles.inputLabel}>Notificaciones por correo</Text>
           <Switch
-            trackColor={{ false: Colors.silverSand, true: Colors.silverSand }}
-            thumbColor={isMail ? Colors.greenLizard : Colors.maastrichtBlue}
-            ios_backgroundColor={Colors.maastrichtBlue}
             onValueChange={toggleMail}
             value={isMail}
           />

@@ -2,6 +2,7 @@ import {
   Text,
   Pressable,
   StyleSheet,
+  View
 } from "react-native";
 import * as Linking from "expo-linking";
 import { LayoutStyles } from "@/src/utils/Styles";
@@ -14,29 +15,31 @@ const Help = () => {
   const telUrl = "tel:982984877";
 
   return (
-    <ChildPage style={{ width: "80%" }}>
+    <ChildPage style={{ width: "80%"}}>
       <Text style={LayoutStyles.pageTitle}>AYUDA</Text>
-      <Text style={styles.content}>Puedes comunicarte al</Text>
-      <Pressable onPress={() => Linking.openURL(mailUrl)}>
-        <Text
-          style={[
-            styles.content,
-            styles.contentBold,
-          ]}
-        >
-          {mail}
-        </Text>
-      </Pressable>
-      <Pressable onPress={() => Linking.openURL(telUrl)}>
-        <Text
-          style={[
-            styles.content,
-            styles.contentBold,
-          ]}
-        >
-          (+51) 982 984 877
-        </Text>
-      </Pressable>
+      <View style={{alignItems: "flex-start" }}>
+        <Text style={styles.content}>Puedes comunicarte al</Text>
+        <Pressable onPress={() => Linking.openURL(mailUrl)}>
+          <Text
+            style={[
+              styles.content,
+              styles.contentBold,
+            ]}
+          >
+            {mail}
+          </Text>
+        </Pressable>
+        <Pressable onPress={() => Linking.openURL(telUrl)}>
+          <Text
+            style={[
+              styles.content,
+              styles.contentBold,
+            ]}
+          >
+            (+51) 982 984 877
+          </Text>
+        </Pressable>
+      </View>
     </ChildPage>
   );
 };

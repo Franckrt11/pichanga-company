@@ -41,14 +41,14 @@ export interface ISpecialHour {
 };
 
 export interface FieldData {
-  active?: boolean;
+  active: boolean;
   address: string;
   city: string;
   company_id: number;
   country: string;
   district: string;
   games: string;
-  id?: number;
+  id: number;
   map: string;
   mobile: string;
   name: string;

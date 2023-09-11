@@ -3,6 +3,7 @@ import { router, useSegments } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useUserContext } from "./User";
 import { fetchLogin, fetchRegister, fetchUser, fetchNewPassword } from "@/src/models/Auth";
+import { fetchConfigAll } from "@/src/models/Config";
 import { FetchUserData, ProviderProps } from "@/src/utils/Types";
 
 interface IAuthContext {
@@ -13,6 +14,7 @@ interface IAuthContext {
   token: string | null;
   loading: boolean;
   errors: any; // Revisar type de Errores del API
+  config: any; // Setear Type de Config
 }
 
 const AuthContext = createContext({} as IAuthContext);
@@ -39,7 +41,15 @@ export const AuthProvider = ({ children }: ProviderProps) => {
   const [loading, setLoading] = useState(false);
   const [token, setToken] = useState<string | null>(null);
   const [errors, setErrors] = useState(null);
+  const [config, setConfig] = useState(null);
   const { dispatch } = useUserContext();
+
+  const loadConfig = async (token: string | null) => {
+    const response = await fetchConfigAll(token);
+    if (response.status) {
+      setConfig(response.data);
+    }
+  };
 
   const signIn = async (email: string, password: string) => {
     if (!email || !password) {
@@ -59,6 +69,7 @@ export const AuthProvider = ({ children }: ProviderProps) => {
           type: "change",
           payload: response.user,
         });
+        await loadConfig(response.token);
       } else {
         setErrors(response.messages);
         console.log("Error", response.messages);
@@ -137,6 +148,8 @@ export const AuthProvider = ({ children }: ProviderProps) => {
           payload: response.data,
         });
       }
+
+      await loadConfig(userToken);
     } catch (error) {
       console.log("🚩 ~ auth.js ~ isLoggedIn() ~ error:", error);
     }
@@ -158,6 +171,7 @@ export const AuthProvider = ({ children }: ProviderProps) => {
         token,
         loading,
         errors,
+        config
       }}
     >
       {children}

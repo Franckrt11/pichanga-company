@@ -8,11 +8,14 @@ import * as Linking from "expo-linking";
 import { LayoutStyles } from "@/src/utils/Styles";
 import Colors from "@/src/utils/Colors";
 import ChildPage from "@/src/components/layouts/child-page";
+import { useAuthContext } from "@/src/context/Auth";
 
 const Help = () => {
-  const mail = "soporte@tejuegounapichanga.com"
+  const { config } = useAuthContext();
+  const mail = config.mail;
+  const tel = config.phone;
   const mailUrl = "mailto:"+mail;
-  const telUrl = "tel:982984877";
+  const telUrl = "tel:"+tel;
 
   return (
     <ChildPage style={{ width: "80%"}}>
@@ -36,7 +39,7 @@ const Help = () => {
               styles.contentBold,
             ]}
           >
-            (+51) 982 984 877
+            (+51) {tel}
           </Text>
         </Pressable>
       </View>

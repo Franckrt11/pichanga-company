@@ -53,10 +53,9 @@ const User = () => {
   const handleClosePress = () => bottomSheetModalRef.current?.close();
 
   const pickImage = async (): Promise<void> => {
-    let image = await pickImageAsync();
+    let image = await pickImageAsync([1, 1]);
     if (image) {
       const photo = await saveAvatar(image);
-      console.log("🚀 ~ file: index.tsx:59 ~ pickImage ~ photo:", photo);
       setAvatar(getAvatarUrl(photo));
       dispatch({
         type: "change-avatar",
@@ -67,7 +66,7 @@ const User = () => {
   };
 
   const pickCamera = async (): Promise<void> => {
-    let image = await pickCameraAsync();
+    let image = await pickCameraAsync([1, 1]);
     if (image) {
       const photo = await saveAvatar(image);
       dispatch({

@@ -1,5 +1,5 @@
 import { createContext, useContext, useReducer, type Dispatch } from "react";
-import { UserData, PhotoData, ProviderProps } from "@/src/utils/Types";
+import { UserData, ProviderProps } from "@/src/utils/Types";
 
 interface Action {
   type: string;
@@ -13,6 +13,8 @@ const initialState: UserData = {
   ruc: "",
   email: "",
   photo: null,
+  push: false,
+  mailing: false,
 };
 
 const UserContext = createContext<{
@@ -32,6 +34,8 @@ const UserReducer = (state: UserData, action: Action): UserData => {
         ruc: action.payload!.ruc,
         email: action.payload!.email,
         photo: action.payload!.photo,
+        push: action.payload!.push,
+        mailing: action.payload!.mailing,
       };
     }
     case "delete": {

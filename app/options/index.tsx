@@ -13,16 +13,29 @@ import UserBlockedIcon from "@/src/components/icons/user-blocked-icon";
 import TermsIcon from "@/src/components/icons/terms-icon";
 import HelpIcon from "@/src/components/icons/help-icon";
 import Switch from "@/src/components/switch";
+import { useUserContext } from "@/src/context/User";
+import { useAuthContext } from "@/src/context/Auth";
+import { changeUserConfig } from "@/src/models/User";
 
 const Options = () => {
-  const [isPush, setIsPush] = useState(false);
-  const [isMail, setIsMail] = useState(false);
-  const togglePush = () => {
-    setIsPush((previousState) => !previousState);
+  const { state } = useUserContext();
+  const { token } = useAuthContext();
+
+  const [isPush, setIsPush] = useState(state.push);
+  const [isMail, setIsMail] = useState(state.mailing);
+
+  const togglePush = async () => {
+    const response = await changeUserConfig({ type: "push", value: !isPush}, token, state.id);
+    if (response.status) {
+      setIsPush((previousState) => !previousState);
+    }
   };
 
-  const toggleMail = () => {
-    setIsMail((previousState) => !previousState);
+  const toggleMail = async () => {
+    const response = await changeUserConfig({ type: "mailing", value: !isMail }, token, state.id);
+    if (response.status) {
+      setIsMail((previousState) => !previousState);
+    }
   };
 
   return (

@@ -9,6 +9,8 @@ export interface UserData extends PhotoData {
   name: string;
   ruc: string;
   email: string;
+  push: boolean;
+  mailing: boolean;
 }
 
 export interface FetchUserData extends UserData {

@@ -29,6 +29,7 @@
     "@react-native-picker/picker": "2.4.10",
     "@react-navigation/native": "^6.0.2",
     "@types/react-native-vector-icons": "^6.4.13",
+    "date-fns": "^2.30.0",
     "expo": "^49.0.9",
     "expo-dev-client": "~2.4.6",
     "expo-device": "~5.4.0",

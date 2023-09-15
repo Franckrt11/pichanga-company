@@ -1,43 +1,44 @@
 import { StyleSheet, Text, View } from "react-native";
+import { useState, useEffect } from "react";
+import { formatDistance } from "date-fns";
+import { es } from 'date-fns/locale';
 import Colors from "@/src/utils/Colors";
+import { fetchActivity } from "@/src/models/Config";
+import { useUserContext } from "@/src/context/User";
+import { useAuthContext } from "@/src/context/Auth";
 
 interface ActivityProps {
   max?: number;
 }
 
-const ActivityBlock = ({ max }: ActivityProps) => {
-  const activityLog = [
-    {
-      title:
-        "Pedro Parker solicitó reserva Cancha 1 para las 6:00 pm del 29 Dic 2023",
-      datetime: "2023-06-14 18:23:07",
-    },
-    {
-      title: "Julio Cárdenas canceló Cancha 3 de las 2:00 pm del 29 Dic 2023",
-      datetime: "2023-06-13 14:23:07",
-    },
-    {
-      title: "Pedro Parker te escribió un mensaje",
-      datetime: "2023-06-12 02:23:07",
-    },
-    {
-      title: "Pedro Parker envió un comentario en Cancha 1",
-      datetime: "2023-06-11 02:23:07",
-    },
-    {
-      title: "Creación de la cuenta de empresa",
-      datetime: "2023-06-10 02:23:07",
-    },
-  ];
+interface IActivity {
+  message: string;
+  created_at: string;
+}
 
-  const limitLog = max ? activityLog.slice(0, max) : activityLog;
+const ActivityBlock = ({ max }: ActivityProps) => {
+  const { state } = useUserContext();
+  const { token } = useAuthContext();
+  const [ logs, setLogs ] = useState<IActivity[]>([]);
+
+  const loadActivity = async () => {
+    const response = await fetchActivity(state.id as number, token);
+    if (response.status) {
+      const limitLog = max ? response.data.slice(0, max) : response.data;
+      setLogs(limitLog);
+    }
+  };
+
+  useEffect(() => {
+    loadActivity();
+  },[]);
 
   return (
-    <View>
-      {limitLog.map((log, index) => (
+    <View style={{ width: "100%" }}>
+      {logs.map((log, index) => (
         <View key={`log-${index}`} style={styles.wrapper}>
-          <Text style={styles.title}>{log.title}</Text>
-          <Text style={styles.date}>{log.datetime}</Text>
+          <Text style={styles.title}>{log.message}</Text>
+          <Text style={styles.date}>{ formatDistance(new Date(log.created_at), new Date(), { addSuffix: true, locale: es }) }</Text>
         </View>
       ))}
     </View>

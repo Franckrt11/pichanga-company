@@ -2,12 +2,12 @@ import { StyleSheet, Text, View, Pressable, Alert } from "react-native";
 import { useState } from "react";
 import { router } from "expo-router";
 import { Picker } from '@react-native-picker/picker';
+import MapView, { Marker, PROVIDER_GOOGLE, LatLng } from "react-native-maps";
 import { LayoutStyles, PageStyles } from "@/src/utils/Styles";
 import Colors from "@/src/utils/Colors";
 import ChildPage from "@/src/components/layouts/child-page";
 import Input from "@/src/components/input";
 import ButtonCheckbox from "@/src/components/button-checkbox";
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import { saveField }  from "@/src/models/Field";
 import { useUserContext } from "@/src/context/User";
 import { useAuthContext } from "@/src/context/Auth";
@@ -28,7 +28,10 @@ const NewField = () => {
   const [city, setCity] = useState("");
   const [district, setDistrict] = useState("");
   const [address, setAddress] = useState("");
-  const [map, setMap] = useState("mapa demo");
+  const [coords, setCoords] = useState<LatLng>({
+    latitude: -12.0459667,
+    longitude: -77.0305709
+  });
 
   const changeModeState = (state: boolean, mode: string) => {
     setMode({ ...modes, [mode]: state });
@@ -42,11 +45,11 @@ const NewField = () => {
     const saved = await saveField(token, {
       address,
       city,
-      company_id: state.id!,
+      company_id: state.id as number,
       country,
       district,
       games: JSON.stringify(filteredModes),
-      map,
+      map: `${coords.latitude},${coords.longitude}`,
       mobile,
       name,
       parking,
@@ -59,7 +62,7 @@ const NewField = () => {
     if (saved.status) {
       router.push(`/fields/new/photos?id=${saved.data.id}`);
     } else {
-      console.log("🚨 ~ file: index.tsx:37 ~ nextStep ~ error", saved);
+      console.log("🚨 ~ fields/new/index.tsx ~ nextStep ~ error", saved);
       Alert.alert('Error al guardar cancha.');
     }
   };
@@ -103,19 +106,9 @@ const NewField = () => {
           styles={PageStyles.input}
           theme="light"
         />
-        <View style={{
-          backgroundColor: Colors.white,
-          borderColor: Colors.silverSand,
-          borderWidth: 2,
-          borderRadius: 10,
-          marginBottom: 20,
-        }}>
+        <View style={PageStyles.pickerContainer}>
           <Picker
-            style={{
-              paddingHorizontal: 15,
-              paddingVertical: 10,
-              fontFamily: "PoppinsMedium"
-            }}
+            style={PageStyles.picker}
             selectedValue={type}
             onValueChange={(value, itemIndex) => setType(value)}
           >
@@ -228,19 +221,23 @@ const NewField = () => {
           theme="light"
         />
       </View>
-      <View style={{ marginBottom: 50 }}>
-
+      <View style={{ width: "80%", height: 400, marginBottom: 50, borderRadius: 20, overflow: "hidden" }}>
         <MapView
           provider={PROVIDER_GOOGLE}
-          style={{ width: '100%', height: 80 }}
-          region={{
-            latitude: 37.78825,
-            longitude: -122.4324,
-            latitudeDelta: 0.015,
-            longitudeDelta: 0.0121,
+          style={{ width: "100%", height: "100%" }}
+          initialRegion={{
+            latitude: coords.latitude,
+            longitude: coords.longitude,
+            latitudeDelta: 0.02,
+            longitudeDelta: 0.005,
           }}
-        />
-
+        >
+          <Marker
+            draggable
+            onDragEnd={(direction) => setCoords(direction.nativeEvent.coordinate)}
+            coordinate={coords}
+          />
+        </MapView>
       </View>
       <Pressable
         onPress={() => nextStep()}

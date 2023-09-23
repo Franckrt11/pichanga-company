@@ -68,15 +68,16 @@ export const PageStyles = StyleSheet.create({
     fontSize: 16,
     fontFamily: "PoppinsMedium",
   },
-  picker: {
-    marginBottom: 5,
+  pickerContainer: {
     backgroundColor: Colors.white,
     borderColor: Colors.silverSand,
     borderWidth: 2,
     borderRadius: 10,
+    marginBottom: 20,
+  },
+  picker: {
     paddingHorizontal: 15,
     paddingVertical: 10,
-    fontFamily: "PoppinsMedium",
-    borderStyle: "solid"
+    fontFamily: "PoppinsMedium"
   }
 });

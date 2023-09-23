@@ -12,6 +12,7 @@ export const fetchConfigAll = async (token: string | null) => {
     return await response.json();
   } catch (error) {
     console.log("🚩 ~ models/Config.ts ~ fetchConfigAll() ~ error:", error);
+    return { status: false };
   }
 };
 

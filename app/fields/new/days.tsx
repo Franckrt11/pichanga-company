@@ -1,20 +1,36 @@
-import { StyleSheet, Text, View, Pressable } from "react-native";
+import { Text, View, Pressable } from "react-native";
 import { useState } from "react";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { LayoutStyles, PageStyles } from "@/src/utils/Styles";
 import Colors from "@/src/utils/Colors";
 import ChildPage from "@/src/components/layouts/child-page";
 import ButtonCheckbox from "@/src/components/button-checkbox";
+import { useAuthContext } from "@/src/context/Auth";
+import { saveFieldDays } from "@/src/models/Field";
+import { FieldDay } from "@/src/utils/Types";
 
 const Days = () => {
+  const params = useLocalSearchParams();
+  const { token } = useAuthContext();
   const [days, setDays] = useState({ "lu": false, "ma": false, "mi": false, "ju": false, "vi": false, "sa": false, "do": false });
 
   const changeDaysState = (state: boolean, day: string) => {
     setDays({ ...days, [day]: state });
   };
 
-  const nextStep = () => {
-    router.push("/fields/new/hours");
+  const daysToArray = (days:any): Array<FieldDay> => {
+    const array = [];
+    for (const [key, value] of Object.entries(days)) {
+      array.push({ day: key, active: value as boolean });
+    }
+    return array;
+  };
+
+  const nextStep = async () => {
+    const response = await saveFieldDays(params.id as unknown as number, token, daysToArray(days));
+    if (response.status) {
+      router.push(`/fields/new/hours?id=${response.data}`);
+    }
   };
 
   return (
@@ -23,6 +39,7 @@ const Days = () => {
       <Text style={[LayoutStyles.subtitle, { marginBottom: 50 }]}>¿Qué días atiende su cancha generalmente?</Text>
       <View style={{ flexDirection: "row", gap: 8, marginBottom: 50 }}>
         <ButtonCheckbox
+          styleText={{ fontSize: 14 }}
           radius={15}
           color={Colors.maastrichtBlue}
           checked={days["lu"]}
@@ -31,6 +48,7 @@ const Days = () => {
           onChangeMode={changeDaysState}
         />
         <ButtonCheckbox
+          styleText={{ fontSize: 14 }}
           radius={15}
           color={Colors.maastrichtBlue}
           checked={days["ma"]}
@@ -39,6 +57,7 @@ const Days = () => {
           onChangeMode={changeDaysState}
         />
         <ButtonCheckbox
+          styleText={{ fontSize: 14 }}
           radius={15}
           color={Colors.maastrichtBlue}
           checked={days["mi"]}
@@ -47,6 +66,7 @@ const Days = () => {
           onChangeMode={changeDaysState}
         />
         <ButtonCheckbox
+          styleText={{ fontSize: 14 }}
           radius={15}
           color={Colors.maastrichtBlue}
           checked={days["ju"]}
@@ -55,6 +75,7 @@ const Days = () => {
           onChangeMode={changeDaysState}
         />
         <ButtonCheckbox
+          styleText={{ fontSize: 14 }}
           radius={15}
           color={Colors.maastrichtBlue}
           checked={days["vi"]}
@@ -63,6 +84,7 @@ const Days = () => {
           onChangeMode={changeDaysState}
         />
         <ButtonCheckbox
+          styleText={{ fontSize: 14 }}
           radius={15}
           color={Colors.maastrichtBlue}
           checked={days["sa"]}
@@ -71,6 +93,7 @@ const Days = () => {
           onChangeMode={changeDaysState}
         />
         <ButtonCheckbox
+          styleText={{ fontSize: 14 }}
           radius={15}
           color={Colors.maastrichtBlue}
           checked={days["do"]}

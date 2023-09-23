@@ -35,15 +35,19 @@ export const fetchRegister = async (data: FetchUserData) => {
 };
 
 export const fetchUser = async (id: string, token: string | null) => {
-  const response = await fetch(`${API_URL}api/company/profile/${id}`, {
-    method: "GET",
-    headers: {
-      ...FETCH_HEADERS,
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  try {
+    const response = await fetch(`${API_URL}api/company/profile/${id}`, {
+      method: "GET",
+      headers: {
+        ...FETCH_HEADERS,
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-  return await response.json();
+    return await response.json();
+  } catch (error) {
+    console.log("🚩 ~ models/Auth.ts ~ fetchUser() ~ error:", error);
+  }
 };
 
 export const fetchNewPassword = async (email: string, oldPassword: string, newPassword: string) => {

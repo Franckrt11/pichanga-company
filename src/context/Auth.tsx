@@ -75,7 +75,7 @@ export const AuthProvider = ({ children }: ProviderProps) => {
         console.log("Error", response.messages);
       }
     } catch (error) {
-      console.log("🚩 ~ auth.js ~ signIn() ~ error:", error);
+      console.log("🚩 ~ context/Auth.js ~ signIn() ~ error:", error);
     }
     setLoading(false);
   };
@@ -116,7 +116,7 @@ export const AuthProvider = ({ children }: ProviderProps) => {
         console.log("Error", response.messages);
       }
     } catch (error) {
-      console.log("🚩 ~ auth.js ~ signOut() ~ error:", error);
+      console.log("🚩 ~ context/Auth.js ~ signOut() ~ error:", error);
     }
     setLoading(false);
   };
@@ -127,8 +127,9 @@ export const AuthProvider = ({ children }: ProviderProps) => {
       let userId = await AsyncStorage.getItem("userId");
 
       const response = await fetchNewPassword(email, oldPassword, newPassword);
+      // Pendiente por completar
     } catch (error) {
-      console.log("🚩 ~ auth.js ~ newPassword() ~ error:", error);
+      console.log("🚩 ~ context/Auth.js ~ newPassword() ~ error:", error);
     }
   };
 
@@ -151,7 +152,7 @@ export const AuthProvider = ({ children }: ProviderProps) => {
 
       await loadConfig(userToken);
     } catch (error) {
-      console.log("🚩 ~ auth.js ~ isLoggedIn() ~ error:", error);
+      console.log("🚩 ~ context/Auth.js ~ isLoggedIn() ~ error:", error);
     }
   };
 

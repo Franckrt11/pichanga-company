@@ -1,8 +1,8 @@
-import { StyleSheet, Text, Pressable } from "react-native";
-import { useState } from "react";
+import { StyleSheet, Text, Pressable, TextStyle } from "react-native";
+import { useState, useEffect } from "react";
 import Colors from "@/src/utils/Colors";
 
-const ButtonCheckbox = ({ radius, color, text, mode, checked, onChangeMode }: { radius: number, color: string, text: string, mode: string, checked: boolean, onChangeMode: any }) => {
+const ButtonCheckbox = ({ styleText, radius, color, text, mode, checked, onChangeMode }: { styleText?: TextStyle, radius: number, color: string, text: string, mode: string, checked: boolean, onChangeMode: any }) => {
   const [active, setActive] = useState(checked);
 
   const changeState = () => {
@@ -10,12 +10,16 @@ const ButtonCheckbox = ({ radius, color, text, mode, checked, onChangeMode }: { 
     onChangeMode(!active, mode);
   };
 
+  useEffect(() => {
+    setActive(checked)
+  }, [checked]);
+
   return (
     <Pressable
       style={[{ borderRadius: radius },styles.button, active ? { backgroundColor: color, borderColor: color } : { backgroundColor: Colors.white, borderColor: Colors.silverSand }]}
       onPress={() => changeState()}
     >
-      <Text style={[styles.buttonText, active ? { color: Colors.white } : { color: Colors.maastrichtBlue }]}>{text}</Text>
+      <Text style={[styles.buttonText, styleText, active ? { color: Colors.white } : { color: Colors.maastrichtBlue }]}>{text}</Text>
     </Pressable>
   );
 };

@@ -1,13 +1,13 @@
 import { StyleSheet, Text, View, Pressable, SafeAreaView, ScrollView, Alert } from "react-native";
 import { useRef, useMemo, useCallback, useState, useEffect } from "react";
 import { router, Stack, useLocalSearchParams } from "expo-router";
-import { Image } from 'expo-image';
+import { Image } from "expo-image";
 import {
   BottomSheetView,
   BottomSheetModal,
   BottomSheetModalProvider,
   BottomSheetBackdrop
-} from '@gorhom/bottom-sheet';
+} from "@gorhom/bottom-sheet";
 import Icon from "react-native-vector-icons/Feather";
 import Back from "@/src/components/header/back";
 import UploadPhoto from "@/src/components/upload-photo";
@@ -107,10 +107,9 @@ const Photos = () => {
     setPortrait(getFieldUrl(response.portrait) as string | undefined);
   };
 
-  // const save = () => {
-  //   console.log("Save Special Hour");
-  //   router.back();
-  // };
+  const save = () => {
+    router.back();
+  };
 
   const renderBackdrop = useCallback(
     (props: any) => (
@@ -243,12 +242,12 @@ const Photos = () => {
               </Pressable>
             }
 
-            {/* <Pressable
+            <Pressable
               onPress={() => save()}
               style={[PageStyles.button, { width: "80%", marginHorizontal: "auto", marginTop: 50 }]}
             >
               <Text style={PageStyles.buttonText}>GUARDAR</Text>
-            </Pressable> */}
+            </Pressable>
 
           </View>
         </ScrollView>

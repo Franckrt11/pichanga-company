@@ -39,7 +39,7 @@ const UploadPhoto = ({ onRemovePhoto, onModalPress, position, storage }: { onRem
         onPress={removePhoto}
         style={styles.buttonOutline}
       >
-        <TrashIcon />
+        <TrashIcon size={10} />
         <Text style={styles.buttonOutlineText}>Borrar foto</Text>
       </Pressable>
     </View>

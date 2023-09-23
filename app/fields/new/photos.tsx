@@ -1,14 +1,14 @@
-import { StyleSheet, Text, View, SafeAreaView, ScrollView, Image, Pressable, Alert } from "react-native";
+import { StyleSheet, Text, View, SafeAreaView, ScrollView, Pressable, Alert } from "react-native";
 import { useRef, useMemo, useCallback, useState, useEffect } from "react";
 import { Stack, router, useLocalSearchParams } from "expo-router";
-// import { Image } from 'expo-image';
+import { Image } from "expo-image";
 import Icon from "react-native-vector-icons/Feather";
 import {
   BottomSheetView,
   BottomSheetModal,
   BottomSheetModalProvider,
   BottomSheetBackdrop
-} from '@gorhom/bottom-sheet';
+} from "@gorhom/bottom-sheet";
 import { LayoutStyles, PageStyles } from "@/src/utils/Styles";
 import Colors from "@/src/utils/Colors";
 import Images from "@/src/utils/Images";
@@ -171,15 +171,18 @@ const Photos = () => {
             </View>
           </BottomSheetView>
         </BottomSheetModal>
-        <ScrollView style={{ paddingTop: 20, paddingBottom: 60 }}>
-          <View style={LayoutStyles.scrollContainer}>
+        <ScrollView
+          style={{ paddingTop: 20 }}
+          contentContainerStyle={{ alignItems: "center"}}
+        >
+          <View style={[LayoutStyles.scrollContainer, { paddingBottom: 60 }]}>
             <Text style={LayoutStyles.pageTitle}>AGREGAR FOTOGRAFÍAS</Text>
             <Text style={LayoutStyles.subtitle}>FOTO PORTADA</Text>
             <Image
-              source={{ uri: portrait ? portrait : "" }}
-              defaultSource={Images.portraitDefault}
+              source={{ uri: portrait }}
+              placeholder={Images.portraitDefault}
               style={{ borderRadius: 20, height: 250, width: "100%", marginBottom: 30 }}
-            // transition={500}
+              transition={300}
             />
             <View style={{ marginBottom: 20 }}>
               <UploadPhoto

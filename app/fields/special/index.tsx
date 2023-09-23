@@ -37,7 +37,7 @@ const Index = () => {
   ]);
 
   return (
-    <ChildPage>
+    <ChildPage style={{ marginBottom: 80 }}>
       <Text style={LayoutStyles.pageTitle}>HORARIOS ESPECIALES</Text>
 
       <Pressable
@@ -66,10 +66,11 @@ const styles = StyleSheet.create({
   button: {
     flexDirection: "row",
     gap: 10,
-    width: "80%",
+    width: "90%",
     marginHorizontal: "auto",
     backgroundColor: Colors.maastrichtBlue,
     borderRadius: 25,
-    justifyContent: "center"
+    justifyContent: "center",
+    paddingVertical: 6
   }
 });

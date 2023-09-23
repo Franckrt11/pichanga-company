@@ -63,4 +63,28 @@ export const HOUR_LIST = [
     value: "17:00",
     text: "5:00 pm",
   },
+  {
+    value: "18:00",
+    text: "6:00 pm",
+  },
+  {
+    value: "19:00",
+    text: "7:00 pm",
+  },
+  {
+    value: "20:00",
+    text: "8:00 pm",
+  },
+  {
+    value: "21:00",
+    text: "9:00 pm",
+  },
+  {
+    value: "22:00",
+    text: "10:00 pm",
+  },
+  {
+    value: "23:00",
+    text: "11:00 pm",
+  },
 ];

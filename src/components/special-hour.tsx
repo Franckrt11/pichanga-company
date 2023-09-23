@@ -9,7 +9,7 @@ const SpecialHour = ({ data }: { data: ISpecialHour }) => {
 
   return (
     <View style={[styles.wapper, { backgroundColor: data.type === 'added' ? Colors.maastrichtBlue : Colors.ferrariRed }]}>
-      {data.type === 'added' ? <ClockPlus style={styles.clockIcon} size={50} /> : <ClockMinus style={styles.clockIcon} size={50} />}
+      {data.type === 'added' ? <ClockPlus style={styles.clockIcon} size={40} /> : <ClockMinus style={styles.clockIcon} size={50} />}
       <Text style={styles.textTitle}>{title}</Text>
       <View>
         <View style={styles.row}>
@@ -41,13 +41,13 @@ const styles = StyleSheet.create({
     paddingTop: 30,
     paddingBottom: 20,
     marginBottom: 15,
-    borderRadius: 20,
+    borderRadius: 15,
     position: "relative"
   },
   row: {
     flexDirection: "row",
     gap: 15,
-    marginBottom: 2
+    marginBottom: 1
   },
   column1: {
     width: "30%"
@@ -58,16 +58,17 @@ const styles = StyleSheet.create({
   text: {
     color: Colors.white,
     fontFamily: "PoppinsMedium",
-    fontSize: 18,
+    fontSize: 16,
   },
   textTitle: {
     color: Colors.white,
-    fontSize: 24,
+    fontSize: 22,
     fontFamily: "PoppinsSemiBold",
     marginBottom: 15
   },
   clockIcon: {
     position: "absolute",
-    right: 30,
+    right: 20,
+    top: 15
   }
 });

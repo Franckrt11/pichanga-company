@@ -4,5 +4,7 @@ export default {
   metallicGreen: '#357A03',
   silverSand: '#B7C0C5',
   greenLizard: '#A4E624',
-  ferrariRed: '#e72c01'
+  ferrariRed: '#E72C01',
+  gray: '#B3BAC1',
+  brightGray: '#EAEDEE'
 };

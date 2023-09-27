@@ -79,4 +79,9 @@ export interface FieldPictureData {
 export interface FieldDay {
   day: string;
   active: boolean;
-}
+};
+
+export interface HourRange {
+  from: string;
+  to: string;
+};

@@ -9,12 +9,8 @@ import ButtonDayPicker from "@/src/components/button-day-picker";
 import AddHourButtom from "@/src/components/add-hour-bottom";
 import HourRangePicker from "@/src/components/hour-range-picker";
 import { useAuthContext } from "@/src/context/Auth";
-import { fetchFieldDays } from "@/src/models/Field";
-import { HourRange } from "@/src/utils/Types";
-
-interface HourDayRange {
-  [key: string]: HourRange[]
-}
+import { fetchFieldDays, updateFieldHours } from "@/src/models/Field";
+import { HourRange, HourDayRange } from "@/src/utils/Types";
 
 const INIT_HOUR_RANGE = { from: "5:00", to: "6:00" };
 
@@ -27,6 +23,9 @@ const Hours = () => {
   const [hourList, setHourList] = useState<HourRange[]>([]);
   const [hourPerDayList, setHourPerDayList] = useState<HourDayRange>({ "lu": [], "ma": [], "mi": [], "ju": [], "vi": [], "sa": [], "do": [] });
 
+  const [hid, setHid] = useState(1);
+  const [hrid, setHrid] = useState({ lu: 1, ma: 1, mi: 1, ju: 1, vi: 1, sa: 1, do: 1 });
+
   const updateHourList = (prop: "from" | "to", value: string, index: number) => {
     let newList = [...hourList];
     newList[index][prop] = value;
@@ -34,7 +33,9 @@ const Hours = () => {
   };
 
   const addHourToList = () => {
-    let newList = [...hourList, INIT_HOUR_RANGE];
+    let newList = [...hourList];
+    newList.push({...INIT_HOUR_RANGE, id: hid });
+    setHid(hid+1);
     setHourList(newList);
   };
 
@@ -44,8 +45,14 @@ const Hours = () => {
     setHourList(newList);
   };
 
-  const save = () => {
-    router.back();
+  const save = async () => {
+    if (same) {
+      const response = await updateFieldHours(params.id as unknown as number, token, hourList, true);
+      if (response.status) router.back();
+    } else {
+      const response = await updateFieldHours(params.id as unknown as number, token, hourPerDayList, false);
+      if (response.status) router.back();
+    }
   };
 
   const loadFieldDays = async () => {
@@ -61,8 +68,11 @@ const Hours = () => {
 
   const addHoursToDayList = (day: string, hours: Object) => {
     let dayList = { ...hourPerDayList };
-    (dayList[day as keyof typeof dayList] as Array<Object>).push(hours);
+    let dayId = { ...hrid };
+    (dayList[day as keyof typeof dayList] as Array<Object>).push({...hours, id: dayId[day as keyof typeof dayId]});
+    dayId[day as keyof typeof dayId] = dayId[day as keyof typeof dayId] + 1;
     setHourPerDayList(dayList);
+    setHrid(dayId);
   };
 
   const updateHourOnDays = {

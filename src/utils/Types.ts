@@ -82,6 +82,11 @@ export interface FieldDay {
 };
 
 export interface HourRange {
+  id: number;
   from: string;
   to: string;
+};
+
+export interface HourDayRange {
+  [key: string]: HourRange[]
 };

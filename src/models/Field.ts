@@ -1,5 +1,5 @@
 import { API_URL, FETCH_HEADERS } from "@/src/utils/Constants";
-import { FieldData, FieldPicture, FieldDay } from "@/src/utils/Types";
+import { FieldData, FieldPicture, FieldDay, HourRange, HourDayRange } from "@/src/utils/Types";
 
 export const fetchAllFields = async (id: number, token: string | null)  => {
   const response = await fetch(`${API_URL}api/company/fields/${id}`, {
@@ -181,6 +181,40 @@ export const updateFieldDays = async ( id: number, token: string | null,  data: 
     return await response.json();
   } catch (error) {
     console.log("🚩 ~ models/Field.ts ~ updateFieldDays() ~ error:", error);
+    return { status: false };
+  }
+};
+
+export const saveFieldHours = async ( id: number, token: string | null, data: HourRange[] | HourDayRange, same: boolean) => {
+  try {
+    const response = await fetch(`${API_URL}api/company/field/${id}/hours`, {
+      method: "POST",
+      headers: {
+        ...FETCH_HEADERS,
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({hours: data, same }),
+    });
+    return await response.json();
+  } catch (error) {
+    console.log("🚩 ~ models/Field.ts ~ saveFieldHours() ~ error:", error);
+    return { status: false };
+  }
+};
+
+export const updateFieldHours = async ( id: number, token: string | null, data: HourRange[] | HourDayRange, same: boolean ) => {
+  try {
+    const response = await fetch(`${API_URL}api/company/field/${id}/hours`, {
+      method: "PUT",
+      headers: {
+        ...FETCH_HEADERS,
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({hours: data, same }),
+    });
+    return await response.json();
+  } catch (error) {
+    console.log("🚩 ~ models/Field.ts ~ updateFieldHours() ~ error:", error);
     return { status: false };
   }
 };

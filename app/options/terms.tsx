@@ -16,6 +16,7 @@ const Terms = () => {
       <RenderHtml
         contentWidth={width * 0.8}
         source={{ html: termsHml }}
+        tagsStyles={tagsStyles}
       />
     </ChildPage>
   );
@@ -32,3 +33,11 @@ const styles = StyleSheet.create({
     textAlign: "justify",
   },
 });
+
+const tagsStyles = {
+  p: {
+    fontSize: 18,
+    lineHeight: 24,
+    color: Colors.maastrichtBlue
+  }
+};

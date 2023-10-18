@@ -79,7 +79,7 @@ const User = () => {
   };
 
   const saveProfile = async (): Promise<void> => {
-    const profile = await saveUserProfile(
+    const response = await saveUserProfile(
       {
         name,
         email,
@@ -88,11 +88,13 @@ const User = () => {
       token,
       state.id
     );
-    Alert.alert("Profile guardado.");
-    dispatch({
-      type: "change",
-      payload: profile!,
-    });
+    if (response.status) {
+      Alert.alert("Perfil de usuario guardado.");
+      dispatch({
+        type: "change",
+        payload: response.data,
+      });
+    }
   };
 
   const saveAvatar = async (imageUri: string | boolean): Promise<string | undefined> => {

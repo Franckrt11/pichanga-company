@@ -2,7 +2,7 @@ import { API_URL, FETCH_HEADERS } from "@/src/utils/Constants";
 
 export const fetchConfigAll = async (token: string | null) => {
   try {
-    const response = await fetch(`${API_URL}api/company/config`, {
+    const response = await fetch(`${API_URL}api/config`, {
       method: "GET",
       headers: {
         ...FETCH_HEADERS,

@@ -1,5 +1,14 @@
 import { ReactNode } from "react";
 
+export interface RegisterUserData {
+  name: string;
+  ruc: string;
+  email: string;
+  password: string;
+  password_confirmation: string;
+  checkbox: boolean;
+}
+
 export interface PhotoData {
   photo: string | null;
 }
@@ -9,8 +18,8 @@ export interface UserData extends PhotoData {
   name: string;
   ruc: string;
   email: string;
-  push: boolean;
-  mailing: boolean;
+  push?: boolean;
+  mailing?: boolean;
 }
 
 export interface FetchUserData extends UserData {

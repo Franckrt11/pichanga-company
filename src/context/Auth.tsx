@@ -4,12 +4,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useUserContext } from "./User";
 import { fetchLogin, fetchRegister, fetchUser, fetchNewPassword } from "@/src/models/Auth";
 import { fetchConfigAll } from "@/src/models/Config";
-import { FetchUserData, ProviderProps } from "@/src/utils/Types";
+import { ProviderProps, RegisterUserData } from "@/src/utils/Types";
 
 interface IAuthContext {
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => void;
-  signUp: (data: FetchUserData) => Promise<void>;
+  signUp: (data: RegisterUserData) => Promise<void>;
   newPassword: (email: string, oldPassword: string, newPassword: string) => Promise<void>;
   token: string | null;
   loading: boolean;
@@ -52,11 +52,6 @@ export const AuthProvider = ({ children }: ProviderProps) => {
   };
 
   const signIn = async (email: string, password: string) => {
-    if (!email || !password) {
-      alert("No data en inputs");
-      return;
-    }
-
     setLoading(true);
     try {
       const response = await fetchLogin(email, password);
@@ -89,15 +84,7 @@ export const AuthProvider = ({ children }: ProviderProps) => {
     setLoading(false);
   };
 
-  const signUp = async (data: FetchUserData) => {
-    if (!data.checkbox) {
-      alert("Aceptar terminos");
-      return;
-    }
-    if (!data.email || !data.password) {
-      alert("No data en inputs");
-      return;
-    }
+  const signUp = async (data: RegisterUserData) => {
     setLoading(true);
     try {
       const response = await fetchRegister(data);
@@ -112,8 +99,8 @@ export const AuthProvider = ({ children }: ProviderProps) => {
         });
         setErrors(null);
       } else {
-        setErrors(response.messages);
-        console.log("Error", response.messages);
+        setErrors(response.errors);
+        console.log("Error", response.errors);
       }
     } catch (error) {
       console.log("🚩 ~ context/Auth.js ~ signOut() ~ error:", error);
@@ -140,17 +127,18 @@ export const AuthProvider = ({ children }: ProviderProps) => {
 
       if (userToken !== null && typeof userToken !== "undefined") {
         setToken(userToken);
+        await loadConfig(userToken);
       }
 
       if (userId !== null && typeof userId !== "undefined") {
         const response = await fetchUser(userId, userToken);
-        dispatch({
-          type: "change",
-          payload: response.data,
-        });
+        if (response.status) {
+          dispatch({
+            type: "change",
+            payload: response.data,
+          });
+        }
       }
-
-      await loadConfig(userToken);
     } catch (error) {
       console.log("🚩 ~ context/Auth.js ~ isLoggedIn() ~ error:", error);
     }

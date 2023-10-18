@@ -1,37 +1,47 @@
 import * as Device from "expo-device";
 import { API_URL, FETCH_HEADERS } from "@/src/utils/Constants";
-import { FetchUserData } from "@/src/utils/Types";
+import { RegisterUserData } from "@/src/utils/Types";
 
 export const fetchLogin = async (email: string, password: string) => {
-  const response = await fetch(`${API_URL}api/company/login`, {
-    method: "POST",
-    headers: FETCH_HEADERS,
-    body: JSON.stringify({
-      email: email,
-      password: password,
-      device: Device.brand ? Device.brand : "myweb",
-    }),
-  });
+  try {
+    const response = await fetch(`${API_URL}api/company/login`, {
+      method: "POST",
+      headers: FETCH_HEADERS,
+      body: JSON.stringify({
+        email: email,
+        password: password,
+        device: Device.brand ? Device.brand : "myweb",
+      }),
+    });
 
-  return await response.json();
+    return await response.json();
+  } catch (error) {
+    console.log("🚩 ~ models/Auth.ts ~ fetchLogin() ~ error:", error);
+    return { status: false };
+  }
 };
 
-export const fetchRegister = async (data: FetchUserData) => {
-  const response = await fetch(`${API_URL}api/company/register`, {
-    method: "POST",
-    headers: FETCH_HEADERS,
-    body: JSON.stringify({
-      name: data.name,
-      ruc: data.ruc,
-      email: data.email,
-      password: data.password,
-      password_confirmation: data.password_confirmation,
-      status: true,
-      device: Device.brand ? Device.brand : "myweb",
-    }),
-  });
+export const fetchRegister = async (data: RegisterUserData) => {
+  try {
+    const response = await fetch(`${API_URL}api/company/register`, {
+      method: "POST",
+      headers: FETCH_HEADERS,
+      body: JSON.stringify({
+        name: data.name,
+        ruc: data.ruc,
+        email: data.email,
+        password: data.password,
+        password_confirmation: data.password_confirmation,
+        checkbox: data.checkbox,
+        device: Device.brand ? Device.brand : "myweb",
+      }),
+    });
 
-  return await response.json();
+    return await response.json();
+  } catch (error) {
+    console.log("🚩 ~ models/Auth.ts ~ fetchRegister() ~ error:", error);
+    return { status: false };
+  }
 };
 
 export const fetchUser = async (id: string, token: string | null) => {
@@ -47,6 +57,7 @@ export const fetchUser = async (id: string, token: string | null) => {
     return await response.json();
   } catch (error) {
     console.log("🚩 ~ models/Auth.ts ~ fetchUser() ~ error:", error);
+    return { status: false };
   }
 };
 

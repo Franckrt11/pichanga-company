@@ -74,3 +74,20 @@ export const fetchNewPassword = async (email: string, oldPassword: string, newPa
 
   return await response.json();
 };
+
+export const fetchLogout = async (token: string | null) => {
+  try {
+    const response = await fetch(`${API_URL}api/company/logout`, {
+      method: "POST",
+      headers: {
+        ...FETCH_HEADERS,
+        Authorization: `Bearer ${token}`,
+      }
+    });
+
+    return await response.json();
+  } catch (error) {
+    console.log("🚩 ~ models/Auth.ts ~ fetchLogout() ~ error:", error);
+    return { status: false };
+  }
+}

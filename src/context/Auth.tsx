@@ -2,7 +2,7 @@ import { createContext, useEffect, useContext, useState } from "react";
 import { router, useSegments } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useUserContext } from "./User";
-import { fetchLogin, fetchRegister, fetchUser, fetchNewPassword } from "@/src/models/Auth";
+import { fetchLogin, fetchRegister, fetchUser, fetchNewPassword, fetchLogout } from "@/src/models/Auth";
 import { fetchConfigAll } from "@/src/models/Config";
 import { ProviderProps, RegisterUserData } from "@/src/utils/Types";
 
@@ -75,12 +75,19 @@ export const AuthProvider = ({ children }: ProviderProps) => {
     setLoading(false);
   };
 
-  const signOut = () => {
+  const signOut = async () => {
     setLoading(true);
-    setToken(null);
-    AsyncStorage.removeItem("token");
-    AsyncStorage.removeItem("userId");
-    dispatch({ type: "delete", payload: null });
+    try {
+      const response = await fetchLogout(token);
+      if (response.status) {
+        setToken(null);
+        AsyncStorage.removeItem("token");
+        AsyncStorage.removeItem("userId");
+        dispatch({ type: "delete", payload: null });
+      }
+    } catch (error) {
+      console.log("🚩 ~ context/Auth.js ~ signOut() ~ error:", error);
+    }
     setLoading(false);
   };
 
@@ -103,7 +110,7 @@ export const AuthProvider = ({ children }: ProviderProps) => {
         console.log("Error", response.errors);
       }
     } catch (error) {
-      console.log("🚩 ~ context/Auth.js ~ signOut() ~ error:", error);
+      console.log("🚩 ~ context/Auth.js ~ signUp() ~ error:", error);
     }
     setLoading(false);
   };

@@ -5,6 +5,8 @@ export const API_URL =
     ? process.env.EXPO_PUBLIC_API_URL
     : process.env.EXPO_PUBLIC_LOCAL_URL;
 
+export const SOCKET_URL = process.env.EXPO_PUBLIC_SOCKET_URL ?? "http://localhost";
+
 export const FETCH_HEADERS = {
   Accept: "application/json",
   "Content-Type": "application/json",

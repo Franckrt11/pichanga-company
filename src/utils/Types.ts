@@ -99,3 +99,40 @@ export interface HourRange {
 export interface HourDayRange {
   [key: string]: HourRange[]
 };
+
+export interface IMessages {
+  id: number;
+  message: string;
+  sender: string;
+  attach: string | null;
+  chat_id: number;
+  updated_at: string;
+  created_at: string;
+}
+
+export interface IRoom {
+  id: number;
+  last_message: string;
+  last_sender: string;
+  company_id: number;
+  user_id: number;
+  company: IFetchCompany;
+  user: IFetchUser;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface IFetchCompany extends PhotoData {
+  id: number;
+  name: string;
+  ruc: string;
+  email: string;
+}
+
+export interface IFetchUser extends PhotoData {
+  id: number;
+  name: string;
+  lastname: string;
+  email: string;
+  phone: string;
+}

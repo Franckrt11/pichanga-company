@@ -13,12 +13,14 @@
         "buildType": "apk"
       },
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://www.tejuegounapichanga.com/"
+        "EXPO_PUBLIC_API_URL": "https://www.tejuegounapichanga.com/",
+        "EXPO_PUBLIC_SOCKET_URL": "https://socket.tejuegounapichanga.com"
       }
     },
     "production": {
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://www.tejuegounapichanga.com/"
+        "EXPO_PUBLIC_API_URL": "https://www.tejuegounapichanga.com/",
+        "EXPO_PUBLIC_SOCKET_URL": "https://socket.tejuegounapichanga.com"
       }
     }
   },

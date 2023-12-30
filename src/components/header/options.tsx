@@ -1,7 +1,7 @@
 import { View, Pressable } from "react-native";
 import { useState, useEffect } from "react";
 import { Link } from "expo-router";
-import { Image } from 'expo-image';
+import { Image } from "expo-image";
 import { useUserContext } from "@/src/context/User";
 import Images from "@/src/utils/Images";
 import Colors from "@/src/utils/Colors";

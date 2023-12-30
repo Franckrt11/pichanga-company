@@ -1,6 +1,6 @@
 import { API_URL, FETCH_HEADERS } from "@/src/utils/Constants";
 import { UserData } from "@/src/utils/Types";
-import { Try } from "expo-router/build/views/Try";
+// import { Try } from "expo-router/build/views/Try";
 
 interface IData {
   name: string;
@@ -23,10 +23,10 @@ export const saveUserProfile = async (
   data: IData,
   token: string | null,
   id?: number
-): Promise<UserData | void> => {
+) => {
   try {
     const response = await fetch(`${API_URL}api/company/profile/update/${id}`, {
-      method: "POST",
+      method: "PUT",
       headers: {
         ...FETCH_HEADERS,
         Authorization: `Bearer ${token}`,
@@ -37,10 +37,10 @@ export const saveUserProfile = async (
         ruc: data.ruc,
       }),
     });
-    const result = await response.json();
-    return result.data;
+    return await response.json();
   } catch (error) {
     console.log("🚩 ~ models/user.js ~ saveProfile() ~ error:", error);
+    return { status: false };
   }
 };
 

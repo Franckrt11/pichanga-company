@@ -218,3 +218,20 @@ export const updateFieldHours = async ( id: number, token: string | null, data: 
     return { status: false };
   }
 };
+
+export const fetchFieldHours = async ( id: number, token: string | null )  => {
+  try {
+    const response = await fetch(`${API_URL}api/company/field/${id}/hours`, {
+      method: "GET",
+      headers: {
+        ...FETCH_HEADERS,
+        Authorization: `Bearer ${token}`,
+      }
+    });
+
+    const result = await response.json();
+    return result.data;
+  } catch (error) {
+    console.log("🚩 ~ models/Field.ts ~ fetchField() ~ error:", error);
+  }
+};

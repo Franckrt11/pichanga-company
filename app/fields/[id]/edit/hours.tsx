@@ -9,7 +9,7 @@ import ButtonDayPicker from "@/src/components/button-day-picker";
 import AddHourButtom from "@/src/components/add-hour-bottom";
 import HourRangePicker from "@/src/components/hour-range-picker";
 import { useAuthContext } from "@/src/context/Auth";
-import { fetchFieldDays, updateFieldHours } from "@/src/models/Field";
+import { fetchFieldDays, fetchFieldHours, updateFieldHours } from "@/src/models/Field";
 import { HourRange, HourDayRange } from "@/src/utils/Types";
 
 const INIT_HOUR_RANGE = { from: "5:00", to: "6:00" };
@@ -60,6 +60,14 @@ const Hours = () => {
     if (response.status) {
       setDays(response.data);
     }
+  };
+
+  const loadFieldHours = async () => {
+    const response = await fetchFieldHours(params.id as unknown as number, token);
+    console.log("🚀 ~ loadFieldHours ~ response:", response);
+    // if (response.status) {
+    //   setHourList(response.data);
+    // }
   };
 
   const selectDay = (day: string) => {
@@ -153,6 +161,7 @@ const Hours = () => {
 
   useEffect(() => {
     loadFieldDays();
+    loadFieldHours();
   }, []);
 
   return (

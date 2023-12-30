@@ -4,7 +4,7 @@ import { SOCKET_URL } from "@/src/utils/Constants";
 export let socket: Socket | null = null;
 
 export const initSockets = () => {
-  socket = io(SOCKET_URL, {
+  socket = io(SOCKET_URL as string, {
     transports: ["websocket"],
   });
 };

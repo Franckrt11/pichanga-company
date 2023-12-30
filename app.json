@@ -3,7 +3,7 @@
     "name": "Te Juego una Pichanga - Canchas",
     "slug": "pichanga-company",
     "owner": "tjupichanga",
-    "version": "0.5.2",
+    "version": "0.5.3",
     "orientation": "portrait",
     "icon": "./src/assets/images/icon.png",
     "scheme": "pichanga",

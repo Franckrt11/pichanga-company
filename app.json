@@ -3,7 +3,7 @@
     "name": "Te Juego una Pichanga - Canchas",
     "slug": "pichanga-company",
     "owner": "tjupichanga",
-    "version": "0.5.3",
+    "version": "0.5.5",
     "orientation": "portrait",
     "icon": "./src/assets/images/icon.png",
     "scheme": "pichanga",
@@ -18,7 +18,10 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.pichanga.company"
+      "bundleIdentifier": "com.pichanga.company",
+      "config": {
+        "googleMapsApiKey": "AIzaSyDLTNEPr5Qopz14NEp6NMBHeFOKh7zQmZY"
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -28,7 +31,7 @@
       "package": "com.pichanga.company",
       "config": {
         "googleMaps": {
-          "apiKey": "AIzaSyAtJRhOU-bgDB_t8b1o0GoWENJTs4V2jD8"
+          "apiKey": "AIzaSyA_6OVn8ZZQJmt5yCWGKN8qSUHK29nifZQ"
         }
       }
     },

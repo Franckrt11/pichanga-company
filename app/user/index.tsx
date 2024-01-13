@@ -9,7 +9,9 @@ import {
 } from "react-native";
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { Stack, router } from "expo-router";
-import { Image } from 'expo-image';
+import * as Linking from "expo-linking";
+import { Image } from "expo-image";
+import * as ImagePicker from "expo-image-picker";
 import Icon from "react-native-vector-icons/Feather";
 import {
   BottomSheetView,
@@ -42,6 +44,8 @@ const User = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [avatar, setAvatar] = useState<string | undefined>(undefined);
+
+  const [cameraStatus, requestCameraPermission] = ImagePicker.useCameraPermissions();
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const snapPoints = useMemo(() => [120], []);
@@ -113,6 +117,24 @@ const User = () => {
     setAvatar(undefined);
   };
 
+  const handleCameraPermission = useCallback(async () => {
+    if (cameraStatus) {
+     if (
+       cameraStatus.status === ImagePicker.PermissionStatus.UNDETERMINED ||
+       (cameraStatus.status === ImagePicker.PermissionStatus.DENIED && cameraStatus.canAskAgain)
+     ) {
+       const permission = await requestCameraPermission()
+       if (permission.granted) {
+         await pickCamera()
+       }
+     } else if (cameraStatus.status === ImagePicker.PermissionStatus.DENIED) {
+       await Linking.openSettings()
+     } else {
+       await pickCamera()
+     }
+   }
+   }, [cameraStatus, pickCamera, requestCameraPermission]);
+
   useEffect(() => {
     setRuc(state.ruc);
     setName(state.name);
@@ -164,7 +186,7 @@ const User = () => {
             >
               <View style={styles.modalContent}>
                 <Pressable
-                  onPress={pickCamera}
+                  onPress={handleCameraPermission}
                   style={[
                     styles.buttonOutline,
                     { backgroundColor: Colors.white },

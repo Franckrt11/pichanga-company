@@ -101,6 +101,7 @@ const ChatMessages = () => {
             onChangeText={setMessage}
             value={message}
             placeholder="Enviar mensaje"
+            placeholderTextColor={Colors.silverSand}
             maxLength={255}
           />
           <Pressable

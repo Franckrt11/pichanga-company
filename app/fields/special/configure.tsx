@@ -164,6 +164,7 @@ const Configure = () => {
             onChangeText={text => setReason(text)}
             value={reason}
             placeholder="Escribe un motivo"
+            placeholderTextColor={Colors.silverSand}
           />
         </View>
       </View>

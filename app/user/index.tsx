@@ -119,21 +119,21 @@ const User = () => {
 
   const handleCameraPermission = useCallback(async () => {
     if (cameraStatus) {
-     if (
-       cameraStatus.status === ImagePicker.PermissionStatus.UNDETERMINED ||
-       (cameraStatus.status === ImagePicker.PermissionStatus.DENIED && cameraStatus.canAskAgain)
-     ) {
-       const permission = await requestCameraPermission()
-       if (permission.granted) {
-         await pickCamera()
-       }
-     } else if (cameraStatus.status === ImagePicker.PermissionStatus.DENIED) {
-       await Linking.openSettings()
-     } else {
-       await pickCamera()
-     }
-   }
-   }, [cameraStatus, pickCamera, requestCameraPermission]);
+      if (
+        cameraStatus.status === ImagePicker.PermissionStatus.UNDETERMINED ||
+        (cameraStatus.status === ImagePicker.PermissionStatus.DENIED && cameraStatus.canAskAgain)
+      ) {
+        const permission = await requestCameraPermission()
+        if (permission.granted) {
+          await pickCamera()
+        }
+      } else if (cameraStatus.status === ImagePicker.PermissionStatus.DENIED) {
+        await Linking.openSettings()
+      } else {
+        await pickCamera()
+      }
+    }
+  }, [cameraStatus, pickCamera, requestCameraPermission]);
 
   useEffect(() => {
     setRuc(state.ruc);
@@ -168,7 +168,7 @@ const User = () => {
         />
         <ScrollView
           style={{ paddingTop: 20 }}
-          contentContainerStyle={{ alignItems: "center"}}
+          contentContainerStyle={{ alignItems: "center" }}
         >
           <BottomSheetModal
             ref={bottomSheetModalRef}
@@ -211,7 +211,7 @@ const User = () => {
 
           <View style={[LayoutStyles.scrollContainer, { width: "80%" }]}>
             <Image
-              source={{uri: avatar}}
+              source={{ uri: avatar }}
               placeholder={Images.avatarDefault}
               style={{
                 borderRadius: 60,

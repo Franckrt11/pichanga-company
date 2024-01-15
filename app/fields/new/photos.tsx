@@ -1,7 +1,9 @@
 import { StyleSheet, Text, View, SafeAreaView, ScrollView, Pressable, Alert } from "react-native";
 import { useRef, useMemo, useCallback, useState, useEffect } from "react";
 import { Stack, router, useLocalSearchParams } from "expo-router";
+import * as Linking from "expo-linking";
 import { Image } from "expo-image";
+import * as ImagePicker from "expo-image-picker";
 import Icon from "react-native-vector-icons/Feather";
 import {
   BottomSheetView,
@@ -30,6 +32,8 @@ const Photos = () => {
   const [location, setLocation] = useState<string | null>(null);
   const [portrait, setPortrait] = useState<string | undefined>(undefined);
   const [pictures, setPictures] = useState<FieldPictureData[]>([]);
+
+  const [cameraStatus, requestCameraPermission] = ImagePicker.useCameraPermissions();
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const snapPoints = useMemo(() => [120], []);
@@ -117,6 +121,24 @@ const Photos = () => {
     []
   );
 
+  const handleCameraPermission = useCallback(async () => {
+    if (cameraStatus) {
+      if (
+        cameraStatus.status === ImagePicker.PermissionStatus.UNDETERMINED ||
+        (cameraStatus.status === ImagePicker.PermissionStatus.DENIED && cameraStatus.canAskAgain)
+      ) {
+        const permission = await requestCameraPermission()
+        if (permission.granted) {
+          await pickCamera()
+        }
+      } else if (cameraStatus.status === ImagePicker.PermissionStatus.DENIED) {
+        await Linking.openSettings()
+      } else {
+        await pickCamera()
+      }
+    }
+  }, [cameraStatus, pickCamera, requestCameraPermission]);
+
   useEffect(() => {
     loadPictures();
   }, []);
@@ -149,7 +171,7 @@ const Photos = () => {
           >
             <View style={styles.modalContent}>
               <Pressable
-                onPress={pickCamera}
+                onPress={handleCameraPermission}
                 style={[
                   styles.buttonOutline,
                   { backgroundColor: Colors.white },

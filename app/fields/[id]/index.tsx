@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View, Image, FlatList, Pressable } from "react-native"
 import { router, useLocalSearchParams } from "expo-router";
 import { useState, useEffect } from "react";
+import MapView, { Marker, PROVIDER_GOOGLE, LatLng } from "react-native-maps";
 import { PageStyles, LayoutStyles } from "@/src/utils/Styles";
 import Colors from "@/src/utils/Colors";
 import { FieldData, FieldPictureData } from "@/src/utils/Types";
@@ -31,13 +32,22 @@ const FieldDetails = () => {
   const [ field, setField ] = useState<FieldData | null>(null);
   const [ pictures, setPictures ] = useState<PictureList[]>([]);
   const [ visible, setVisible ] = useState(false);
+  const [coords, setCoords] = useState<LatLng>({
+    latitude: -12.0459667,
+    longitude: -77.0305709
+  });
 
   const getField = async () => {
     const response:FieldData = await fetchField(params.id as unknown as number, token);
     setField(response);
     const pictures = await getPictures();
+    const coordinates = response.map.split(',');
     setPictures([{id: 0, filename: response.portrait as string | undefined }, ...pictures]);
-    setVisible(response.active);
+    setCoords({
+      latitude: parseFloat(coordinates[0]),
+      longitude: parseFloat(coordinates[1])
+    })
+    setVisible(response.active as boolean);
   };
 
   const getPictures = async (): Promise<FieldPictureData[]> => {
@@ -52,7 +62,7 @@ const FieldDetails = () => {
   };
 
   const toggleVisible = async(): Promise<void> => {
-    const response = await updateFieldStatus(field!.id, token, !visible);
+    const response = await updateFieldStatus(field!.id as number, token, !visible);
     if (response.status) {
       setVisible(!visible);
     }
@@ -134,8 +144,22 @@ const FieldDetails = () => {
         data={field?.address}
       />
 
+      <View style={{ width: "100%", height: 300, marginBottom: 50, borderRadius: 20, overflow: "hidden" }}>
+        <MapView
+          provider={PROVIDER_GOOGLE}
+          style={{ width: "100%", height: "100%" }}
+          region={{
+            latitude: coords.latitude,
+            longitude: coords.longitude,
+            latitudeDelta: 0.02,
+            longitudeDelta: 0.005,
+          }}
+        >
+          <Marker coordinate={coords} />
+        </MapView>
+      </View>
+
       {/*
-      Mapa
       Rating
       N° Comentarios
       */}

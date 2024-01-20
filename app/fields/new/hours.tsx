@@ -34,7 +34,7 @@ const Hours = () => {
 
   const addHourToList = () => {
     let newList = [...hourList];
-    newList.push({...INIT_HOUR_RANGE, id: hid });
+    newList.push({...INIT_HOUR_RANGE, position: hid });
     setHid(hid+1);
     setHourList(newList);
   };
@@ -59,7 +59,7 @@ const Hours = () => {
   const addHoursToDayList = (day: string, hours: Object) => {
     let dayList = { ...hourPerDayList };
     let dayId = { ...hrid };
-    (dayList[day as keyof typeof dayList] as Array<Object>).push({...hours, id: dayId[day as keyof typeof dayId]});
+    (dayList[day as keyof typeof dayList] as Array<Object>).push({...hours, position: dayId[day as keyof typeof dayId]});
     dayId[day as keyof typeof dayId] = dayId[day as keyof typeof dayId] + 1;
     setHourPerDayList(dayList);
     setHrid(dayId);
@@ -141,14 +141,22 @@ const Hours = () => {
     }
   };
 
-  const nextStep = async () => {
-    if (same) {
-      const response = await saveFieldHours(params.id as unknown as number, token, hourList, true);
-      if (response.status) router.push(`/fields/new/price?id=${response.data}`);
-    } else {
-      const response = await saveFieldHours(params.id as unknown as number, token, hourPerDayList, false);
-      if (response.status) router.push(`/fields/new/price?id=${response.data}`);
+  const completeDaysWithHours = (list: HourRange[]): HourDayRange => {
+    return {
+      "lu": days.lu ? list : [],
+      "ma": days.ma ? list : [],
+      "mi": days.mi ? list : [],
+      "ju": days.ju ? list : [],
+      "vi": days.vi ? list : [],
+      "sa": days.sa ? list : [],
+      "do": days.do ? list : []
     }
+  };
+
+  const nextStep = async () => {
+    const hours = same ? completeDaysWithHours(hourList) : hourPerDayList;
+    const response = await saveFieldHours(params.id as unknown as number, token, hours);
+    if (response.status) router.push(`/fields/new/price?id=${response.data}`);
   };
 
   useEffect(() => {

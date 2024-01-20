@@ -185,7 +185,7 @@ export const updateFieldDays = async ( id: number, token: string | null,  data: 
   }
 };
 
-export const saveFieldHours = async ( id: number, token: string | null, data: HourRange[] | HourDayRange, same: boolean) => {
+export const saveFieldHours = async ( id: number, token: string | null, data: HourDayRange) => {
   try {
     const response = await fetch(`${API_URL}api/company/field/${id}/hours`, {
       method: "POST",
@@ -193,7 +193,7 @@ export const saveFieldHours = async ( id: number, token: string | null, data: Ho
         ...FETCH_HEADERS,
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({hours: data, same }),
+      body: JSON.stringify({hours: data }),
     });
     return await response.json();
   } catch (error) {

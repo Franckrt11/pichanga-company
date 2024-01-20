@@ -91,7 +91,7 @@ export interface FieldDay {
 };
 
 export interface HourRange {
-  id: number;
+  position: number;
   from: string;
   to: string;
 };

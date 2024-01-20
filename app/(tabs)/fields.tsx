@@ -40,7 +40,7 @@ const Fields = () => {
       >
         <View style={LayoutStyles.scrollContainer}>
 
-        {fields.map((field, index) => (
+        {fields?.map((field, index) => (
           <FieldItem
             key={index}
             id={field.id as number}

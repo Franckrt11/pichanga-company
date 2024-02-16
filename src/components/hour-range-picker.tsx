@@ -1,4 +1,5 @@
 import { StyleSheet, Text, View, Pressable } from "react-native";
+import { useState, useEffect } from "react";
 import { Picker } from "@react-native-picker/picker";
 import Colors from "@/src/utils/Colors";
 import { PageStyles } from "@/src/utils/Styles";
@@ -15,36 +16,52 @@ const HourRangePicker = ({
 }: {
   hour: HourRange,
   index: number,
-  updateFrom: (prop: "from" | "to", value: string, index: number) => void,
-  updateTo: (prop: "from" | "to", value: string, index: number) => void,
+  updateFrom: (prop: "start" | "end", value: string, index: number) => void,
+  updateTo: (prop: "start" | "end", value: string, index: number) => void,
   remove: (index: number) => void,
 }) => {
+  const [selectedStart, setSelectedStart] = useState<string>(HOUR_LIST[0].value);
+  const [selectedEnd, setSelectedEnd] = useState<string>(HOUR_LIST[2].value);
+
+  useEffect(() => {
+    setSelectedStart(hour.start);
+    setSelectedEnd(hour.end);
+  }, [hour]);
+
   return (
     <View style={{ flexDirection: "row", gap: 15 }}>
       <View style={{ flex: 1 }}>
         <Text style={[styles.checkboxText, { marginLeft: 15, marginBottom: 5 }]}>Desde las</Text>
+        <Text>{selectedStart}</Text>
         <View style={[PageStyles.pickerContainer, { borderRadius: 50, height: 45 }]}>
           <Picker
             style={[PageStyles.picker, { marginTop: -7 }]}
-            selectedValue={hour.from}
-            onValueChange={(value, itemIndex) => updateFrom("from", value, index)}
+            selectedValue={selectedStart}
+            onValueChange={(value, itemIndex) => {
+              updateFrom("start", value, index);
+              setSelectedStart(value);
+            }}
           >
-            {HOUR_LIST.map((hour, index) => (
-              <Picker.Item fontFamily="PoppinsMedium" key={index} label={hour.text} value={hour.value} />
+            {HOUR_LIST.map((h, i) => (
+              <Picker.Item fontFamily="PoppinsMedium" key={i} label={h.text} value={h.value} />
             ))}
           </Picker>
         </View>
       </View>
       <View style={{ flex: 1 }}>
         <Text style={[styles.checkboxText, { marginLeft: 15, marginBottom: 5 }]}>Hasta las</Text>
+        <Text>{selectedEnd}</Text>
         <View style={[PageStyles.pickerContainer, { borderRadius: 50, height: 45 }]}>
           <Picker
             style={[PageStyles.picker, { marginTop: -7 }]}
-            selectedValue={hour.to}
-            onValueChange={(value, itemIndex) => updateTo("to", value, index)}
+            selectedValue={selectedEnd}
+            onValueChange={(value, itemIndex) => {
+              updateTo("end", value, index);
+              setSelectedEnd(value);
+            }}
           >
-            {HOUR_LIST.map((hour, index) => (
-              <Picker.Item fontFamily="PoppinsMedium" key={index} label={hour.text} value={hour.value} />
+            {HOUR_LIST.map((h, i) => (
+              <Picker.Item fontFamily="PoppinsMedium" key={i} label={h.text} value={h.value} />
             ))}
           </Picker>
         </View>

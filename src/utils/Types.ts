@@ -91,13 +91,23 @@ export interface FieldDay {
 };
 
 export interface HourRange {
+  id?: number;
   position: number;
-  from: string;
-  to: string;
+  start: string;
+  end: string;
 };
 
 export interface HourDayRange {
   [key: string]: HourRange[]
+};
+
+export interface PriceRange {
+  full: number;
+  half: number;
+};
+
+export interface PriceDayRange {
+  [key: string]: PriceRange[]
 };
 
 export interface IMessages {

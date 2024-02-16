@@ -202,7 +202,7 @@ export const saveFieldHours = async ( id: number, token: string | null, data: Ho
   }
 };
 
-export const updateFieldHours = async ( id: number, token: string | null, data: HourRange[] | HourDayRange, same: boolean ) => {
+export const updateFieldHours = async ( id: number, token: string | null, data: HourRange[] | HourDayRange ) => {
   try {
     const response = await fetch(`${API_URL}api/company/field/${id}/hours`, {
       method: "PUT",
@@ -210,7 +210,7 @@ export const updateFieldHours = async ( id: number, token: string | null, data: 
         ...FETCH_HEADERS,
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({hours: data, same }),
+      body: JSON.stringify({hours: data}),
     });
     return await response.json();
   } catch (error) {
@@ -218,6 +218,7 @@ export const updateFieldHours = async ( id: number, token: string | null, data: 
     return { status: false };
   }
 };
+
 
 export const fetchFieldHours = async ( id: number, token: string | null )  => {
   try {
@@ -228,10 +229,9 @@ export const fetchFieldHours = async ( id: number, token: string | null )  => {
         Authorization: `Bearer ${token}`,
       }
     });
-
-    const result = await response.json();
-    return result.data;
+    return await response.json();
   } catch (error) {
     console.log("🚩 ~ models/Field.ts ~ fetchField() ~ error:", error);
+    return { status: false };
   }
 };

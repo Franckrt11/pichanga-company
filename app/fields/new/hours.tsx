@@ -12,21 +12,18 @@ import { useAuthContext } from "@/src/context/Auth";
 import { fetchFieldDays, saveFieldHours } from "@/src/models/Field";
 import { HourRange, HourDayRange } from "@/src/utils/Types";
 
-const INIT_HOUR_RANGE = { from: "5:00", to: "6:00" };
+const INIT_HOUR_RANGE = { start: "5:00", end: "6:00" };
 
 const Hours = () => {
   const params = useLocalSearchParams();
   const { token } = useAuthContext();
   const [days, setDays] = useState({ "lu": false, "ma": false, "mi": false, "ju": false, "vi": false, "sa": false, "do": false });
   const [activeDay, setActiveDay] = useState<string | null>(null);
-  const [same, setSame] = useState(true);
+  const [same, setSame] = useState<boolean>(true);
   const [hourList, setHourList] = useState<HourRange[]>([]);
   const [hourPerDayList, setHourPerDayList] = useState<HourDayRange>({ "lu": [], "ma": [], "mi": [], "ju": [], "vi": [], "sa": [], "do": [] });
 
-  const [hid, setHid] = useState(1);
-  const [hrid, setHrid] = useState({ lu: 1, ma: 1, mi: 1, ju: 1, vi: 1, sa: 1, do: 1 });
-
-  const updateHourList = (prop: "from" | "to", value: string, index: number) => {
+  const updateHourList = (prop: "start" | "end", value: string, index: number) => {
     let newList = [...hourList];
     newList[index][prop] = value;
     setHourList(newList);
@@ -34,8 +31,7 @@ const Hours = () => {
 
   const addHourToList = () => {
     let newList = [...hourList];
-    newList.push({...INIT_HOUR_RANGE, position: hid });
-    setHid(hid+1);
+    newList.push({ ...INIT_HOUR_RANGE, position: newList.length + 1 });
     setHourList(newList);
   };
 
@@ -47,9 +43,7 @@ const Hours = () => {
 
   const loadFieldDays = async () => {
     const response = await fetchFieldDays(params.id as unknown as number, token);
-    if (response.status) {
-      setDays(response.data);
-    }
+    if (response.status) setDays(response.data);
   };
 
   const selectDay = (day: string) => {
@@ -58,45 +52,43 @@ const Hours = () => {
 
   const addHoursToDayList = (day: string, hours: Object) => {
     let dayList = { ...hourPerDayList };
-    let dayId = { ...hrid };
-    (dayList[day as keyof typeof dayList] as Array<Object>).push({...hours, position: dayId[day as keyof typeof dayId]});
-    dayId[day as keyof typeof dayId] = dayId[day as keyof typeof dayId] + 1;
+    let count = dayList[day as keyof typeof dayList].length;
+    (dayList[day as keyof typeof dayList] as Array<Object>).push({...hours, position: count + 1 });
     setHourPerDayList(dayList);
-    setHrid(dayId);
   };
 
   const updateHourOnDays = {
-    lu: function updateHourDate(prop: "from" | "to", value: string, index: number) {
+    lu: function updateHourDate(prop: "start" | "end", value: string, index: number) {
       let dayList = { ...hourPerDayList };
       dayList["lu"][index][prop] = value;
       setHourPerDayList(dayList);
     },
-    ma: function updateHourDate(prop: "from" | "to", value: string, index: number) {
+    ma: function updateHourDate(prop: "start" | "end", value: string, index: number) {
       let dayList = { ...hourPerDayList };
       dayList["ma"][index][prop] = value;
       setHourPerDayList(dayList);
     },
-    mi: function updateHourDate(prop: "from" | "to", value: string, index: number) {
+    mi: function updateHourDate(prop: "start" | "end", value: string, index: number) {
       let dayList = { ...hourPerDayList };
       dayList["mi"][index][prop] = value;
       setHourPerDayList(dayList);
     },
-    ju: function updateHourDate(prop: "from" | "to", value: string, index: number) {
+    ju: function updateHourDate(prop: "start" | "end", value: string, index: number) {
       let dayList = { ...hourPerDayList };
       dayList["ju"][index][prop] = value;
       setHourPerDayList(dayList);
     },
-    vi: function updateHourDate(prop: "from" | "to", value: string, index: number) {
+    vi: function updateHourDate(prop: "start" | "end", value: string, index: number) {
       let dayList = { ...hourPerDayList };
       dayList["vi"][index][prop] = value;
       setHourPerDayList(dayList);
     },
-    sa: function updateHourDate(prop: "from" | "to", value: string, index: number) {
+    sa: function updateHourDate(prop: "start" | "end", value: string, index: number) {
       let dayList = { ...hourPerDayList };
       dayList["sa"][index][prop] = value;
       setHourPerDayList(dayList);
     },
-    do: function updateHourDate(prop: "from" | "to", value: string, index: number) {
+    do: function updateHourDate(prop: "start" | "end", value: string, index: number) {
       let dayList = { ...hourPerDayList };
       dayList["do"][index][prop] = value;
       setHourPerDayList(dayList);
@@ -156,6 +148,7 @@ const Hours = () => {
   const nextStep = async () => {
     const hours = same ? completeDaysWithHours(hourList) : hourPerDayList;
     const response = await saveFieldHours(params.id as unknown as number, token, hours);
+    console.log("🚀 ~ nextStep ~ response:", response);
     if (response.status) router.push(`/fields/new/price?id=${response.data}`);
   };
 

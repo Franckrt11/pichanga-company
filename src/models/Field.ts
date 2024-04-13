@@ -1,5 +1,5 @@
 import { API_URL, FETCH_HEADERS } from "@/src/utils/Constants";
-import { FieldData, FieldPicture, FieldDay, HourRange, HourDayRange } from "@/src/utils/Types";
+import { FieldData, FieldPicture, FieldDay, HourRange, HourDayRange, PriceRange, SavePrice } from "@/src/utils/Types";
 
 export const fetchAllFields = async (id: number, token: string | null)  => {
   const response = await fetch(`${API_URL}api/company/fields/${id}`, {
@@ -219,8 +219,7 @@ export const updateFieldHours = async ( id: number, token: string | null, data: 
   }
 };
 
-
-export const fetchFieldHours = async ( id: number, token: string | null )  => {
+export const fetchFieldHours = async ( id: number, token: string | null ) => {
   try {
     const response = await fetch(`${API_URL}api/company/field/${id}/hours`, {
       method: "GET",
@@ -231,7 +230,58 @@ export const fetchFieldHours = async ( id: number, token: string | null )  => {
     });
     return await response.json();
   } catch (error) {
-    console.log("🚩 ~ models/Field.ts ~ fetchField() ~ error:", error);
+    console.log("🚩 ~ models/Field.ts ~ fetchFieldHours() ~ error:", error);
+    return { status: false };
+  }
+};
+
+
+export const fetchFieldPrices = async ( id: number, token: string | null ) => {
+  try {
+    const response = await fetch(`${API_URL}api/company/field/${id}/prices`, {
+      method: "GET",
+      headers: {
+        ...FETCH_HEADERS,
+        Authorization: `Bearer ${token}`,
+      }
+    });
+    return await response.json();
+  } catch (error) {
+    console.log("🚩 ~ models/Field.ts ~ fetchFieldPrices() ~ error:", error);
+    return { status: false };
+  }
+};
+
+export const updateFieldPrices = async ( id: number, token: string | null, data: PriceRange[] ) => {
+  try {
+    const response = await fetch(`${API_URL}api/company/field/${id}/prices`, {
+      method: "PUT",
+      headers: {
+        ...FETCH_HEADERS,
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({prices: data}),
+    });
+    return await response.json();
+  } catch (error) {
+    console.log("🚩 ~ models/Field.ts ~ updateFieldPrices() ~ error:", error);
+    return { status: false };
+  }
+};
+
+export const saveFieldPrices = async ( id: number, token: string | null, data: SavePrice[] ) => {
+  try {
+    const response = await fetch(`${API_URL}api/company/field/${id}/prices`, {
+      method: "POST",
+      headers: {
+        ...FETCH_HEADERS,
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({prices: data}),
+    });
+    return await response.json();
+  } catch (error) {
+    console.log("🚩 ~ models/Field.ts ~ saveFieldPrices() ~ error:", error);
     return { status: false };
   }
 };

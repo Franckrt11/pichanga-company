@@ -5,6 +5,7 @@ import {
   StyleSheet,
   StyleProp,
   TextStyle,
+  KeyboardTypeOptions
 } from "react-native";
 import { useState } from "react";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -19,7 +20,7 @@ interface InputProps {
   // onFocus: () => void;
   styles: StyleProp<TextStyle>;
   theme: string;
-  keyboardType?: string;
+  keyboard?: KeyboardTypeOptions;
 }
 
 const Input = ({
@@ -31,6 +32,7 @@ const Input = ({
   // onFocus = () => {},
   styles,
   theme,
+  keyboard
 }: // ...props
 InputProps) => {
   const [hidePassword, setHidePassword] = useState(password);
@@ -57,6 +59,7 @@ InputProps) => {
         style={styles}
         placeholder={placeholder}
         placeholderTextColor={Colors.silverSand}
+        keyboardType={keyboard}
         // {...props}
       />
       {password && (

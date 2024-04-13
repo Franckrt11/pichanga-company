@@ -29,7 +29,7 @@ const Days = () => {
   const nextStep = async () => {
     const response = await saveFieldDays(params.id as unknown as number, token, daysToArray(days));
     if (response.status) {
-      router.push(`/fields/new/hours?id=${response.data}`);
+      router.push(`/fields/new/hours?id=${params.id}`);
     }
   };
 

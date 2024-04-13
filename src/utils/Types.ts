@@ -95,6 +95,7 @@ export interface HourRange {
   position: number;
   start: string;
   end: string;
+  price?: any;
 };
 
 export interface HourDayRange {
@@ -102,7 +103,7 @@ export interface HourDayRange {
 };
 
 export interface PriceRange {
-  full: number;
+  whole: number;
   half: number;
 };
 
@@ -145,4 +146,9 @@ export interface IFetchUser extends PhotoData {
   lastname: string;
   email: string;
   phone: string;
+}
+
+export interface SavePrice {
+  id: number;
+  price: PriceRange;
 }

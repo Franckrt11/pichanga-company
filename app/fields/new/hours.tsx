@@ -148,8 +148,7 @@ const Hours = () => {
   const nextStep = async () => {
     const hours = same ? completeDaysWithHours(hourList) : hourPerDayList;
     const response = await saveFieldHours(params.id as unknown as number, token, hours);
-    console.log("🚀 ~ nextStep ~ response:", response);
-    if (response.status) router.push(`/fields/new/price?id=${response.data}`);
+    if (response.status) router.push(`/fields/new/price?id=${params.id}`);
   };
 
   useEffect(() => {

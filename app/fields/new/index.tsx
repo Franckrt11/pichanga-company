@@ -84,6 +84,7 @@ const NewField = () => {
           onChangeText={(text: string) => setPhone(text)}
           styles={PageStyles.input}
           theme="light"
+          keyboard="numeric"
         />
         <Input
           placeholder="Celular o Whatsapp"
@@ -91,6 +92,7 @@ const NewField = () => {
           onChangeText={(text: string) => setMobile(text)}
           styles={PageStyles.input}
           theme="light"
+          keyboard="numeric"
         />
         <Input
           placeholder="Cantidad de estacionamientos"
@@ -98,6 +100,7 @@ const NewField = () => {
           onChangeText={(text: string) => setParking(text)}
           styles={PageStyles.input}
           theme="light"
+          keyboard="numeric"
         />
         <Input
           placeholder="Medida de cancha"
@@ -123,6 +126,7 @@ const NewField = () => {
           onChangeText={(text: string) => setPlayers(text)}
           styles={PageStyles.input}
           theme="light"
+          keyboard="numeric"
         />
       </View>
       <View style={{ marginBottom: 20 }}>

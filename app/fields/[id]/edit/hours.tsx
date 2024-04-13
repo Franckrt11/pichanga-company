@@ -184,6 +184,7 @@ const Hours = () => {
             onSelect={selectDay}
           />
         </View>
+
         <View style={{ borderWidth: 2, borderColor: Colors.silverSand, borderRadius: 15, padding: 5 }}>
           {(() => {
             switch (activeDay) {
@@ -199,7 +200,6 @@ const Hours = () => {
                         updateTo={updateHourOnDays.lu}
                         remove={removeourOnDays.lu}
                       />
-                      // <Text style={{color: "black"}} key={index}>{hour.from} - {hour.to}</Text>
                     ))}
                     <AddHourButtom onPress={() => addHoursToDayList("lu", INIT_HOUR_RANGE)} />
                   </View>

@@ -16,14 +16,14 @@
         "simulator": true
       },
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://www.tejuegounapichanga.com/",
-        "EXPO_PUBLIC_SOCKET_URL": "https://socket.tejuegounapichanga.com"
+        "EXPO_PUBLIC_API_URL": "https://www.tejuegounapichanga.com.pe/",
+        "EXPO_PUBLIC_SOCKET_URL": "https://socket.tejuegounapichanga.com.pe"
       }
     },
     "production": {
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://www.tejuegounapichanga.com/",
-        "EXPO_PUBLIC_SOCKET_URL": "https://socket.tejuegounapichanga.com"
+        "EXPO_PUBLIC_API_URL": "https://www.tejuegounapichanga.com.pe/",
+        "EXPO_PUBLIC_SOCKET_URL": "https://socket.tejuegounapichanga.com.pe"
       }
     }
   },

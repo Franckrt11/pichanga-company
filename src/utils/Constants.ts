@@ -1,7 +1,7 @@
-import { Platform } from "react-native";
+// import { Platform } from "react-native";
 
-// export const API_URL = process.env.EXPO_PUBLIC_API_URL;
-export const API_URL = "http://10.0.2.2/pichanga/";
+export const API_URL = process.env.EXPO_PUBLIC_API_URL;
+// export const API_URL = "http://10.0.2.2/pichanga/";
 
 export const SOCKET_URL = process.env.EXPO_PUBLIC_SOCKET_URL;
 

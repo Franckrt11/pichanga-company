@@ -1,5 +1,5 @@
 import { Image, StyleProp, ImageStyle } from "react-native";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import * as FileSystem from "expo-file-system";
 import { API_URL } from "@/src/utils/Constants";
 
@@ -42,19 +42,11 @@ const CachedImage = ({
       const fileInfo = await FileSystem.getInfoAsync(fileUri);
 
       if (fileInfo.exists) {
-        console.log(
-          "🚀 ~ file: cached-image.tsx:39 ~ saveInCache ~ fileInfo:",
-          fileInfo
-        );
         setSource({ uri: fileInfo.uri });
       } else {
         const newAvatarImage = await FileSystem.downloadAsync(
           avatarUrl(name),
           fileUri
-        );
-        console.log(
-          "🚀 ~ file: cached-image.tsx:43 ~ saveInCache ~ newAvatarImage:",
-          newAvatarImage
         );
         setSource({ uri: newAvatarImage.uri });
       }
@@ -64,13 +56,8 @@ const CachedImage = ({
     }
   };
 
-  // useEffect(() => {
-  //   if (filename) saveInCache(filename);
-  // }, []);
-
   return (
     <Image
-      // source={source}
       source={{ uri: defaultImage }}
       style={[
         {

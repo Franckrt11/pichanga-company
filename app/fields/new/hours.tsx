@@ -166,13 +166,12 @@ const Hours = () => {
           size={25}
           style={{ marginBottom: 15 }}
           fillColor={Colors.greenLizard}
-          unfillColor={Colors.white}
+          unFillColor={Colors.white}
           text="Si, tiene el mismo horario."
           iconStyle={{ borderColor: Colors.white, borderWidth: 6 }}
           innerIconStyle={styles.innerIcon}
           textStyle={styles.checkboxText}
           iconComponent={<View></View>}
-          disableBuiltInState
           onPress={(isChecked: boolean) => {
             setSame(true);
           }}
@@ -181,13 +180,12 @@ const Hours = () => {
           isChecked={!same}
           size={25}
           fillColor={Colors.greenLizard}
-          unfillColor={Colors.white}
+          unFillColor={Colors.white}
           text="No, tiene distintos horarios."
           iconStyle={{ borderColor: Colors.white, borderWidth: 6 }}
           innerIconStyle={styles.innerIcon}
           textStyle={styles.checkboxText}
           iconComponent={<View></View>}
-          disableBuiltInState
           onPress={(isChecked: boolean) => {
             setSame(false);
           }}

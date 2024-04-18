@@ -1,4 +1,4 @@
-import { StyleSheet, Pressable, View } from "react-native";
+import { StyleSheet, Pressable } from "react-native";
 import { useEffect } from "react";
 import Animated, { useSharedValue, useAnimatedStyle, withTiming, Easing } from 'react-native-reanimated';
 import Colors from "@/src/utils/Colors";

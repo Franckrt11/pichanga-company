@@ -18,7 +18,7 @@ import {
   BottomSheetModal,
   BottomSheetModalProvider,
   BottomSheetBackdrop
-} from '@gorhom/bottom-sheet';
+} from "@gorhom/bottom-sheet";
 import { useAuthContext } from "@/src/context/Auth";
 import { useUserContext } from "@/src/context/User";
 import { LayoutStyles } from "@/src/utils/Styles";
@@ -243,7 +243,7 @@ const User = () => {
                 onChangeText={(text) => setRuc(text)}
                 styles={styles.input}
                 theme="light"
-                keyboardType="numeric"
+                keyboard="numeric"
                 error={errors ? errors.ruc : null}
               />
               <Input
@@ -252,7 +252,7 @@ const User = () => {
                 onChangeText={(text) => setEmail(text)}
                 styles={styles.input}
                 theme="light"
-                keyboardType="email-address"
+                keyboard="email-address"
                 error={errors ? errors.email : null}
               />
             </View>

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Pressable } from "react-native"
+import { Text, View, Pressable } from "react-native"
 import { useState, useEffect } from "react";
 import { router, useLocalSearchParams } from "expo-router";
 import { LayoutStyles, PageStyles } from "@/src/utils/Styles";

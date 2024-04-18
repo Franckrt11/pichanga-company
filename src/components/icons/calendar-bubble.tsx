@@ -1,4 +1,3 @@
-import Svg, { G, Path, Defs, ClipPath } from "react-native-svg";
 import { View } from "react-native";
 import { TabStyles } from "@/src/utils/Styles";
 import Colors from "@/src/utils/Colors";

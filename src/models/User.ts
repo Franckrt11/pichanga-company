@@ -1,6 +1,4 @@
 import { API_URL, FETCH_HEADERS } from "@/src/utils/Constants";
-import { UserData } from "@/src/utils/Types";
-// import { Try } from "expo-router/build/views/Try";
 
 interface IData {
   name: string;

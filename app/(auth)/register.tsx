@@ -61,7 +61,7 @@ const Register = () => {
           onChangeText={(text: string) => setRuc(text)}
           styles={PageStyles.input}
           theme="light"
-          keyboardType="numeric"
+          keyboard="numeric"
           error={errors ? errors.ruc : null}
         />
         <Input
@@ -70,7 +70,7 @@ const Register = () => {
           onChangeText={(text: string) => setEmail(text)}
           styles={PageStyles.input}
           theme="light"
-          keyboardType="email-address"
+          keyboard="email-address"
           error={errors ? errors.email : null}
         />
         <Input
@@ -111,8 +111,8 @@ const Register = () => {
                 password,
                 password_confirmation,
                 checkbox,
-                status: false,
-                photo: null
+                // status: false,
+                // photo: null
               })
             }
             style={PageStyles.button}

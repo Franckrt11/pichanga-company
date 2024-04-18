@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, Pressable } from "react-native"
 import { router, useLocalSearchParams } from "expo-router";
-import { PageStyles, LayoutStyles } from "@/src/utils/Styles";
+import { LayoutStyles } from "@/src/utils/Styles";
 import ChildPage from "@/src/components/layouts/child-page";
 
 const CommentsDetails = () => {

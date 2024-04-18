@@ -23,11 +23,7 @@ const EditField = () => {
 
   const save = async () => {
     const response = await updateFieldStatus(params.id as unknown as number, token, status);
-    if (response.status) {
-      router.replace("/(tabs)/fields");
-    } else {
-      console.log("error");
-    }
+    if (response.status) router.replace("/(tabs)/fields");
   };
 
   useEffect(() => {

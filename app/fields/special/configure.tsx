@@ -55,13 +55,12 @@ const Configure = () => {
             isChecked={add}
             size={25}
             fillColor={Colors.greenLizard}
-            unfillColor={Colors.white}
+            unFillColor={Colors.white}
             text="Agregar"
             iconStyle={{ borderColor: Colors.white, borderWidth: 6 }}
             innerIconStyle={styles.innerIcon}
             textStyle={styles.checkboxText}
             iconComponent={<View></View>}
-            disableBuiltInState
             onPress={(isChecked: boolean) => {
               setAdd(true);
               setRetire(false);
@@ -73,13 +72,12 @@ const Configure = () => {
             isChecked={retire}
             size={25}
             fillColor={Colors.greenLizard}
-            unfillColor={Colors.white}
+            unFillColor={Colors.white}
             text="Retirar"
             iconStyle={{ borderColor: Colors.white, borderWidth: 6 }}
             innerIconStyle={styles.innerIcon}
             textStyle={styles.checkboxText}
             iconComponent={<View></View>}
-            disableBuiltInState
             onPress={(isChecked: boolean) => {
               setRetire(true);
               setAdd(false);

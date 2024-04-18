@@ -15,9 +15,8 @@ const Password = () => {
   const { newPassword } = useAuthContext();
 
   const changePassword = async (): Promise<void> => {
-    console.log('changePassword');
     const response = await newPassword(state.email, old, password);
-    console.log("🚀 ~ file: user.tsx:95 ~ saveProfile ~ change:", response);
+    console.log("🚀 ~ user/password.tsx ~ changePassword ~ response:", response);
     Alert.alert("Contraseña actualizada.");
   };
 

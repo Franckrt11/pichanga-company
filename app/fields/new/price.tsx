@@ -130,7 +130,6 @@ const Price = () => {
   };
 
   useEffect(() => {
-    // console.log('🎄 ~ datos price', {params, token})
     loadFieldDays();
     loadFieldPrices();
   }, []);
@@ -145,13 +144,12 @@ const Price = () => {
           isChecked={same}
           size={25}
           fillColor={Colors.greenLizard}
-          unfillColor={Colors.white}
+          unFillColor={Colors.white}
           text="Si, tiene precio único."
           iconStyle={{ borderColor: Colors.white, borderWidth: 6 }}
           innerIconStyle={styles.innerIcon}
           textStyle={styles.checkboxText}
           iconComponent={<View></View>}
-          disableBuiltInState
           onPress={(isChecked: boolean) => {
             setSame(true);
           }}
@@ -160,13 +158,12 @@ const Price = () => {
           isChecked={!same}
           size={25}
           fillColor={Colors.greenLizard}
-          unfillColor={Colors.white}
+          unFillColor={Colors.white}
           text="No, tiene distinto precio."
           iconStyle={{ borderColor: Colors.white, borderWidth: 6 }}
           innerIconStyle={styles.innerIcon}
           textStyle={styles.checkboxText}
           iconComponent={<View></View>}
-          disableBuiltInState
           onPress={(isChecked: boolean) => {
             setSame(false);
           }}

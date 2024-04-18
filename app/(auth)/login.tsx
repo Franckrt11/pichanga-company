@@ -1,7 +1,6 @@
 import {
   Pressable,
   Image,
-  Platform,
   SafeAreaView,
   ScrollView,
   Text,

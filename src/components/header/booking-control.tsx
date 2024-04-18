@@ -1,5 +1,5 @@
-import { View, Pressable, Image, StyleSheet } from "react-native";
-import { useState, useEffect } from "react";
+import { View, Pressable, StyleSheet } from "react-native";
+import { useState } from "react";
 import Colors from "@/src/utils/Colors";
 import CheckIcon from "@/src/components/icons/check-icon";
 import CalendarIcon from "@/src/components/icons/calendar-icon";

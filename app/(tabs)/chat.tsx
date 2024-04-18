@@ -6,7 +6,7 @@ import { LayoutStyles } from "@/src/utils/Styles";
 import Colors from "@/src/utils/Colors";
 import { fetchAllChats }  from "@/src/models/Chat";
 import { useAuthContext } from "@/src/context/Auth";
-import { getAvatarUrl, getUserAvatarUrl } from "@/src/utils/Helpers";
+import { getUserAvatarUrl } from "@/src/utils/Helpers";
 import Images from "@/src/utils/Images";
 import { IRoom } from "@/src/utils/Types";
 

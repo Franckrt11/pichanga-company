@@ -27,10 +27,7 @@ const FieldItem = ({ id, name, district, active, portrait }: FieldProps) => {
 
   const toggleVisible = async(): Promise<void> => {
     const response = await updateFieldStatus(id, token, !visible);
-    if (response.status) {
-      console.log("Change visible to:", !visible.toString());
-      setVisible(!visible);
-    }
+    if (response.status) setVisible(!visible);
   };
 
   return (

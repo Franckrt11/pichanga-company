@@ -51,16 +51,52 @@ export interface ISpecialHour {
   reason: string;
 };
 
+export interface DistrictData {
+  id: number;
+  name: string;
+  city_id: number;
+}
+
+export interface CityData {
+  id: number;
+  name: string;
+  country_id: number;
+}
+
+export interface CountryData {
+  id: number;
+  name: string;
+}
+
+export interface FieldDataSave {
+  address: string;
+  city_id: number;
+  company_id: number;
+  country_id: number;
+  district_id: number;
+  games: string;
+  map_latitude: number;
+  map_longitude: number;
+  mobile: string;
+  name: string;
+  parking: string;
+  phone: string;
+  players: string;
+  size: string;
+  type: string;
+}
+
 export interface FieldData {
   active?: boolean;
   address: string;
-  city: string;
+  city: CityData;
   company_id: number;
-  country: string;
-  district: string;
+  country: CountryData;
+  district: DistrictData;
   games: string;
   id?: number;
-  map: string;
+  map_latitude: number;
+  map_longitude: number;
   mobile: string;
   name: string;
   parking: string;

@@ -1,16 +1,18 @@
 import { StyleSheet, Text, View, Pressable, Alert } from "react-native";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { router } from "expo-router";
-import { Picker } from '@react-native-picker/picker';
+import { Picker } from "@react-native-picker/picker";
 import MapView, { Marker, PROVIDER_GOOGLE, LatLng } from "react-native-maps";
 import { LayoutStyles, PageStyles } from "@/src/utils/Styles";
 import Colors from "@/src/utils/Colors";
 import ChildPage from "@/src/components/layouts/child-page";
 import Input from "@/src/components/input";
 import ButtonCheckbox from "@/src/components/button-checkbox";
-import { saveField }  from "@/src/models/Field";
+import { saveField } from "@/src/models/Field";
+import { fetchCountries, fetchCities, fetchDistricts } from "@/src/models/Config";
 import { useUserContext } from "@/src/context/User";
 import { useAuthContext } from "@/src/context/Auth";
+import { CountryData, CityData, DistrictData } from "@/src/utils/Types";
 
 const NewField = () => {
   const { state } = useUserContext();
@@ -23,33 +25,64 @@ const NewField = () => {
   const [size, setSize] = useState("");
   const [type, setType] = useState("Grass");
   const [players, setPlayers] = useState("");
-  const [modes, setMode] = useState({ "5v5": false, "6v6": false, "7v7": false, "8v8": false, "9v9": false, "10v10": false, "11v11": false });
-  const [country, setCountry] = useState("");
-  const [city, setCity] = useState("");
-  const [district, setDistrict] = useState("");
+  const [modes, setMode] = useState({
+    "5v5": false,
+    "6v6": false,
+    "7v7": false,
+    "8v8": false,
+    "9v9": false,
+    "10v10": false,
+    "11v11": false,
+  });
+
+  const [countries, setCountries] = useState<CountryData[]>([]);
+  const [cities, setCities] = useState<CityData[]>([]);
+  const [districts, setDistricts] = useState<DistrictData[]>([]);
+
+  const [country, setCountry] = useState<number>(0);
+  const [city, setCity] = useState<number>(0);
+  const [district, setDistrict] = useState<number>(0);
   const [address, setAddress] = useState("");
   const [coords, setCoords] = useState<LatLng>({
     latitude: -12.0459667,
-    longitude: -77.0305709
+    longitude: -77.0305709,
   });
 
   const changeModeState = (state: boolean, mode: string) => {
     setMode({ ...modes, [mode]: state });
   };
 
+  const getCountries = async () => {
+    const countries = await fetchCountries(token);
+    if (countries.status)  setCountries(countries.data);
+  };
+
+  const getCities = async (country: number) => {
+    const cities = await fetchCities(country, token);
+    if (cities.status) setCities(cities.data)
+  };
+
+  const getDistricts = async (city: number) => {
+    const districts = await fetchDistricts(city, token);
+    if (districts.status) setDistricts(districts.data)
+  };
+
   const nextStep = async () => {
-    const filteredModes = Object.keys(modes).map(key => {
-      if (modes[key as keyof typeof modes]) return key;
-    }).filter(element => element !== undefined);
+    const filteredModes = Object.keys(modes)
+      .map((key) => {
+        if (modes[key as keyof typeof modes]) return key;
+      })
+      .filter((element) => element !== undefined);
 
     const saved = await saveField(token, {
       address,
-      city,
+      city_id: city,
       company_id: state.id as number,
-      country,
-      district,
+      country_id: country,
+      district_id: district,
       games: JSON.stringify(filteredModes),
-      map: `${coords.latitude},${coords.longitude}`,
+      map_latitude: coords.latitude,
+      map_longitude: coords.longitude,
       mobile,
       name,
       parking,
@@ -63,14 +96,20 @@ const NewField = () => {
       router.push(`/fields/new/photos?id=${saved.data.id}`);
     } else {
       console.log("🚨 ~ fields/new/index.tsx ~ nextStep ~ error", saved);
-      Alert.alert('Error al guardar cancha.');
+      Alert.alert("Error al guardar cancha.");
     }
   };
+
+  useEffect(() => {
+    getCountries();
+  }, []);
 
   return (
     <ChildPage style={{ marginBottom: 80 }}>
       <Text style={LayoutStyles.pageTitle}>NUEVA CANCHA</Text>
-      <View style={{ width: "80%", marginHorizontal: "auto", marginBottom: 10 }}>
+      <View
+        style={{ width: "80%", marginHorizontal: "auto", marginBottom: 10 }}
+      >
         <Input
           placeholder="Nombre de la cancha"
           value={name}
@@ -115,9 +154,21 @@ const NewField = () => {
             selectedValue={type}
             onValueChange={(value, itemIndex) => setType(value)}
           >
-            <Picker.Item fontFamily="PoppinsMedium" label="Grass" value="Grass" />
-            <Picker.Item fontFamily="PoppinsMedium" label="Cemento" value="Cemento" />
-            <Picker.Item fontFamily="PoppinsMedium" label="Sintético" value="Sintético" />
+            <Picker.Item
+              fontFamily="PoppinsMedium"
+              label="Grass"
+              value="Grass"
+            />
+            <Picker.Item
+              fontFamily="PoppinsMedium"
+              label="Cemento"
+              value="Cemento"
+            />
+            <Picker.Item
+              fontFamily="PoppinsMedium"
+              label="Sintético"
+              value="Sintético"
+            />
           </Picker>
         </View>
         <Input
@@ -170,7 +221,8 @@ const NewField = () => {
             radius={25}
             color={Colors.metallicGreen}
             checked={modes["9v9"]}
-            mode="9v9" text="9 vs 9"
+            mode="9v9"
+            text="9 vs 9"
             onChangeMode={changeModeState}
           />
           <ButtonCheckbox
@@ -196,6 +248,62 @@ const NewField = () => {
         </View>
       </View>
       <View style={{ width: "80%", marginHorizontal: "auto" }}>
+        <View style={PageStyles.pickerContainer}>
+          <Picker
+            style={PageStyles.picker}
+            selectedValue={country}
+            onValueChange={(value, itemIndex) => {
+              getCities(value);
+              setCountry(value);
+            }}
+          >
+            {countries?.map((country, index) => (
+              <Picker.Item
+                key={`picker-co-${index}`}
+                fontFamily="PoppinsMedium"
+                label={country.name}
+                value={country.id}
+              />
+            ))}
+          </Picker>
+        </View>
+        <View style={PageStyles.pickerContainer}>
+          <Picker
+            style={PageStyles.picker}
+            selectedValue={city}
+            onValueChange={(value, itemIndex) => {
+              getDistricts(value);
+              setCity(value);
+            }}
+          >
+            {cities?.map((city, index) => (
+              <Picker.Item
+                key={`picker-cy-${index}`}
+                fontFamily="PoppinsMedium"
+                label={city.name}
+                value={city.id}
+              />
+            ))}
+          </Picker>
+        </View>
+        <View style={PageStyles.pickerContainer}>
+          <Picker
+            style={PageStyles.picker}
+            selectedValue={district}
+            onValueChange={(value, itemIndex) => setDistrict(value)}
+          >
+            {districts?.map((district, index) => (
+              <Picker.Item
+                key={`picker-di-${index}`}
+                fontFamily="PoppinsMedium"
+                label={district.name}
+                value={district.id}
+              />
+            ))}
+          </Picker>
+        </View>
+
+        {/*
         <Input
           placeholder="País"
           value={country}
@@ -216,7 +324,8 @@ const NewField = () => {
           onChangeText={(text: string) => setDistrict(text)}
           styles={PageStyles.input}
           theme="light"
-        />
+        /> */}
+
         <Input
           placeholder="Dirección"
           value={address}
@@ -225,7 +334,15 @@ const NewField = () => {
           theme="light"
         />
       </View>
-      <View style={{ width: "80%", height: 400, marginBottom: 50, borderRadius: 20, overflow: "hidden" }}>
+      <View
+        style={{
+          width: "80%",
+          height: 400,
+          marginBottom: 50,
+          borderRadius: 20,
+          overflow: "hidden",
+        }}
+      >
         <MapView
           provider={PROVIDER_GOOGLE}
           style={{ width: "100%", height: "100%" }}
@@ -238,7 +355,9 @@ const NewField = () => {
         >
           <Marker
             draggable
-            onDragEnd={(direction) => setCoords(direction.nativeEvent.coordinate)}
+            onDragEnd={(direction) =>
+              setCoords(direction.nativeEvent.coordinate)
+            }
             coordinate={coords}
           />
         </MapView>
@@ -250,7 +369,7 @@ const NewField = () => {
         <Text style={PageStyles.buttonText}>SIGUIENTE</Text>
       </Pressable>
     </ChildPage>
-  )
+  );
 };
 
 export default NewField;
@@ -261,7 +380,6 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     padding: 8,
     borderRadius: 25,
-    borderColor: Colors.white
-  }
+    borderColor: Colors.white,
+  },
 });
-

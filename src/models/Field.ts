@@ -1,26 +1,35 @@
 import { API_URL, FETCH_HEADERS } from "@/src/utils/Constants";
-import { FieldData, FieldPicture, FieldDay, HourRange, HourDayRange, PriceRange, SavePrice } from "@/src/utils/Types";
+import {
+  //FieldData,
+  FieldDataSave,
+  FieldPicture,
+  FieldDay,
+  HourRange,
+  HourDayRange,
+  PriceRange,
+  SavePrice,
+} from "@/src/utils/Types";
 
-export const fetchAllFields = async (id: number, token: string | null)  => {
+export const fetchAllFields = async (id: number, token: string | null) => {
   const response = await fetch(`${API_URL}api/company/fields/${id}`, {
     method: "GET",
     headers: {
       ...FETCH_HEADERS,
       Authorization: `Bearer ${token}`,
-    }
+    },
   });
 
   return await response.json();
 };
 
-export const fetchField = async (fid: number, token: string | null)  => {
+export const fetchField = async (fid: number, token: string | null) => {
   try {
     const response = await fetch(`${API_URL}api/company/field/${fid}`, {
       method: "GET",
       headers: {
         ...FETCH_HEADERS,
         Authorization: `Bearer ${token}`,
-      }
+      },
     });
 
     const result = await response.json();
@@ -30,7 +39,7 @@ export const fetchField = async (fid: number, token: string | null)  => {
   }
 };
 
-export const saveField = async (token: string | null, data: FieldData) => {
+export const saveField = async (token: string | null, data: FieldDataSave) => {
   try {
     const response = await fetch(`${API_URL}api/company/field/new`, {
       method: "POST",
@@ -50,17 +59,20 @@ export const saveField = async (token: string | null, data: FieldData) => {
 export const uploadPicture = async (
   data: FieldPicture,
   token: string | null,
-  id?: number,
+  id?: number
 ): Promise<string | undefined> => {
   try {
-    const response = await fetch(`${API_URL}api/company/field/${id}/${data.location}`, {
-      method: "POST",
-      headers: {
-        ...FETCH_HEADERS,
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(data),
-    });
+    const response = await fetch(
+      `${API_URL}api/company/field/${id}/${data.location}`,
+      {
+        method: "POST",
+        headers: {
+          ...FETCH_HEADERS,
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(data),
+      }
+    );
     const result = await response.json();
 
     return result.picture;
@@ -69,14 +81,14 @@ export const uploadPicture = async (
   }
 };
 
-export const fetchFieldPictures = async (id: number, token: string | null)  => {
+export const fetchFieldPictures = async (id: number, token: string | null) => {
   try {
     const response = await fetch(`${API_URL}api/company/field/${id}/pictures`, {
       method: "GET",
       headers: {
         ...FETCH_HEADERS,
         Authorization: `Bearer ${token}`,
-      }
+      },
     });
     const result = await response.json();
 
@@ -86,15 +98,22 @@ export const fetchFieldPictures = async (id: number, token: string | null)  => {
   }
 };
 
-export const removePicture = async ( id: number, token: string | null, location: string ) => {
+export const removePicture = async (
+  id: number,
+  token: string | null,
+  location: string
+) => {
   try {
-    const response = await fetch(`${API_URL}api/company/field/${id}/${location}`, {
-      method: "DELETE",
-      headers: {
-        ...FETCH_HEADERS,
-        Authorization: `Bearer ${token}`,
+    const response = await fetch(
+      `${API_URL}api/company/field/${id}/${location}`,
+      {
+        method: "DELETE",
+        headers: {
+          ...FETCH_HEADERS,
+          Authorization: `Bearer ${token}`,
+        },
       }
-    });
+    );
     const result = await response.json();
 
     return result.data;
@@ -103,7 +122,11 @@ export const removePicture = async ( id: number, token: string | null, location:
   }
 };
 
-export const updateField = async ( id: number, token: string | null,  data: FieldData) => {
+export const updateField = async (
+  id: number,
+  token: string | null,
+  data: FieldDataSave
+) => {
   try {
     const response = await fetch(`${API_URL}api/company/field/${id}`, {
       method: "PUT",
@@ -119,7 +142,11 @@ export const updateField = async ( id: number, token: string | null,  data: Fiel
   }
 };
 
-export const updateFieldStatus = async ( id: number, token: string | null,  data: boolean) => {
+export const updateFieldStatus = async (
+  id: number,
+  token: string | null,
+  data: boolean
+) => {
   try {
     const response = await fetch(`${API_URL}api/company/field/${id}/status`, {
       method: "PATCH",
@@ -135,7 +162,11 @@ export const updateFieldStatus = async ( id: number, token: string | null,  data
   }
 };
 
-export const saveFieldDays = async ( id: number, token: string | null,  data: FieldDay[]) => {
+export const saveFieldDays = async (
+  id: number,
+  token: string | null,
+  data: FieldDay[]
+) => {
   try {
     const response = await fetch(`${API_URL}api/company/field/${id}/days`, {
       method: "POST",
@@ -143,7 +174,7 @@ export const saveFieldDays = async ( id: number, token: string | null,  data: Fi
         ...FETCH_HEADERS,
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({days: data}),
+      body: JSON.stringify({ days: data }),
     });
     return await response.json();
   } catch (error) {
@@ -152,14 +183,14 @@ export const saveFieldDays = async ( id: number, token: string | null,  data: Fi
   }
 };
 
-export const fetchFieldDays = async ( id: number, token: string | null ) => {
+export const fetchFieldDays = async (id: number, token: string | null) => {
   try {
     const response = await fetch(`${API_URL}api/company/field/${id}/days`, {
       method: "GET",
       headers: {
         ...FETCH_HEADERS,
         Authorization: `Bearer ${token}`,
-      }
+      },
     });
     return await response.json();
   } catch (error) {
@@ -168,7 +199,11 @@ export const fetchFieldDays = async ( id: number, token: string | null ) => {
   }
 };
 
-export const updateFieldDays = async ( id: number, token: string | null,  data: FieldDay[]) => {
+export const updateFieldDays = async (
+  id: number,
+  token: string | null,
+  data: FieldDay[]
+) => {
   try {
     const response = await fetch(`${API_URL}api/company/field/${id}/days`, {
       method: "PUT",
@@ -176,7 +211,7 @@ export const updateFieldDays = async ( id: number, token: string | null,  data: 
         ...FETCH_HEADERS,
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({days: data}),
+      body: JSON.stringify({ days: data }),
     });
     return await response.json();
   } catch (error) {
@@ -185,7 +220,11 @@ export const updateFieldDays = async ( id: number, token: string | null,  data: 
   }
 };
 
-export const saveFieldHours = async ( id: number, token: string | null, data: HourDayRange) => {
+export const saveFieldHours = async (
+  id: number,
+  token: string | null,
+  data: HourDayRange
+) => {
   try {
     const response = await fetch(`${API_URL}api/company/field/${id}/hours`, {
       method: "POST",
@@ -193,7 +232,7 @@ export const saveFieldHours = async ( id: number, token: string | null, data: Ho
         ...FETCH_HEADERS,
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({hours: data }),
+      body: JSON.stringify({ hours: data }),
     });
     return await response.json();
   } catch (error) {
@@ -202,7 +241,11 @@ export const saveFieldHours = async ( id: number, token: string | null, data: Ho
   }
 };
 
-export const updateFieldHours = async ( id: number, token: string | null, data: HourRange[] | HourDayRange ) => {
+export const updateFieldHours = async (
+  id: number,
+  token: string | null,
+  data: HourRange[] | HourDayRange
+) => {
   try {
     const response = await fetch(`${API_URL}api/company/field/${id}/hours`, {
       method: "PUT",
@@ -210,7 +253,7 @@ export const updateFieldHours = async ( id: number, token: string | null, data: 
         ...FETCH_HEADERS,
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({hours: data}),
+      body: JSON.stringify({ hours: data }),
     });
     return await response.json();
   } catch (error) {
@@ -219,14 +262,14 @@ export const updateFieldHours = async ( id: number, token: string | null, data: 
   }
 };
 
-export const fetchFieldHours = async ( id: number, token: string | null ) => {
+export const fetchFieldHours = async (id: number, token: string | null) => {
   try {
     const response = await fetch(`${API_URL}api/company/field/${id}/hours`, {
       method: "GET",
       headers: {
         ...FETCH_HEADERS,
         Authorization: `Bearer ${token}`,
-      }
+      },
     });
     return await response.json();
   } catch (error) {
@@ -235,15 +278,14 @@ export const fetchFieldHours = async ( id: number, token: string | null ) => {
   }
 };
 
-
-export const fetchFieldPrices = async ( id: number, token: string | null ) => {
+export const fetchFieldPrices = async (id: number, token: string | null) => {
   try {
     const response = await fetch(`${API_URL}api/company/field/${id}/prices`, {
       method: "GET",
       headers: {
         ...FETCH_HEADERS,
         Authorization: `Bearer ${token}`,
-      }
+      },
     });
     return await response.json();
   } catch (error) {
@@ -252,7 +294,11 @@ export const fetchFieldPrices = async ( id: number, token: string | null ) => {
   }
 };
 
-export const updateFieldPrices = async ( id: number, token: string | null, data: PriceRange[] ) => {
+export const updateFieldPrices = async (
+  id: number,
+  token: string | null,
+  data: PriceRange[]
+) => {
   try {
     const response = await fetch(`${API_URL}api/company/field/${id}/prices`, {
       method: "PUT",
@@ -260,7 +306,7 @@ export const updateFieldPrices = async ( id: number, token: string | null, data:
         ...FETCH_HEADERS,
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({prices: data}),
+      body: JSON.stringify({ prices: data }),
     });
     return await response.json();
   } catch (error) {
@@ -269,7 +315,11 @@ export const updateFieldPrices = async ( id: number, token: string | null, data:
   }
 };
 
-export const saveFieldPrices = async ( id: number, token: string | null, data: SavePrice[] ) => {
+export const saveFieldPrices = async (
+  id: number,
+  token: string | null,
+  data: SavePrice[]
+) => {
   try {
     const response = await fetch(`${API_URL}api/company/field/${id}/prices`, {
       method: "POST",
@@ -277,7 +327,7 @@ export const saveFieldPrices = async ( id: number, token: string | null, data: S
         ...FETCH_HEADERS,
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({prices: data}),
+      body: JSON.stringify({ prices: data }),
     });
     return await response.json();
   } catch (error) {

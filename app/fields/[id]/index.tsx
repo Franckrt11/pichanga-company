@@ -41,7 +41,7 @@ const FieldDetails = () => {
     const response:FieldData = await fetchField(params.id as unknown as number, token);
     setField(response);
     const pictures = await getPictures();
-    const coordinates = response.map.split(',');
+    const coordinates = response.map.split(','); // Modificar porque el mapa es diferente ahora
     setPictures([{id: 0, filename: response.portrait as string | undefined }, ...pictures]);
     setCoords({
       latitude: parseFloat(coordinates[0]),
@@ -129,15 +129,15 @@ const FieldDetails = () => {
       />
       <ContentRow
         label="País"
-        data={field?.country}
+        data={field?.country.name}
       />
       <ContentRow
         label="Ciudad"
-        data={field?.city}
+        data={field?.city.name}
       />
       <ContentRow
         label="Distrito"
-        data={field?.district}
+        data={field?.district.name}
       />
       <ContentRow
         label="Dirección"

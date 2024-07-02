@@ -122,20 +122,20 @@ export interface FieldPictureData {
 };
 
 export interface FieldDay {
-  day: string;
+  day: number;
   active: boolean;
 };
 
 export interface HourRange {
   id?: number;
   position: number;
-  start: string;
-  end: string;
+  start: number;
+  end: number;
   price?: any;
 };
 
 export interface HourDayRange {
-  [key: string]: HourRange[]
+  [key: number]: HourRange[]
 };
 
 export interface PriceRange {

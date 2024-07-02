@@ -12,22 +12,34 @@ import { FieldDay } from "@/src/utils/Types";
 const Days = () => {
   const params = useLocalSearchParams();
   const { token } = useAuthContext();
-  const [days, setDays] = useState({ "lu": false, "ma": false, "mi": false, "ju": false, "vi": false, "sa": false, "do": false });
+  const [days, setDays] = useState<boolean[]>([
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+  ]);
 
-  const changeDaysState = (state: boolean, day: string) => {
-    setDays({ ...days, [day]: state });
+  const changeDaysState = (state: boolean, day: number) => {
+    let currentState = days;
+    currentState[day] = state;
+    setDays(currentState);
   };
 
-  const daysToArray = (days:any): Array<FieldDay> => {
-    const array = [];
-    for (const [key, value] of Object.entries(days)) {
-      array.push({ day: key, active: value as boolean });
-    }
-    return array;
+  const daysToArray = (days: boolean[]): Array<FieldDay> => {
+    return days.map( (day, index) => {
+      return { day: index, active: day }
+    });
   };
 
   const nextStep = async () => {
-    const response = await saveFieldDays(params.id as unknown as number, token, daysToArray(days));
+    const response = await saveFieldDays(
+      params.id as unknown as number,
+      token,
+      daysToArray(days)
+    );
     if (response.status) {
       router.push(`/fields/new/hours?id=${params.id}`);
     }
@@ -36,14 +48,25 @@ const Days = () => {
   return (
     <ChildPage>
       <Text style={LayoutStyles.pageTitle}>DÍAS DE ATENCIÓN</Text>
-      <Text style={[LayoutStyles.subtitle, { marginBottom: 50 }]}>¿Qué días atiende su cancha generalmente?</Text>
+      <Text style={[LayoutStyles.subtitle, { marginBottom: 50 }]}>
+        ¿Qué días atiende su cancha generalmente?
+      </Text>
       <View style={{ flexDirection: "row", gap: 8, marginBottom: 50 }}>
         <ButtonCheckbox
           styleText={{ fontSize: 14 }}
           radius={15}
           color={Colors.maastrichtBlue}
-          checked={days["lu"]}
-          mode="lu"
+          checked={days[0]}
+          mode={0}
+          text="Do"
+          onChangeMode={changeDaysState}
+        />
+        <ButtonCheckbox
+          styleText={{ fontSize: 14 }}
+          radius={15}
+          color={Colors.maastrichtBlue}
+          checked={days[1]}
+          mode={1}
           text="Lu"
           onChangeMode={changeDaysState}
         />
@@ -51,8 +74,8 @@ const Days = () => {
           styleText={{ fontSize: 14 }}
           radius={15}
           color={Colors.maastrichtBlue}
-          checked={days["ma"]}
-          mode="ma"
+          checked={days[2]}
+          mode={2}
           text="Ma"
           onChangeMode={changeDaysState}
         />
@@ -60,8 +83,8 @@ const Days = () => {
           styleText={{ fontSize: 14 }}
           radius={15}
           color={Colors.maastrichtBlue}
-          checked={days["mi"]}
-          mode="mi"
+          checked={days[3]}
+          mode={3}
           text="Mi"
           onChangeMode={changeDaysState}
         />
@@ -69,8 +92,8 @@ const Days = () => {
           styleText={{ fontSize: 14 }}
           radius={15}
           color={Colors.maastrichtBlue}
-          checked={days["ju"]}
-          mode="ju"
+          checked={days[4]}
+          mode={4}
           text="Ju"
           onChangeMode={changeDaysState}
         />
@@ -78,8 +101,8 @@ const Days = () => {
           styleText={{ fontSize: 14 }}
           radius={15}
           color={Colors.maastrichtBlue}
-          checked={days["vi"]}
-          mode="vi"
+          checked={days[5]}
+          mode={5}
           text="Vi"
           onChangeMode={changeDaysState}
         />
@@ -87,18 +110,9 @@ const Days = () => {
           styleText={{ fontSize: 14 }}
           radius={15}
           color={Colors.maastrichtBlue}
-          checked={days["sa"]}
-          mode="sa"
+          checked={days[6]}
+          mode={6}
           text="Sa"
-          onChangeMode={changeDaysState}
-        />
-        <ButtonCheckbox
-          styleText={{ fontSize: 14 }}
-          radius={15}
-          color={Colors.maastrichtBlue}
-          checked={days["do"]}
-          mode="do"
-          text="Do"
           onChangeMode={changeDaysState}
         />
       </View>
@@ -110,7 +124,7 @@ const Days = () => {
         <Text style={PageStyles.buttonText}>SIGUIENTE</Text>
       </Pressable>
     </ChildPage>
-  )
+  );
 };
 
 export default Days;

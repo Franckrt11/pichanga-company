@@ -54,7 +54,7 @@ const NewField = () => {
 
   const getCountries = async () => {
     const countries = await fetchCountries(token);
-    if (countries.status)  setCountries(countries.data);
+    if (countries.status) setCountries(countries.data);
   };
 
   const getCities = async (country: number) => {
@@ -302,30 +302,6 @@ const NewField = () => {
             ))}
           </Picker>
         </View>
-
-        {/*
-        <Input
-          placeholder="País"
-          value={country}
-          onChangeText={(text: string) => setCountry(text)}
-          styles={PageStyles.input}
-          theme="light"
-        />
-        <Input
-          placeholder="Ciudad"
-          value={city}
-          onChangeText={(text: string) => setCity(text)}
-          styles={PageStyles.input}
-          theme="light"
-        />
-        <Input
-          placeholder="Distrito"
-          value={district}
-          onChangeText={(text: string) => setDistrict(text)}
-          styles={PageStyles.input}
-          theme="light"
-        /> */}
-
         <Input
           placeholder="Dirección"
           value={address}

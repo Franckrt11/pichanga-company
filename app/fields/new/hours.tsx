@@ -12,26 +12,78 @@ import { useAuthContext } from "@/src/context/Auth";
 import { fetchFieldDays, saveFieldHours } from "@/src/models/Field";
 import { HourRange, HourDayRange } from "@/src/utils/Types";
 
-const INIT_HOUR_RANGE = { start: "5:00", end: "6:00" };
+const INIT_HOUR_RANGE = { start: 1, end: 2, position: 1 };
 
 const Hours = () => {
   const params = useLocalSearchParams();
   const { token } = useAuthContext();
-  const [days, setDays] = useState({ "lu": false, "ma": false, "mi": false, "ju": false, "vi": false, "sa": false, "do": false });
-  const [activeDay, setActiveDay] = useState<string | null>(null);
+  const [days, setDays] = useState<boolean[]>([
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+  ]);
+  const [activeDay, setActiveDay] = useState<number | null>(null);
   const [same, setSame] = useState<boolean>(true);
   const [hourList, setHourList] = useState<HourRange[]>([]);
-  const [hourPerDayList, setHourPerDayList] = useState<HourDayRange>({ "lu": [], "ma": [], "mi": [], "ju": [], "vi": [], "sa": [], "do": [] });
+  const [hourPerDayList, setHourPerDayList] = useState<HourRange[][]>([
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+  ]);
 
-  const updateHourList = (prop: "start" | "end", value: string, index: number) => {
-    let newList = [...hourList];
-    newList[index][prop] = value;
-    setHourList(newList);
+  const completeDaysWithHours = (list: HourRange[]): HourDayRange => {
+    return {
+      0: days[0] ? list : [],
+      1: days[1] ? list : [],
+      2: days[2] ? list : [],
+      3: days[3] ? list : [],
+      4: days[4] ? list : [],
+      5: days[5] ? list : [],
+      6: days[6] ? list : [],
+    };
   };
+
+  const nextStep = async () => {
+    const hours = same ? completeDaysWithHours(hourList) : hourPerDayList;
+    const response = await saveFieldHours(
+      params.id as unknown as number,
+      token,
+      hours
+    );
+    if (response.status) router.push(`/fields/new/price?id=${params.id}`);
+  };
+
+  const loadFieldDays = async () => {
+    const response = await fetchFieldDays(
+      params.id as unknown as number,
+      token
+    );
+    if (response.status) setDays(response.data);
+  };
+
+  const selectDay = (day: number) => setActiveDay(day);
 
   const addHourToList = () => {
     let newList = [...hourList];
     newList.push({ ...INIT_HOUR_RANGE, position: newList.length + 1 });
+    setHourList(newList);
+  };
+
+  const updateHourList = (
+    prop: "start" | "end",
+    value: number,
+    index: number
+  ) => {
+    let newList = [...hourList];
+    newList[index][prop] = value;
     setHourList(newList);
   };
 
@@ -41,114 +93,28 @@ const Hours = () => {
     setHourList(newList);
   };
 
-  const loadFieldDays = async () => {
-    const response = await fetchFieldDays(params.id as unknown as number, token);
-    if (response.status) setDays(response.data);
-  };
-
-  const selectDay = (day: string) => {
-    setActiveDay(day);
-  };
-
-  const addHoursToDayList = (day: string, hours: Object) => {
-    let dayList = { ...hourPerDayList };
-    let count = dayList[day as keyof typeof dayList].length;
-    (dayList[day as keyof typeof dayList] as Array<Object>).push({...hours, position: count + 1 });
+  const addHoursToDayList = (day: number, hours: HourRange) => {
+    let dayList = [...hourPerDayList];
+    let count = dayList[day].length;
+    dayList[day].push({ ...hours, position: count + 1 });
     setHourPerDayList(dayList);
   };
 
-  const updateHourOnDays = {
-    lu: function updateHourDate(prop: "start" | "end", value: string, index: number) {
-      let dayList = { ...hourPerDayList };
-      dayList["lu"][index][prop] = value;
-      setHourPerDayList(dayList);
-    },
-    ma: function updateHourDate(prop: "start" | "end", value: string, index: number) {
-      let dayList = { ...hourPerDayList };
-      dayList["ma"][index][prop] = value;
-      setHourPerDayList(dayList);
-    },
-    mi: function updateHourDate(prop: "start" | "end", value: string, index: number) {
-      let dayList = { ...hourPerDayList };
-      dayList["mi"][index][prop] = value;
-      setHourPerDayList(dayList);
-    },
-    ju: function updateHourDate(prop: "start" | "end", value: string, index: number) {
-      let dayList = { ...hourPerDayList };
-      dayList["ju"][index][prop] = value;
-      setHourPerDayList(dayList);
-    },
-    vi: function updateHourDate(prop: "start" | "end", value: string, index: number) {
-      let dayList = { ...hourPerDayList };
-      dayList["vi"][index][prop] = value;
-      setHourPerDayList(dayList);
-    },
-    sa: function updateHourDate(prop: "start" | "end", value: string, index: number) {
-      let dayList = { ...hourPerDayList };
-      dayList["sa"][index][prop] = value;
-      setHourPerDayList(dayList);
-    },
-    do: function updateHourDate(prop: "start" | "end", value: string, index: number) {
-      let dayList = { ...hourPerDayList };
-      dayList["do"][index][prop] = value;
-      setHourPerDayList(dayList);
-    }
+  const updateHourOnDays = (
+    prop: "start" | "end",
+    value: number,
+    index: number,
+    day: number
+  ) => {
+    let dayList = [...hourPerDayList];
+    dayList[day][index][prop] = value;
+    setHourPerDayList(dayList);
   };
 
-  const removeourOnDays = {
-    lu: function removeHourDate(index: number) {
-      let newList = { ...hourPerDayList };
-      newList["lu"].splice(index, 1);
-      setHourPerDayList(newList);
-    },
-    ma: function removeHourDate(index: number) {
-      let newList = { ...hourPerDayList };
-      newList["ma"].splice(index, 1);
-      setHourPerDayList(newList);
-    },
-    mi: function removeHourDate(index: number) {
-      let newList = { ...hourPerDayList };
-      newList["mi"].splice(index, 1);
-      setHourPerDayList(newList);
-    },
-    ju: function removeHourDate(index: number) {
-      let newList = { ...hourPerDayList };
-      newList["ju"].splice(index, 1);
-      setHourPerDayList(newList);
-    },
-    vi: function removeHourDate(index: number) {
-      let newList = { ...hourPerDayList };
-      newList["vi"].splice(index, 1);
-      setHourPerDayList(newList);
-    },
-    sa: function removeHourDate(index: number) {
-      let newList = { ...hourPerDayList };
-      newList["sa"].splice(index, 1);
-      setHourPerDayList(newList);
-    },
-    do: function removeHourDate(index: number) {
-      let newList = { ...hourPerDayList };
-      newList["do"].splice(index, 1);
-      setHourPerDayList(newList);
-    }
-  };
-
-  const completeDaysWithHours = (list: HourRange[]): HourDayRange => {
-    return {
-      "lu": days.lu ? list : [],
-      "ma": days.ma ? list : [],
-      "mi": days.mi ? list : [],
-      "ju": days.ju ? list : [],
-      "vi": days.vi ? list : [],
-      "sa": days.sa ? list : [],
-      "do": days.do ? list : []
-    }
-  };
-
-  const nextStep = async () => {
-    const hours = same ? completeDaysWithHours(hourList) : hourPerDayList;
-    const response = await saveFieldHours(params.id as unknown as number, token, hours);
-    if (response.status) router.push(`/fields/new/price?id=${params.id}`);
+  const removeHourOnDays = (index: number, day: number) => {
+    let newList = [...hourPerDayList];
+    newList[day].splice(index, 1);
+    setHourPerDayList(newList);
   };
 
   useEffect(() => {
@@ -158,7 +124,9 @@ const Hours = () => {
   return (
     <ChildPage style={{ marginBottom: 60 }}>
       <Text style={LayoutStyles.pageTitle}>HORARIOS</Text>
-      <Text style={[LayoutStyles.subtitle, { marginBottom: 20 }]}>¿Todos los días atiende en el mismo horario?</Text>
+      <Text style={[LayoutStyles.subtitle, { marginBottom: 20 }]}>
+        ¿Todos los días atiende en el mismo horario?
+      </Text>
 
       <View style={{ marginBottom: 30, width: "90%" }}>
         <BouncyCheckbox
@@ -196,9 +164,10 @@ const Hours = () => {
         <View style={{ width: "100%", alignItems: "center" }}>
           {hourList.map((hour, index) => (
             <HourRangePicker
-              key={index}
+              key={`range-s-${index}`}
               hour={hour}
               index={index}
+              day={7}
               updateFrom={updateHourList}
               updateTo={updateHourList}
               remove={removeHourList}
@@ -210,177 +179,205 @@ const Hours = () => {
         <View style={{ width: "100%" }}>
           <View style={{ flexDirection: "row", gap: 6, marginBottom: 15 }}>
             <ButtonDayPicker
-              allowed={days['lu']}
-              value="lu"
+              allowed={days[0]}
+              value={0}
+              text="Do"
+              selected={activeDay}
+              onSelect={selectDay}
+            />
+            <ButtonDayPicker
+              allowed={days[1]}
+              value={1}
               text="Lu"
               selected={activeDay}
               onSelect={selectDay}
             />
             <ButtonDayPicker
-              allowed={days['ma']}
-              value="ma"
+              allowed={days[2]}
+              value={2}
               text="Ma"
               selected={activeDay}
               onSelect={selectDay}
             />
             <ButtonDayPicker
-              allowed={days['mi']}
-              value="mi"
+              allowed={days[3]}
+              value={3}
               text="Mi"
               selected={activeDay}
               onSelect={selectDay}
             />
             <ButtonDayPicker
-              allowed={days['ju']}
-              value="ju"
+              allowed={days[4]}
+              value={4}
               text="Ju"
               selected={activeDay}
               onSelect={selectDay}
             />
             <ButtonDayPicker
-              allowed={days['vi']}
-              value="vi"
+              allowed={days[5]}
+              value={5}
               text="Vi"
               selected={activeDay}
               onSelect={selectDay}
             />
             <ButtonDayPicker
-              allowed={days['sa']}
-              value="sa"
+              allowed={days[6]}
+              value={6}
               text="Sa"
               selected={activeDay}
               onSelect={selectDay}
             />
-            <ButtonDayPicker
-              allowed={days['do']}
-              value="do"
-              text="Do"
-              selected={activeDay}
-              onSelect={selectDay}
-            />
           </View>
-          <View style={{ borderWidth: 2, borderColor: Colors.silverSand, borderRadius: 15, padding: 5 }}>
+          <View
+            style={{
+              borderWidth: 2,
+              borderColor: Colors.silverSand,
+              borderRadius: 15,
+              padding: 5,
+            }}
+          >
             {(() => {
               switch (activeDay) {
-                case "lu":
+                case 0:
                   return (
                     <View style={{ alignItems: "center" }}>
-                      {hourPerDayList["lu"].map((hour, index) => (
+                      {hourPerDayList[0].map((hour, index) => (
                         <HourRangePicker
-                          key={index}
+                          key={`range-0-${index}`}
                           hour={hour}
                           index={index}
-                          updateFrom={updateHourOnDays.lu}
-                          updateTo={updateHourOnDays.lu}
-                          remove={removeourOnDays.lu}
+                          day={0}
+                          updateFrom={updateHourOnDays}
+                          updateTo={updateHourOnDays}
+                          remove={removeHourOnDays}
                         />
                       ))}
-                      <AddHourButtom onPress={() => addHoursToDayList("lu", INIT_HOUR_RANGE)} />
+                      <AddHourButtom
+                        onPress={() => addHoursToDayList(0, INIT_HOUR_RANGE)}
+                      />
                     </View>
                   );
-                case "ma":
+                case 1:
                   return (
                     <View style={{ alignItems: "center" }}>
-                      {hourPerDayList["ma"].map((hour, index) => (
+                      {hourPerDayList[1].map((hour, index) => (
                         <HourRangePicker
-                          key={index}
+                          key={`range-1-${index}`}
                           hour={hour}
                           index={index}
-                          updateFrom={updateHourOnDays.ma}
-                          updateTo={updateHourOnDays.ma}
-                          remove={removeourOnDays.ma}
+                          day={1}
+                          updateFrom={updateHourOnDays}
+                          updateTo={updateHourOnDays}
+                          remove={removeHourOnDays}
                         />
                       ))}
-                      <AddHourButtom onPress={() => addHoursToDayList("ma", INIT_HOUR_RANGE)} />
-                    </View>
-                  );
-
-                case "mi":
-                  return (
-                    <View style={{ alignItems: "center" }}>
-                      {hourPerDayList["mi"].map((hour, index) => (
-                        <HourRangePicker
-                          key={index}
-                          hour={hour}
-                          index={index}
-                          updateFrom={updateHourOnDays.mi}
-                          updateTo={updateHourOnDays.mi}
-                          remove={removeourOnDays.mi}
-                        />
-                      ))}
-                      <AddHourButtom onPress={() => addHoursToDayList("mi", INIT_HOUR_RANGE)} />
+                      <AddHourButtom
+                        onPress={() => addHoursToDayList(1, INIT_HOUR_RANGE)}
+                      />
                     </View>
                   );
 
-                case "ju":
+                case 2:
                   return (
                     <View style={{ alignItems: "center" }}>
-                      {hourPerDayList["ju"].map((hour, index) => (
+                      {hourPerDayList[2].map((hour, index) => (
                         <HourRangePicker
-                          key={index}
+                          key={`range-2-${index}`}
                           hour={hour}
                           index={index}
-                          updateFrom={updateHourOnDays.ju}
-                          updateTo={updateHourOnDays.ju}
-                          remove={removeourOnDays.ju}
+                          day={2}
+                          updateFrom={updateHourOnDays}
+                          updateTo={updateHourOnDays}
+                          remove={removeHourOnDays}
                         />
                       ))}
-                      <AddHourButtom onPress={() => addHoursToDayList("ju", INIT_HOUR_RANGE)} />
+                      <AddHourButtom
+                        onPress={() => addHoursToDayList(2, INIT_HOUR_RANGE)}
+                      />
                     </View>
                   );
 
-                case "vi":
+                case 3:
                   return (
                     <View style={{ alignItems: "center" }}>
-                      {hourPerDayList["vi"].map((hour, index) => (
+                      {hourPerDayList[3].map((hour, index) => (
                         <HourRangePicker
-                          key={index}
+                          key={`range-3-${index}`}
                           hour={hour}
                           index={index}
-                          updateFrom={updateHourOnDays.vi}
-                          updateTo={updateHourOnDays.vi}
-                          remove={removeourOnDays.vi}
+                          day={3}
+                          updateFrom={updateHourOnDays}
+                          updateTo={updateHourOnDays}
+                          remove={removeHourOnDays}
                         />
                       ))}
-                      <AddHourButtom onPress={() => addHoursToDayList("vi", INIT_HOUR_RANGE)} />
+                      <AddHourButtom
+                        onPress={() => addHoursToDayList(3, INIT_HOUR_RANGE)}
+                      />
                     </View>
                   );
 
-                case "sa":
+                case 4:
                   return (
                     <View style={{ alignItems: "center" }}>
-                      {hourPerDayList["sa"].map((hour, index) => (
+                      {hourPerDayList[4].map((hour, index) => (
                         <HourRangePicker
-                          key={index}
+                          key={`range-4-${index}`}
                           hour={hour}
                           index={index}
-                          updateFrom={updateHourOnDays.sa}
-                          updateTo={updateHourOnDays.sa}
-                          remove={removeourOnDays.sa}
+                          day={4}
+                          updateFrom={updateHourOnDays}
+                          updateTo={updateHourOnDays}
+                          remove={removeHourOnDays}
                         />
                       ))}
-                      <AddHourButtom onPress={() => addHoursToDayList("sa", INIT_HOUR_RANGE)} />
+                      <AddHourButtom
+                        onPress={() => addHoursToDayList(4, INIT_HOUR_RANGE)}
+                      />
                     </View>
                   );
 
-                case "do":
+                case 5:
                   return (
                     <View style={{ alignItems: "center" }}>
-                      {hourPerDayList["do"].map((hour, index) => (
+                      {hourPerDayList[5].map((hour, index) => (
                         <HourRangePicker
-                          key={index}
+                          key={`range-5-${index}`}
                           hour={hour}
                           index={index}
-                          updateFrom={updateHourOnDays.do}
-                          updateTo={updateHourOnDays.do}
-                          remove={removeourOnDays.do}
+                          day={5}
+                          updateFrom={updateHourOnDays}
+                          updateTo={updateHourOnDays}
+                          remove={removeHourOnDays}
                         />
                       ))}
-                      <AddHourButtom onPress={() => addHoursToDayList("do", INIT_HOUR_RANGE)} />
+                      <AddHourButtom
+                        onPress={() => addHoursToDayList(5, INIT_HOUR_RANGE)}
+                      />
+                    </View>
+                  );
+
+                case 6:
+                  return (
+                    <View style={{ alignItems: "center" }}>
+                      {hourPerDayList[6].map((hour, index) => (
+                        <HourRangePicker
+                          key={`range-6-${index}`}
+                          hour={hour}
+                          index={index}
+                          day={6}
+                          updateFrom={updateHourOnDays}
+                          updateTo={updateHourOnDays}
+                          remove={removeHourOnDays}
+                        />
+                      ))}
+                      <AddHourButtom
+                        onPress={() => addHoursToDayList(6, INIT_HOUR_RANGE)}
+                      />
                     </View>
                   );
                 default:
-                  return null
+                  return null;
               }
             })()}
           </View>
@@ -394,7 +391,7 @@ const Hours = () => {
         <Text style={PageStyles.buttonText}>SIGUIENTE</Text>
       </Pressable>
     </ChildPage>
-  )
+  );
 };
 
 export default Hours;
@@ -403,11 +400,11 @@ const styles = StyleSheet.create({
   checkboxText: {
     fontFamily: "PoppinsSemiBold",
     color: Colors.maastrichtBlue,
-    textDecorationLine: "none"
+    textDecorationLine: "none",
   },
   innerIcon: {
     borderWidth: 1,
-    borderColor: Colors.silverSand
+    borderColor: Colors.silverSand,
   },
   button: {
     flexDirection: "row",
@@ -417,6 +414,6 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.maastrichtBlue,
     borderRadius: 25,
     justifyContent: "center",
-    paddingVertical: 6
-  }
+    paddingVertical: 6,
+  },
 });

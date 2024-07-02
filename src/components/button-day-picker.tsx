@@ -3,20 +3,20 @@ import { useState, useEffect } from "react";
 import Colors from "@/src/utils/Colors";
 import ArrowUpIcon from "@/src/components/icons/arrowup-icon";
 
-const ButtonDayPicker = ({ text, value, allowed, selected, onSelect }: { text: string, value: string, allowed: boolean, selected: string | null, onSelect: any }) => {
+const ButtonDayPicker = ({ text, value, allowed, selected, onSelect }: { text: string, value: number, allowed: boolean, selected: number | null, onSelect: any }) => {
   const [active, setActive] = useState(allowed);
-  const [show, setShow] = useState(selected === value ? value : null);
+  const [show, setShow] = useState<boolean>(selected === value ? true : false);
 
   const changeState = () => {
     if (allowed) {
-      setShow(value);
+      setShow(true);
       onSelect(value);
     }
   };
 
   useEffect(() => {
     setActive(allowed);
-    setShow(selected === value ? value : null);
+    setShow(selected === value ? true : false);
   }, [allowed, selected]);
 
   return (

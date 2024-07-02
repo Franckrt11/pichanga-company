@@ -4,19 +4,22 @@ import Colors from "@/src/utils/Colors";
 import Input from "@/src/components/input";
 import { PageStyles } from "@/src/utils/Styles";
 import { HourRange, PriceRange } from "@/src/utils/Types";
+import { HOUR_LIST } from "@/src/utils/Constants";
 
 const HourRangeItemPrice = ({
   hour,
   price,
   index,
   last,
+  day,
   updatePrice
 }: {
   hour: HourRange,
   price: PriceRange | null,
   index: number,
   last?: boolean,
-  updatePrice: (value: string, type: "whole" | "half", index: number) => void,
+  day: number,
+  updatePrice: (type: "whole" | "half", value: string, index: number, day: number) => void,
 }) => {
   const [priceHour, setPriceHour] = useState("");
   const [priceHalfHour, setPriceHalfHour] = useState("");
@@ -32,13 +35,13 @@ const HourRangeItemPrice = ({
         <View style={{ flex: 1 }}>
           <Text style={[styles.checkboxText, { marginLeft: 15, marginBottom: 5 }]}>Desde las</Text>
           <View style={[PageStyles.pickerContainer, { borderRadius: 50, height: 45, justifyContent: "center", paddingLeft: 15 }]}>
-            <Text>{hour.start}</Text>
+            <Text>{HOUR_LIST[hour.start].text}</Text>
           </View>
         </View>
         <View style={{ flex: 1 }}>
           <Text style={[styles.checkboxText, { marginLeft: 15, marginBottom: 5 }]}>Hasta las</Text>
           <View style={[PageStyles.pickerContainer, { borderRadius: 50, height: 45, justifyContent: "center", paddingLeft: 15 }]}>
-            <Text>{hour.end}</Text>
+            <Text>{HOUR_LIST[hour.end].text}</Text>
           </View>
         </View>
       </View>
@@ -49,8 +52,8 @@ const HourRangeItemPrice = ({
               placeholder=""
               value={priceHour}
               onChangeText={(text: string) => {
+                updatePrice("whole", text, index, day);
                 setPriceHour(text);
-                updatePrice(text, "whole", index);
               }}
               styles={[PageStyles.input, styles.input]}
               theme="light"
@@ -63,8 +66,8 @@ const HourRangeItemPrice = ({
               placeholder=""
               value={priceHalfHour}
               onChangeText={(text: string) => {
+                updatePrice("half", text, index, day);
                 setPriceHalfHour(text);
-                updatePrice(text, "half", index);
               }}
               styles={[PageStyles.input, styles.input]}
               theme="light"

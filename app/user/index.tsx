@@ -5,7 +5,7 @@ import {
   Pressable,
   View,
   StyleSheet,
-  Alert
+  Alert,
 } from "react-native";
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { Stack, router } from "expo-router";
@@ -17,7 +17,7 @@ import {
   BottomSheetView,
   BottomSheetModal,
   BottomSheetModalProvider,
-  BottomSheetBackdrop
+  BottomSheetBackdrop,
 } from "@gorhom/bottom-sheet";
 import { useAuthContext } from "@/src/context/Auth";
 import { useUserContext } from "@/src/context/User";
@@ -45,7 +45,8 @@ const User = () => {
   const [email, setEmail] = useState("");
   const [avatar, setAvatar] = useState<string | undefined>(undefined);
 
-  const [cameraStatus, requestCameraPermission] = ImagePicker.useCameraPermissions();
+  const [cameraStatus, requestCameraPermission] =
+    ImagePicker.useCameraPermissions();
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const snapPoints = useMemo(() => [120], []);
@@ -101,7 +102,9 @@ const User = () => {
     }
   };
 
-  const saveAvatar = async (imageUri: string | boolean): Promise<string | undefined> => {
+  const saveAvatar = async (
+    imageUri: string | boolean
+  ): Promise<string | undefined> => {
     const avatar = await saveUserAvatar(imageUri, token, state.id);
     Alert.alert("Imagen de perfil guardada.");
     return avatar;
@@ -112,7 +115,6 @@ const User = () => {
     Alert.alert(response);
     dispatch({
       type: "change-avatar",
-      photoload: null,
     });
     setAvatar(undefined);
   };
@@ -121,16 +123,17 @@ const User = () => {
     if (cameraStatus) {
       if (
         cameraStatus.status === ImagePicker.PermissionStatus.UNDETERMINED ||
-        (cameraStatus.status === ImagePicker.PermissionStatus.DENIED && cameraStatus.canAskAgain)
+        (cameraStatus.status === ImagePicker.PermissionStatus.DENIED &&
+          cameraStatus.canAskAgain)
       ) {
-        const permission = await requestCameraPermission()
+        const permission = await requestCameraPermission();
         if (permission.granted) {
-          await pickCamera()
+          await pickCamera();
         }
       } else if (cameraStatus.status === ImagePicker.PermissionStatus.DENIED) {
-        await Linking.openSettings()
+        await Linking.openSettings();
       } else {
-        await pickCamera()
+        await pickCamera();
       }
     }
   }, [cameraStatus, pickCamera, requestCameraPermission]);
@@ -156,13 +159,11 @@ const User = () => {
 
   return (
     <BottomSheetModalProvider>
-      <SafeAreaView
-        style={LayoutStyles.whiteContainer}
-      >
+      <SafeAreaView style={LayoutStyles.whiteContainer}>
         <Stack.Screen
           options={{
             headerShown: true,
-            title: '',
+            title: "",
             headerLeft: () => <Back />,
           }}
         />
@@ -256,7 +257,13 @@ const User = () => {
                 error={errors ? errors.email : null}
               />
             </View>
-            <View style={{ width: "80%", marginBottom: 40, marginHorizontal: "auto" }}>
+            <View
+              style={{
+                width: "80%",
+                marginBottom: 40,
+                marginHorizontal: "auto",
+              }}
+            >
               <Pressable
                 onPress={() => router.push("/user/password")}
                 style={styles.button}
@@ -293,7 +300,10 @@ const User = () => {
             <View style={{ width: "100%" }}>
               <Pressable
                 onPress={() => saveProfile()}
-                style={[styles.button, { backgroundColor: Colors.metallicGreen }]}
+                style={[
+                  styles.button,
+                  { backgroundColor: Colors.metallicGreen },
+                ]}
               >
                 <Text
                   style={{ fontFamily: "PoppinsMedium", color: Colors.white }}

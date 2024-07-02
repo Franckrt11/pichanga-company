@@ -3,8 +3,8 @@ import { UserData, ProviderProps } from "@/src/utils/Types";
 
 interface Action {
   type: string;
-  payload?: UserData | null;
-  photoload?: string | null;
+  payload?: UserData;
+  photoload?: string;
 }
 
 const initialState: UserData = {

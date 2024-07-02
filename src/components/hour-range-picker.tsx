@@ -10,18 +10,20 @@ import { HourRange } from "@/src/utils/Types";
 const HourRangePicker = ({
   hour,
   index,
+  day,
   updateFrom,
   updateTo,
   remove
 }: {
   hour: HourRange,
   index: number,
-  updateFrom: (prop: "start" | "end", value: string, index: number) => void,
-  updateTo: (prop: "start" | "end", value: string, index: number) => void,
-  remove: (index: number) => void,
+  day: number,
+  updateFrom: (prop: "start" | "end", value: number, index: number, day: number) => void,
+  updateTo: (prop: "start" | "end", value: number, index: number, day: number) => void,
+  remove: (index: number, day: number) => void,
 }) => {
-  const [selectedStart, setSelectedStart] = useState<string>(HOUR_LIST[0].value);
-  const [selectedEnd, setSelectedEnd] = useState<string>(HOUR_LIST[2].value);
+  const [selectedStart, setSelectedStart] = useState<number>(HOUR_LIST[0].value);
+  const [selectedEnd, setSelectedEnd] = useState<number>(HOUR_LIST[2].value);
 
   useEffect(() => {
     setSelectedStart(hour.start);
@@ -32,13 +34,12 @@ const HourRangePicker = ({
     <View style={{ flexDirection: "row", gap: 15 }}>
       <View style={{ flex: 1 }}>
         <Text style={[styles.checkboxText, { marginLeft: 15, marginBottom: 5 }]}>Desde las</Text>
-        <Text>{selectedStart}</Text>
         <View style={[PageStyles.pickerContainer, { borderRadius: 50, height: 45 }]}>
           <Picker
             style={[PageStyles.picker, { marginTop: -7 }]}
             selectedValue={selectedStart}
             onValueChange={(value, itemIndex) => {
-              updateFrom("start", value, index);
+              updateFrom("start", value, index, day);
               setSelectedStart(value);
             }}
           >
@@ -50,13 +51,12 @@ const HourRangePicker = ({
       </View>
       <View style={{ flex: 1 }}>
         <Text style={[styles.checkboxText, { marginLeft: 15, marginBottom: 5 }]}>Hasta las</Text>
-        <Text>{selectedEnd}</Text>
         <View style={[PageStyles.pickerContainer, { borderRadius: 50, height: 45 }]}>
           <Picker
             style={[PageStyles.picker, { marginTop: -7 }]}
             selectedValue={selectedEnd}
             onValueChange={(value, itemIndex) => {
-              updateTo("end", value, index);
+              updateTo("end", value, index, day);
               setSelectedEnd(value);
             }}
           >
@@ -69,7 +69,7 @@ const HourRangePicker = ({
       <View>
         <Pressable
           style={{ marginTop: 40 }}
-          onPress={() => remove(index)}
+          onPress={() => remove(index, day)}
         >
           <TrashIcon size={20} />
         </Pressable>

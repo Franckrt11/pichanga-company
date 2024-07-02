@@ -2,7 +2,7 @@ import { StyleSheet, Text, Pressable, TextStyle } from "react-native";
 import { useState, useEffect } from "react";
 import Colors from "@/src/utils/Colors";
 
-const ButtonCheckbox = ({ styleText, radius, color, text, mode, checked, onChangeMode }: { styleText?: TextStyle, radius: number, color: string, text: string, mode: string, checked: boolean, onChangeMode: any }) => {
+const ButtonCheckbox = ({ styleText, radius, color, text, mode, checked, onChangeMode }: { styleText?: TextStyle, radius: number, color: string, text: string, mode: number, checked: boolean, onChangeMode: any }) => {
   const [active, setActive] = useState(checked);
 
   const changeState = () => {

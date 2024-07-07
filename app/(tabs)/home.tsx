@@ -6,21 +6,36 @@ import {
   SafeAreaView,
   ScrollView,
 } from "react-native";
+import { useState, useEffect } from "react";
 import { router } from "expo-router";
 import { LayoutStyles } from "@/src/utils/Styles";
 import Colors from "@/src/utils/Colors";
 import ActivityBlock from "@/src/components/activity-block";
-import ZoomPlusIcon from "@/src/components/icons/zoom-plus-icon";
+import ReservationItem from "@/src/components/reservation-item";
+import { fetchAllReserves } from "@/src/models/Reserve";
+import { ReserveData, FieldData, HourRange } from "@/src/utils/Types";
+import { useAuthContext } from "@/src/context/Auth";
 
 const Home = () => {
+  const { userId, token } = useAuthContext();
+  const [reserves, setReserves] = useState<ReserveData[]>([]);
+
+  const getReserves = async () => {
+    if (userId) {
+      const response = await fetchAllReserves(Number(userId), token);
+      if (response.status) setReserves(response.data);
+    }
+  };
+
+  useEffect(() => {
+    getReserves();
+  }, [userId]);
 
   return (
-    <SafeAreaView
-      style={LayoutStyles.whiteContainer}
-    >
+    <SafeAreaView style={LayoutStyles.whiteContainer}>
       <ScrollView
         style={{ paddingTop: 10 }}
-        contentContainerStyle={{ alignItems: "center"}}
+        contentContainerStyle={{ alignItems: "center" }}
       >
         <View style={LayoutStyles.scrollContainer}>
           <Text style={styles.title}>ACTIVIDAD</Text>
@@ -35,34 +50,20 @@ const Home = () => {
           </View>
 
           <Text style={styles.title}>PRÓXIMO PARTIDO EN 45 mins</Text>
-          <Pressable
-            style={styles.matchBlock}
-            onPress={() => console.log("GoTo Next Match")}
-          >
-            <View style={styles.matchContent}>
-              <View>
-                <Text style={[styles.matchContentText, { marginBottom: 3 }]}>
-                  Reserva:
-                </Text>
-                <Text style={[styles.matchContentText, { marginBottom: 3 }]}>
-                  Horario:
-                </Text>
-                <Text style={styles.matchContentText}>Cancha:</Text>
-              </View>
-              <View>
-                <Text style={[styles.matchContentText, { marginBottom: 3 }]}>
-                  Pedro Paredes
-                </Text>
-                <Text style={[styles.matchContentText, { marginBottom: 3 }]}>
-                  5:00 pm - 8:00 pm
-                </Text>
-                <Text style={styles.matchContentText}>Cancha Lorem</Text>
-              </View>
-            </View>
-            <View style={styles.matchIcon}>
-              <ZoomPlusIcon size={20} color={Colors.white} />
-            </View>
-          </Pressable>
+
+          <View style={{ width: "100%", paddingBottom: 30 }}>
+            {reserves.map((reserve, index) => (
+              <ReservationItem
+                key={`reserve-${index}`}
+                id={reserve.id as number}
+                status={reserve.status as string}
+                date={reserve.date}
+                field={reserve.field as FieldData}
+                hour={reserve.hour as HourRange}
+                inscription={reserve.inscription}
+              />
+            ))}
+          </View>
 
           <View style={[styles.buttonGroup, { width: "80%" }]}>
             <Pressable

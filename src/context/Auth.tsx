@@ -22,6 +22,7 @@ interface IAuthContext {
     newPassword: string
   ) => Promise<void>;
   token: string | null;
+  userId: string | null;
   loading: boolean;
   errors: any; // Revisar type de Errores del API
   config: any; // Setear Type de Config
@@ -50,6 +51,7 @@ const useProtectedRoute = (token: string | null) => {
 export const AuthProvider = ({ children }: ProviderProps) => {
   const [loading, setLoading] = useState(false);
   const [token, setToken] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
   const [errors, setErrors] = useState(null);
   const [config, setConfig] = useState(null);
   const { dispatch } = useUserContext();
@@ -68,6 +70,7 @@ export const AuthProvider = ({ children }: ProviderProps) => {
 
       if (response.status) {
         setToken(response.token);
+        setUserId(response.user.id.toString());
         await AsyncStorage.setItem("token", response.token);
         await AsyncStorage.setItem("userId", response.user.id.toString());
         dispatch({
@@ -91,6 +94,7 @@ export const AuthProvider = ({ children }: ProviderProps) => {
       const response = await fetchLogout(token);
       if (response.status) {
         setToken(null);
+        setUserId(null);
         AsyncStorage.removeItem("token");
         AsyncStorage.removeItem("userId");
         dispatch({ type: "delete" });
@@ -98,6 +102,7 @@ export const AuthProvider = ({ children }: ProviderProps) => {
 
       if (response.message === "Unauthenticated.") {
         setToken(null);
+        setUserId(null);
         AsyncStorage.removeItem("token");
         AsyncStorage.removeItem("userId");
         dispatch({ type: "delete" });
@@ -115,6 +120,7 @@ export const AuthProvider = ({ children }: ProviderProps) => {
 
       if (response.status) {
         setToken(response.token);
+        setUserId(response.user.id.toString());
         await AsyncStorage.setItem("token", response.token);
         await AsyncStorage.setItem("userId", response.user.id.toString());
         dispatch({
@@ -150,16 +156,17 @@ export const AuthProvider = ({ children }: ProviderProps) => {
 
   const isLoggedIn = async () => {
     try {
-      let userToken = await AsyncStorage.getItem("token");
-      let userId = await AsyncStorage.getItem("userId");
+      let storageToken = await AsyncStorage.getItem("token");
+      let storageId = await AsyncStorage.getItem("userId");
 
-      if (userToken !== null && typeof userToken !== "undefined") {
-        setToken(userToken);
-        await loadConfig(userToken);
+      if (storageToken !== null && typeof storageToken !== "undefined") {
+        setToken(storageToken);
+        setUserId(storageId);
+        await loadConfig(storageToken);
       }
 
-      if (userId !== null && typeof userId !== "undefined") {
-        const response = await fetchUser(userId, userToken);
+      if (storageId !== null && typeof storageId !== "undefined") {
+        const response = await fetchUser(storageId, storageToken);
         if (response.status) {
           dispatch({
             type: "change",
@@ -186,6 +193,7 @@ export const AuthProvider = ({ children }: ProviderProps) => {
         signUp,
         newPassword,
         token,
+        userId,
         loading,
         errors,
         config,

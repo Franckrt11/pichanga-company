@@ -9,6 +9,21 @@ export const FETCH_HEADERS = {
   "Content-Type": "application/json",
 };
 
+export const RESERVE_STATUS = [
+  {
+    value: "pending",
+    text: "En espera",
+  },
+  {
+    value: "confirm",
+    text: "Confirmado",
+  },
+  {
+    value: "cancel",
+    text: "Cancelado",
+  },
+];
+
 export const HOUR_LIST = [
   {
     value: 1,

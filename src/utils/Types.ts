@@ -188,3 +188,18 @@ export interface SavePrice {
   id: number;
   price: PriceRange;
 }
+
+export interface ReserveData {
+  id?: number;
+  date: string;
+  time: number;
+  game: string;
+  price: number;
+  inscription: boolean;
+  status?: string;
+  field_hour_id: number;
+  field_id: number;
+  user_id: number;
+  field?: FieldData;
+  hour?: HourRange;
+}

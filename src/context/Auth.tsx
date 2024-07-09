@@ -63,6 +63,14 @@ export const AuthProvider = ({ children }: ProviderProps) => {
     }
   };
 
+  const unauthenticated = () => {
+    setToken(null);
+    setUserId(null);
+    AsyncStorage.removeItem("token");
+    AsyncStorage.removeItem("userId");
+    dispatch({ type: "delete" });
+  };
+
   const signIn = async (email: string, password: string) => {
     setLoading(true);
     try {
@@ -101,11 +109,7 @@ export const AuthProvider = ({ children }: ProviderProps) => {
       }
 
       if (response.message === "Unauthenticated.") {
-        setToken(null);
-        setUserId(null);
-        AsyncStorage.removeItem("token");
-        AsyncStorage.removeItem("userId");
-        dispatch({ type: "delete" });
+        unauthenticated();
       }
     } catch (error) {
       console.log("🚩 ~ context/Auth.js ~ signOut() ~ error:", error);
@@ -172,6 +176,10 @@ export const AuthProvider = ({ children }: ProviderProps) => {
             type: "change",
             payload: response.data,
           });
+        } else if (response.message === "Unauthenticated.") {
+          unauthenticated();
+        } else {
+          console.log("🚩 ~ context/Auth.js ~ isLoggedIn() ~ fetchUser:", response);
         }
       }
     } catch (error) {

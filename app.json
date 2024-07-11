@@ -54,7 +54,8 @@
           "photosPermission": "Permitir a $(PRODUCT_NAME) acceder a tus fotos.",
           "cameraPermission": "Permitir a $(PRODUCT_NAME) acceder a tu cámara."
         }
-      ]
+      ],
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true

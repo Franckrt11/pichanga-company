@@ -5,7 +5,7 @@ import { es } from "date-fns/locale";
 import ZoomPlusIcon from "@/src/components/icons/zoom-plus-icon";
 import CashIcon from "@/src/components/icons/cash-icon";
 import Colors from "@/src/utils/Colors";
-import { FieldData, HourRange } from "@/src/utils/Types";
+import { FieldData, HourRange, ClientData } from "@/src/utils/Types";
 import { HOUR_LIST, RESERVE_STATUS } from "@/src/utils/Constants";
 
 const ReservationItem = ({
@@ -15,6 +15,7 @@ const ReservationItem = ({
   hour,
   status,
   inscription,
+  user,
 }: {
   id: number;
   date: string;
@@ -22,6 +23,7 @@ const ReservationItem = ({
   hour: HourRange;
   status: string;
   inscription: boolean;
+  user: ClientData;
 }) => {
   const getHourName = (key: number) => {
     if (key) {
@@ -63,6 +65,9 @@ const ReservationItem = ({
         </View>
         <View>
           <Text style={[styles.matchContentText, { marginBottom: 3 }]}>
+            Usuario:
+          </Text>
+          <Text style={[styles.matchContentText, { marginBottom: 3 }]}>
             Estado:
           </Text>
           <Text style={[styles.matchContentText, { marginBottom: 3 }]}>
@@ -74,6 +79,9 @@ const ReservationItem = ({
           <Text style={styles.matchContentText}>Cancha:</Text>
         </View>
         <View>
+          <Text style={[styles.matchContentText, { marginBottom: 3 }]}>
+            {user.name} {user.lastname}
+          </Text>
           <Text style={[styles.matchContentText, { marginBottom: 3 }]}>
             {getStatus(status)}
           </Text>

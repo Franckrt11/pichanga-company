@@ -12,13 +12,20 @@ import { LayoutStyles } from "@/src/utils/Styles";
 import Colors from "@/src/utils/Colors";
 import ActivityBlock from "@/src/components/activity-block";
 import ReservationItem from "@/src/components/reservation-item";
-import { fetchAllReserves } from "@/src/models/Reserve";
-import { ReserveData, FieldData, HourRange } from "@/src/utils/Types";
+import NextReserve from "@/src/components/next-reserve";
+import { fetchAllReserves, fetchNextReserve } from "@/src/models/Reserve";
+import {
+  ReserveData,
+  FieldData,
+  HourRange,
+  ClientData,
+} from "@/src/utils/Types";
 import { useAuthContext } from "@/src/context/Auth";
 
 const Home = () => {
   const { userId, token } = useAuthContext();
   const [reserves, setReserves] = useState<ReserveData[]>([]);
+  const [nextReserve, setNextReserve] = useState<ReserveData | null>(null);
 
   const getReserves = async () => {
     if (userId) {
@@ -27,8 +34,14 @@ const Home = () => {
     }
   };
 
+  const incomingReserve = async () => {
+    const response = await fetchNextReserve(Number(userId), token);
+    if (response.status) setNextReserve(response.data);
+  };
+
   useEffect(() => {
     getReserves();
+    incomingReserve();
   }, [userId]);
 
   return (
@@ -49,7 +62,7 @@ const Home = () => {
             </Pressable>
           </View>
 
-          <Text style={styles.title}>PRÓXIMO PARTIDO EN 45 mins</Text>
+          <NextReserve reserve={nextReserve} />
 
           <View style={{ width: "100%", paddingBottom: 30 }}>
             {reserves.map((reserve, index) => (
@@ -61,6 +74,7 @@ const Home = () => {
                 field={reserve.field as FieldData}
                 hour={reserve.hour as HourRange}
                 inscription={reserve.inscription}
+                user={reserve.user as ClientData}
               />
             ))}
           </View>

@@ -191,6 +191,7 @@ export interface SavePrice {
 
 export interface ReserveData {
   id?: number;
+  start_date: string;
   date: string;
   time: number;
   game: string;
@@ -202,4 +203,13 @@ export interface ReserveData {
   user_id: number;
   field?: FieldData;
   hour?: HourRange;
+  user?: ClientData;
+}
+
+export interface ClientData extends PhotoData {
+  name: string;
+  lastname: string;
+  email: string;
+  phone: string;
+  district: string;
 }

@@ -3,7 +3,7 @@
     "name": "Te Juego una Pichanga - Canchas",
     "slug": "pichanga-company",
     "owner": "tjupichanga",
-    "version": "0.6.9",
+    "version": "0.7.0",
     "orientation": "portrait",
     "icon": "./src/assets/images/icon.png",
     "scheme": "pichanga",
@@ -29,7 +29,7 @@
         "backgroundColor": "#00182E"
       },
       "package": "com.tjupichanga.company",
-      "versionCode": 11,
+      "versionCode": 12,
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyBGdX-hMTP3z_iTUqU1fO32hlVoPooXTjY"

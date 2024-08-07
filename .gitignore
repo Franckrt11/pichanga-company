@@ -42,6 +42,7 @@ expo-env.d.ts
 # @end expo-cli
 
 resources/
+.vscode/
 
 # Builds
 android/

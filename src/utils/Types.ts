@@ -70,8 +70,8 @@ export interface CountryData {
 
 export interface FieldDataSave {
   address: string;
+  company_id?: number;
   city_id: number;
-  company_id: number;
   country_id: number;
   district_id: number;
   games: string;

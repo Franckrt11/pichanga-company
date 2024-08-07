@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, ScrollView, Pressable } from "react-native";
 import { useState, useEffect } from "react";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, router } from "expo-router";
 import { Image } from "expo-image";
 import ChildPage from "@/src/components/layouts/child-page";
 import ContentRow from "@/src/components/content-row";
@@ -37,20 +37,17 @@ const BookingsDetails = () => {
 
   const approveReserve = async () => {
     const response = await updateReserve(params.id as unknown as number, 'confirm', token);
-    console.log("🚀 ~ approveReserve ~ response:", response);
-    if (response.status) console.log('🥩 reserve approved!!');
+    if (response.status) router.back();
   };
 
   const rejectReserve = async () => {
     const response = await updateReserve(params.id as unknown as number, 'cancel', token);
-    console.log("🚀 ~ approveReserve ~ response:", response);
-    if (response.status) console.log('🥫 reserve rejected!!');
+    if (response.status) router.back();
   };
 
   const cancelReserve = async () => {
     const response = await updateReserve(params.id as unknown as number, 'cancel', token);
-    console.log("🚀 ~ approveReserve ~ response:", response);
-    if (response.status) console.log('👩‍🦰 reserve canceled!!');
+    if (response.status) router.back();
   };
 
   useEffect(() => {

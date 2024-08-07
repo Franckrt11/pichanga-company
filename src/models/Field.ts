@@ -138,6 +138,7 @@ export const updateField = async (
     return await response.json();
   } catch (error) {
     console.log("🚩 ~ models/Field.ts ~ updateField() ~ error:", error);
+    return { status: false };
   }
 };
 
@@ -158,6 +159,7 @@ export const updateFieldStatus = async (
     return await response.json();
   } catch (error) {
     console.log("🚩 ~ models/Field.ts ~ updateFieldStatus() ~ error:", error);
+    return { status: false };
   }
 };
 

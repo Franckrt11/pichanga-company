@@ -2,14 +2,12 @@ import {
   StyleSheet,
   Text,
   View,
-  Image,
-  FlatList,
   Pressable,
 } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { useState, useEffect } from "react";
 import MapView, { Marker, PROVIDER_GOOGLE, LatLng } from "react-native-maps";
-import { PageStyles, LayoutStyles } from "@/src/utils/Styles";
+import { LayoutStyles } from "@/src/utils/Styles";
 import Colors from "@/src/utils/Colors";
 import { FieldData, FieldPictureData } from "@/src/utils/Types";
 import ChildPage from "@/src/components/layouts/child-page";

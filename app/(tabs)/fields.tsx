@@ -10,7 +10,7 @@ import { router } from "expo-router";
 import { useState, useEffect } from "react";
 import { LayoutStyles } from "@/src/utils/Styles";
 import Colors from "@/src/utils/Colors";
-import { FieldData } from "@/src/utils/Types";
+import { DistrictData, FieldData } from "@/src/utils/Types";
 import FieldItem from "@/src/components/field-item";
 import { useUserContext } from "@/src/context/User";
 import { useAuthContext } from "@/src/context/Auth";
@@ -42,7 +42,7 @@ const Fields = () => {
               key={index}
               id={field.id as number}
               name={field.name}
-              district={field.district}
+              district={field.district.name}
               portrait={field.portrait as string | null}
               active={field.active as boolean}
             />

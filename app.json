@@ -34,8 +34,7 @@
         "googleMaps": {
           "apiKey": "AIzaSyBGdX-hMTP3z_iTUqU1fO32hlVoPooXTjY"
         }
-      },
-      "googleServicesFile": "./tjupichanga-firebase-adminsdk-hl4zn-883ee58f59.json"
+      }
     },
     "web": {
       "bundler": "metro",

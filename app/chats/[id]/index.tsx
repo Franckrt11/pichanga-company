@@ -1,7 +1,17 @@
-import { SafeAreaView, ScrollView, StyleSheet, Text, View, TextInput, Pressable } from "react-native"
+import {
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  Platform,
+  KeyboardAvoidingView,
+  Pressable,
+} from "react-native";
 import { useEffect, useState, createRef } from "react";
 import { Stack, useLocalSearchParams } from "expo-router";
-import { Image } from 'expo-image';
+import { Image } from "expo-image";
 import Colors from "@/src/utils/Colors";
 import { fetchMessages, fetchChat, postMessage } from "@/src/models/Chat";
 import { useAuthContext } from "@/src/context/Auth";
@@ -66,53 +76,76 @@ const ChatMessages = () => {
 
   return (
     <SafeAreaView
-      style={[LayoutStyles.whiteContainer, { alignItems: "center", paddingBottom: 10 }]}
+      style={[
+        LayoutStyles.whiteContainer,
+        { alignItems: "center", paddingBottom: 10 },
+      ]}
     >
       <Stack.Screen
         options={{
           headerShown: true,
-          title: '',
+          title: "",
           headerLeft: () => <Back />,
         }}
       />
       <View style={[LayoutStyles.scrollContainer, { flex: 1, width: "90%" }]}>
-        <View style={{ flexDirection: "row", width: "100%", alignItems: "center", marginBottom: 50 }}>
+        <View
+          style={{
+            flexDirection: "row",
+            width: "100%",
+            alignItems: "center",
+            marginBottom: 20,
+          }}
+        >
           <Image
             source={{ uri: getUserAvatarUrl(room?.user.photo) }}
             placeholder={Images.avatarDefault}
             style={styles.avatar}
             transition={300}
           />
-          <Text style={styles.roomTitle}>{room?.user.name} {room?.user.lastname}</Text>
+          <Text style={styles.roomTitle}>
+            {room?.user.name} {room?.user.lastname}
+          </Text>
         </View>
-        <ScrollView
-          style={{ flexGrow: 1, width: "100%" }}
-          alwaysBounceVertical={false}
-          ref={scrollViewRef}
-          onContentSizeChange={() => {
-            scrollViewRef.current?.scrollToEnd({ animated: true });
-          }}
+
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={Platform.OS === "ios" ? "padding" : undefined}
         >
-          {messages.map((item) => <MessageBubble data={item} sender={room?.user} current={room?.company} key={item.id} />)}
-        </ScrollView>
-        <View style={styles.inputBox}>
-          <TextInput
-            style={{ marginRight: 10, flexGrow: 1, fontSize: 16 }}
-            onChangeText={setMessage}
-            value={message}
-            placeholder="Enviar mensaje"
-            placeholderTextColor={Colors.silverSand}
-            maxLength={255}
-          />
-          <Pressable
-            onPress={() => sendMessage()}
+          <ScrollView
+            style={{ flexGrow: 1 }}
+            alwaysBounceVertical={false}
+            ref={scrollViewRef}
+            onContentSizeChange={() => {
+              scrollViewRef.current?.scrollToEnd({ animated: true });
+            }}
           >
-            <ArrowMessageIcon />
-          </Pressable>
-        </View>
+            {messages.map((item) => (
+              <MessageBubble
+                data={item}
+                sender={room?.user}
+                current={room?.company}
+                key={item.id}
+              />
+            ))}
+          </ScrollView>
+          <View style={styles.inputBox}>
+            <TextInput
+              style={{ marginRight: 10, flexGrow: 1, fontSize: 16 }}
+              onChangeText={setMessage}
+              value={message}
+              placeholder="Enviar mensaje"
+              placeholderTextColor={Colors.silverSand}
+              maxLength={255}
+            />
+            <Pressable onPress={() => sendMessage()}>
+              <ArrowMessageIcon />
+            </Pressable>
+          </View>
+        </KeyboardAvoidingView>
       </View>
     </SafeAreaView>
-  )
+  );
 };
 
 export default ChatMessages;
@@ -122,7 +155,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     height: 50,
     width: 50,
-    marginRight: 20
+    marginRight: 20,
   },
   roomTitle: {
     color: Colors.metallicGreen,
@@ -137,6 +170,6 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingHorizontal: 10,
     paddingVertical: 5,
-    alignItems: "center"
-  }
+    alignItems: "center",
+  },
 });

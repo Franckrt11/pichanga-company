@@ -1,31 +1,47 @@
-import { View, SafeAreaView, ScrollView, StyleProp, ViewStyle  } from "react-native";
+import {
+  View,
+  SafeAreaView,
+  ScrollView,
+  StyleProp,
+  ViewStyle,
+  Platform,
+  KeyboardAvoidingView,
+} from "react-native";
 import { ReactNode } from "react";
 import { Stack } from "expo-router";
 import { LayoutStyles } from "@/src/utils/Styles";
 import Back from "@/src/components/header/back";
 
-const ChildPage = ({ style, children }: { style?: StyleProp<ViewStyle>, children: ReactNode }) => {
+const ChildPage = ({
+  style,
+  children,
+}: {
+  style?: StyleProp<ViewStyle>;
+  children: ReactNode;
+}) => {
   return (
-    <SafeAreaView
-      style={LayoutStyles.whiteContainer}
-    >
+    <SafeAreaView style={LayoutStyles.whiteContainer}>
       <Stack.Screen
         options={{
           headerShown: true,
-          title: '',
+          title: "",
           headerLeft: () => <Back />,
         }}
       />
-      <ScrollView
-        style={{ paddingTop: 20 }}
-        contentContainerStyle={{ alignItems: "center"}}
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        keyboardVerticalOffset={120}
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
-        <View style={[LayoutStyles.scrollContainer, style]}>
-          {children}
-        </View>
-      </ScrollView>
+        <ScrollView
+          style={{ paddingTop: 20 }}
+          contentContainerStyle={{ alignItems: "center" }}
+        >
+          <View style={[LayoutStyles.scrollContainer, style]}>{children}</View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
-  )
+  );
 };
 
 export default ChildPage;

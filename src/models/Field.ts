@@ -31,7 +31,6 @@ export const fetchField = async (fid: number, token: string | null) => {
         Authorization: `Bearer ${token}`,
       },
     });
-
     return await response.json();
   } catch (error) {
     console.log("🚩 ~ models/Field.ts ~ fetchField() ~ error:", error);

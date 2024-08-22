@@ -1,13 +1,14 @@
 import { StyleSheet, Text, Pressable, View } from "react-native";
 import { useState, useEffect } from "react";
 import { router, useLocalSearchParams } from "expo-router";
-import { Picker } from "@react-native-picker/picker";
+import { Dropdown } from "react-native-element-dropdown";
 import MapView, { Marker, PROVIDER_GOOGLE, LatLng } from "react-native-maps";
 import { PageStyles, LayoutStyles } from "@/src/utils/Styles";
 import Colors from "@/src/utils/Colors";
 import ChildPage from "@/src/components/layouts/child-page";
 import Input from "@/src/components/input";
 import ButtonCheckbox from "@/src/components/button-checkbox";
+import ArrowDownIcon from "@/src/components/icons/arrowdown-icon";
 import { useAuthContext } from "@/src/context/Auth";
 import { fetchField, updateField } from "@/src/models/Field";
 import {
@@ -16,6 +17,7 @@ import {
   fetchDistricts,
 } from "@/src/models/Config";
 import { CountryData, CityData, DistrictData } from "@/src/utils/Types";
+import { FIELD_TYPES_LIST } from "@/src/utils/Constants";
 
 const Data = () => {
   const params = useLocalSearchParams();
@@ -182,29 +184,23 @@ const Data = () => {
           styles={PageStyles.input}
           theme="light"
         />
-        <View style={PageStyles.pickerContainer}>
-          <Picker
-            style={PageStyles.picker}
-            selectedValue={type}
-            onValueChange={(value, itemIndex) => setType(value)}
-          >
-            <Picker.Item
-              fontFamily="PoppinsMedium"
-              label="Grass"
-              value="Grass"
-            />
-            <Picker.Item
-              fontFamily="PoppinsMedium"
-              label="Cemento"
-              value="Cemento"
-            />
-            <Picker.Item
-              fontFamily="PoppinsMedium"
-              label="Sintético"
-              value="Sintético"
-            />
-          </Picker>
-        </View>
+        <Dropdown
+          style={[PageStyles.dropdown, styles.dropdown]}
+          data={FIELD_TYPES_LIST}
+          labelField="label"
+          valueField="value"
+          placeholder="Tipo de cancha"
+          placeholderStyle={[
+            PageStyles.dropdownPlaceholder,
+            { paddingHorizontal: 10 },
+          ]}
+          onChange={(item) => setType(item.value)}
+          value={type}
+          selectedTextStyle={styles.dropdownSelectectText}
+          renderRightIcon={() => (
+            <ArrowDownIcon size={10} style={{ marginRight: 10 }} />
+          )}
+        />
         <Input
           placeholder="Cantidad máxima de jugadores"
           value={players}
@@ -282,60 +278,63 @@ const Data = () => {
         </View>
       </View>
       <View style={{ width: "80%", marginHorizontal: "auto" }}>
-        <View style={PageStyles.pickerContainer}>
-          <Picker
-            style={PageStyles.picker}
-            selectedValue={country}
-            onValueChange={(value, itemIndex) => {
-              getCities(value);
-              setCountry(value);
-            }}
-          >
-            {countries?.map((country, index) => (
-              <Picker.Item
-                key={`picker-co-${index}`}
-                fontFamily="PoppinsMedium"
-                label={country.name}
-                value={country.id}
-              />
-            ))}
-          </Picker>
-        </View>
-        <View style={PageStyles.pickerContainer}>
-          <Picker
-            style={PageStyles.picker}
-            selectedValue={city}
-            onValueChange={(value, itemIndex) => {
-              getDistricts(value);
-              setCity(value);
-            }}
-          >
-            {cities?.map((city, index) => (
-              <Picker.Item
-                key={`picker-cy-${index}`}
-                fontFamily="PoppinsMedium"
-                label={city.name}
-                value={city.id}
-              />
-            ))}
-          </Picker>
-        </View>
-        <View style={PageStyles.pickerContainer}>
-          <Picker
-            style={PageStyles.picker}
-            selectedValue={district}
-            onValueChange={(value, itemIndex) => setDistrict(value)}
-          >
-            {districts?.map((district, index) => (
-              <Picker.Item
-                key={`picker-di-${index}`}
-                fontFamily="PoppinsMedium"
-                label={district.name}
-                value={district.id}
-              />
-            ))}
-          </Picker>
-        </View>
+        <Dropdown
+          style={[PageStyles.dropdown, styles.dropdown]}
+          data={countries}
+          labelField="name"
+          valueField="id"
+          placeholder="País"
+          placeholderStyle={[
+            PageStyles.dropdownPlaceholder,
+            { paddingHorizontal: 10 },
+          ]}
+          onChange={(item) => {
+            setCountry(item.id);
+            getCities(item.id);
+          }}
+          value={countries.find((item) => item.id === country)}
+          selectedTextStyle={styles.dropdownSelectectText}
+          renderRightIcon={() => (
+            <ArrowDownIcon size={10} style={{ marginRight: 10 }} />
+          )}
+        />
+        <Dropdown
+          style={[PageStyles.dropdown, styles.dropdown]}
+          data={cities}
+          labelField="name"
+          valueField="id"
+          placeholder="Ciudad"
+          placeholderStyle={[
+            PageStyles.dropdownPlaceholder,
+            { paddingHorizontal: 10 },
+          ]}
+          onChange={(item) => {
+            setCity(item.id);
+            getDistricts(item.id);
+          }}
+          value={cities.find((item) => item.id === city)}
+          selectedTextStyle={styles.dropdownSelectectText}
+          renderRightIcon={() => (
+            <ArrowDownIcon size={10} style={{ marginRight: 10 }} />
+          )}
+        />
+        <Dropdown
+          style={[PageStyles.dropdown, styles.dropdown]}
+          data={districts}
+          labelField="name"
+          valueField="id"
+          placeholder="Distrito"
+          placeholderStyle={[
+            PageStyles.dropdownPlaceholder,
+            { paddingHorizontal: 10 },
+          ]}
+          onChange={(item) => setDistrict(item.id)}
+          value={districts.find((item) => item.id === district)}
+          selectedTextStyle={styles.dropdownSelectectText}
+          renderRightIcon={() => (
+            <ArrowDownIcon size={10} style={{ marginRight: 10 }} />
+          )}
+        />
         <Input
           placeholder="Dirección"
           value={address}
@@ -392,5 +391,15 @@ const styles = StyleSheet.create({
     padding: 8,
     borderRadius: 25,
     borderColor: Colors.white,
+  },
+  dropdown: {
+    flex: 1,
+    paddingHorizontal: 0,
+    marginBottom: 20,
+  },
+  dropdownSelectectText: {
+    paddingHorizontal: 15,
+    fontFamily: "PoppinsMedium",
+    fontSize: 14,
   },
 });

@@ -110,6 +110,7 @@ const ChatMessages = () => {
 
         <KeyboardAvoidingView
           style={{ flex: 1 }}
+          keyboardVerticalOffset={110}
           behavior={Platform.OS === "ios" ? "padding" : undefined}
         >
           <ScrollView

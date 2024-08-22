@@ -79,5 +79,21 @@ export const PageStyles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 10,
     fontFamily: "PoppinsMedium"
-  }
+  },
+  dropdown: {
+    backgroundColor: Colors.white,
+    borderColor: Colors.silverSand,
+    borderWidth: 2,
+    borderRadius: 10,
+    marginBottom: 10,
+    color: Colors.maastrichtBlue,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    fontFamily: "PoppinsMedium",
+  },
+  dropdownPlaceholder: {
+    color: Colors.silverSand,
+    fontFamily: "PoppinsMedium",
+    fontSize: 15,
+  },
 });

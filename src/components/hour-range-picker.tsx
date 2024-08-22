@@ -1,10 +1,11 @@
 import { StyleSheet, Text, View, Pressable } from "react-native";
 import { useState, useEffect } from "react";
-import { Picker } from "@react-native-picker/picker";
+import { Dropdown } from "react-native-element-dropdown";
 import Colors from "@/src/utils/Colors";
 import { PageStyles } from "@/src/utils/Styles";
 import { HOUR_LIST } from "@/src/utils/Constants";
 import TrashIcon from "@/src/components/icons/trash-icon";
+import ArrowDownIcon from "@/src/components/icons/arrowdown-icon";
 import { HourRange } from "@/src/utils/Types";
 
 const HourRangePicker = ({
@@ -13,16 +14,28 @@ const HourRangePicker = ({
   day,
   updateFrom,
   updateTo,
-  remove
+  remove,
 }: {
-  hour: HourRange,
-  index: number,
-  day: number,
-  updateFrom: (prop: "start" | "end", value: number, index: number, day: number) => void,
-  updateTo: (prop: "start" | "end", value: number, index: number, day: number) => void,
-  remove: (index: number, day: number) => void,
+  hour: HourRange;
+  index: number;
+  day: number;
+  updateFrom: (
+    prop: "start" | "end",
+    value: number,
+    index: number,
+    day: number
+  ) => void;
+  updateTo: (
+    prop: "start" | "end",
+    value: number,
+    index: number,
+    day: number
+  ) => void;
+  remove: (index: number, day: number) => void;
 }) => {
-  const [selectedStart, setSelectedStart] = useState<number>(HOUR_LIST[0].value);
+  const [selectedStart, setSelectedStart] = useState<number>(
+    HOUR_LIST[0].value
+  );
   const [selectedEnd, setSelectedEnd] = useState<number>(HOUR_LIST[2].value);
 
   useEffect(() => {
@@ -33,44 +46,61 @@ const HourRangePicker = ({
   return (
     <View style={{ flexDirection: "row", gap: 15 }}>
       <View style={{ flex: 1 }}>
-        <Text style={[styles.checkboxText, { marginLeft: 15, marginBottom: 5 }]}>Desde las</Text>
-        <View style={[PageStyles.pickerContainer, { borderRadius: 50, height: 45 }]}>
-          <Picker
-            style={[PageStyles.picker, { marginTop: -7 }]}
-            selectedValue={selectedStart}
-            onValueChange={(value, itemIndex) => {
-              updateFrom("start", value, index, day);
-              setSelectedStart(value);
-            }}
-          >
-            {HOUR_LIST.map((h, i) => (
-              <Picker.Item fontFamily="PoppinsMedium" key={i} label={h.text} value={h.value} />
-            ))}
-          </Picker>
-        </View>
+        <Text
+          style={[styles.checkboxText, { marginLeft: 15, marginBottom: 5 }]}
+        >
+          Desde las
+        </Text>
+        <Dropdown
+          style={[PageStyles.dropdown]}
+          data={HOUR_LIST}
+          labelField="text"
+          valueField="value"
+          // placeholder="Distrito"
+          placeholderStyle={[
+            PageStyles.dropdownPlaceholder,
+            { paddingHorizontal: 10 },
+          ]}
+          onChange={(item) => {
+            updateFrom("start", item.value, index, day);
+            setSelectedStart(item.value);
+          }}
+          value={HOUR_LIST.find((obj) => obj.value === selectedStart)}
+          // selectedTextStyle={styles.dropdownSelectectText}
+          renderRightIcon={() => (
+            <ArrowDownIcon size={10} style={{ marginRight: 10 }} />
+          )}
+        />
       </View>
       <View style={{ flex: 1 }}>
-        <Text style={[styles.checkboxText, { marginLeft: 15, marginBottom: 5 }]}>Hasta las</Text>
-        <View style={[PageStyles.pickerContainer, { borderRadius: 50, height: 45 }]}>
-          <Picker
-            style={[PageStyles.picker, { marginTop: -7 }]}
-            selectedValue={selectedEnd}
-            onValueChange={(value, itemIndex) => {
-              updateTo("end", value, index, day);
-              setSelectedEnd(value);
-            }}
-          >
-            {HOUR_LIST.map((h, i) => (
-              <Picker.Item fontFamily="PoppinsMedium" key={i} label={h.text} value={h.value} />
-            ))}
-          </Picker>
-        </View>
+        <Text
+          style={[styles.checkboxText, { marginLeft: 15, marginBottom: 5 }]}
+        >
+          Hasta las
+        </Text>
+        <Dropdown
+          style={[PageStyles.dropdown]}
+          data={HOUR_LIST}
+          labelField="text"
+          valueField="value"
+          // placeholder="Distrito"
+          placeholderStyle={[
+            PageStyles.dropdownPlaceholder,
+            { paddingHorizontal: 10 },
+          ]}
+          onChange={(item) => {
+            updateTo("end", item.value, index, day);
+            setSelectedEnd(item.value);
+          }}
+          value={HOUR_LIST.find((obj) => obj.value === selectedEnd)}
+          // selectedTextStyle={styles.dropdownSelectectText}
+          renderRightIcon={() => (
+            <ArrowDownIcon size={10} style={{ marginRight: 10 }} />
+          )}
+        />
       </View>
       <View>
-        <Pressable
-          style={{ marginTop: 40 }}
-          onPress={() => remove(index, day)}
-        >
+        <Pressable style={{ marginTop: 40 }} onPress={() => remove(index, day)}>
           <TrashIcon size={20} />
         </Pressable>
       </View>
@@ -84,6 +114,6 @@ const styles = StyleSheet.create({
   checkboxText: {
     fontFamily: "PoppinsSemiBold",
     color: Colors.maastrichtBlue,
-    textDecorationLine: "none"
-  }
+    textDecorationLine: "none",
+  },
 });

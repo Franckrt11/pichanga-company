@@ -1,5 +1,3 @@
-// import { Platform } from "react-native";
-
 export const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
 export const SOCKET_URL = process.env.EXPO_PUBLIC_SOCKET_URL;
@@ -13,6 +11,16 @@ export const FIELD_TYPES_LIST = [
   { label: "Grass", value: "Grass" },
   { label: "Cemento", value: "Cemento" },
   { label: "Sintético", value: "Sintético" },
+];
+
+export const INIT_FIELD_DAYS = [
+  {day: 0, active: false},
+  {day: 1, active: false},
+  {day: 2, active: false},
+  {day: 3, active: false},
+  {day: 4, active: false},
+  {day: 5, active: false},
+  {day: 6, active: false},
 ];
 
 export const RESERVE_STATUS = [

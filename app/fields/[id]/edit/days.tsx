@@ -8,30 +8,17 @@ import ButtonCheckbox from "@/src/components/button-checkbox";
 import { useAuthContext } from "@/src/context/Auth";
 import { updateFieldDays, fetchFieldDays } from "@/src/models/Field";
 import { FieldDay } from "@/src/utils/Types";
+import { INIT_FIELD_DAYS } from "@/src/utils/Constants";
 
 const Days = () => {
   const params = useLocalSearchParams();
   const { token } = useAuthContext();
-  const [days, setDays] = useState<boolean[]>([
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-  ]);
+  const [days, setDays] = useState<FieldDay[]>(INIT_FIELD_DAYS);
 
   const changeDaysState = (state: boolean, day: number) => {
-    let currentState = days;
-    currentState[day] = state;
+    let currentState = [ ...days ];
+    currentState[day].active = state;
     setDays(currentState);
-  };
-
-  const daysToArray = (days: boolean[]): Array<FieldDay> => {
-    return days.map((day, index) => {
-      return { day: index, active: day };
-    });
   };
 
   const loadFieldDays = async () => {
@@ -40,7 +27,11 @@ const Days = () => {
       token
     );
     if (response.status) {
-      setDays(response.data);
+      if (response.data.length > 0) {
+        setDays(response.data);
+      } else {
+        setDays(INIT_FIELD_DAYS);
+      }
     }
   };
 
@@ -48,7 +39,7 @@ const Days = () => {
     const response = await updateFieldDays(
       params.id as unknown as number,
       token,
-      daysToArray(days)
+      days
     );
     if (response.status) router.back();
   };
@@ -68,7 +59,7 @@ const Days = () => {
           styleText={{ fontSize: 14 }}
           radius={15}
           color={Colors.maastrichtBlue}
-          checked={days[0]}
+          checked={days[0].active}
           mode={0}
           text="Do"
           onChangeMode={changeDaysState}
@@ -77,7 +68,7 @@ const Days = () => {
           styleText={{ fontSize: 14 }}
           radius={15}
           color={Colors.maastrichtBlue}
-          checked={days[1]}
+          checked={days[1].active}
           mode={1}
           text="Lu"
           onChangeMode={changeDaysState}
@@ -86,7 +77,7 @@ const Days = () => {
           styleText={{ fontSize: 14 }}
           radius={15}
           color={Colors.maastrichtBlue}
-          checked={days[2]}
+          checked={days[2].active}
           mode={2}
           text="Ma"
           onChangeMode={changeDaysState}
@@ -95,7 +86,7 @@ const Days = () => {
           styleText={{ fontSize: 14 }}
           radius={15}
           color={Colors.maastrichtBlue}
-          checked={days[3]}
+          checked={days[3].active}
           mode={3}
           text="Mi"
           onChangeMode={changeDaysState}
@@ -104,7 +95,7 @@ const Days = () => {
           styleText={{ fontSize: 14 }}
           radius={15}
           color={Colors.maastrichtBlue}
-          checked={days[4]}
+          checked={days[4].active}
           mode={4}
           text="Ju"
           onChangeMode={changeDaysState}
@@ -113,7 +104,7 @@ const Days = () => {
           styleText={{ fontSize: 14 }}
           radius={15}
           color={Colors.maastrichtBlue}
-          checked={days[5]}
+          checked={days[5].active}
           mode={5}
           text="Vi"
           onChangeMode={changeDaysState}
@@ -122,7 +113,7 @@ const Days = () => {
           styleText={{ fontSize: 14 }}
           radius={15}
           color={Colors.maastrichtBlue}
-          checked={days[6]}
+          checked={days[6].active}
           mode={6}
           text="Sa"
           onChangeMode={changeDaysState}

@@ -140,7 +140,7 @@ const Data = () => {
   }, []);
 
   return (
-    <ChildPage>
+    <ChildPage style={{ marginBottom: 80 }}>
       <Text style={LayoutStyles.pageTitle}>DATOS DE CANCHA</Text>
 
       <View

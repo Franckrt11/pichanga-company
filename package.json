@@ -27,7 +27,7 @@
     "@react-navigation/native": "^6.0.2",
     "@types/react-native-vector-icons": "^6.4.18",
     "date-fns": "^3.6.0",
-    "expo": "~51.0.28",
+    "expo": "~51.0.31",
     "expo-device": "~6.0.2",
     "expo-font": "~12.0.9",
     "expo-image": "~1.12.14",

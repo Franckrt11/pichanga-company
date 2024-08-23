@@ -52,14 +52,14 @@ const HourRangePicker = ({
           Desde las
         </Text>
         <Dropdown
-          style={[PageStyles.dropdown]}
+          style={[PageStyles.dropdown, styles.dropdown]}
           data={HOUR_LIST}
           labelField="text"
           valueField="value"
-          // placeholder="Distrito"
+          placeholder=" "
           placeholderStyle={[
             PageStyles.dropdownPlaceholder,
-            { paddingHorizontal: 10 },
+            { paddingHorizontal: 10, fontSize: 12 },
           ]}
           onChange={(item) => {
             updateFrom("start", item.value, index, day);
@@ -79,14 +79,14 @@ const HourRangePicker = ({
           Hasta las
         </Text>
         <Dropdown
-          style={[PageStyles.dropdown]}
+          style={[PageStyles.dropdown, styles.dropdown]}
           data={HOUR_LIST}
           labelField="text"
           valueField="value"
-          // placeholder="Distrito"
+          placeholder=""
           placeholderStyle={[
             PageStyles.dropdownPlaceholder,
-            { paddingHorizontal: 10 },
+            { paddingHorizontal: 10, fontSize: 12 },
           ]}
           onChange={(item) => {
             updateTo("end", item.value, index, day);
@@ -115,5 +115,17 @@ const styles = StyleSheet.create({
     fontFamily: "PoppinsSemiBold",
     color: Colors.maastrichtBlue,
     textDecorationLine: "none",
+  },
+  dropdown: {
+    flex: 1,
+    paddingLeft: 10,
+    paddingRight: 0,
+    marginBottom: 20,
+    borderRadius: 25
+  },
+  dropdownSelectectText: {
+    paddingHorizontal: 15,
+    fontFamily: "PoppinsMedium",
+    fontSize: 14,
   },
 });

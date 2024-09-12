@@ -1,3 +1,4 @@
+import { Alert } from "react-native";
 import { createContext, useEffect, useContext, useState } from "react";
 import { router, useSegments } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -19,7 +20,8 @@ interface IAuthContext {
   newPassword: (
     email: string,
     oldPassword: string,
-    newPassword: string
+    newPassword: string,
+    newPasswordConfirm: string
   ) => Promise<void>;
   token: string | null;
   userId: string | null;
@@ -66,6 +68,7 @@ export const AuthProvider = ({ children }: ProviderProps) => {
   const unauthenticated = () => {
     setToken(null);
     setUserId(null);
+    setErrors(null);
     AsyncStorage.removeItem("token");
     AsyncStorage.removeItem("userId");
     dispatch({ type: "delete" });
@@ -86,6 +89,7 @@ export const AuthProvider = ({ children }: ProviderProps) => {
           payload: response.user,
         });
         await loadConfig(response.token);
+        setErrors(null);
       } else {
         setErrors(response.messages);
         console.log("Error", response.messages);
@@ -106,6 +110,7 @@ export const AuthProvider = ({ children }: ProviderProps) => {
         AsyncStorage.removeItem("token");
         AsyncStorage.removeItem("userId");
         dispatch({ type: "delete" });
+        setErrors(null);
       }
 
       if (response.message === "Unauthenticated.") {
@@ -134,7 +139,6 @@ export const AuthProvider = ({ children }: ProviderProps) => {
         setErrors(null);
       } else {
         setErrors(response.errors);
-        console.log("Error", response.errors);
       }
     } catch (error) {
       console.log("🚩 ~ context/Auth.js ~ signUp() ~ error:", error);
@@ -145,14 +149,25 @@ export const AuthProvider = ({ children }: ProviderProps) => {
   const newPassword = async (
     email: string,
     oldPassword: string,
-    newPassword: string
-  ) => {
+    newPassword: string,
+    newPasswordConfirm: string
+  ): Promise<void> => {
     try {
-      let userToken = await AsyncStorage.getItem("token");
-      let userId = await AsyncStorage.getItem("userId");
+      let storageToken = await AsyncStorage.getItem("token");
 
-      const response = await fetchNewPassword(email, oldPassword, newPassword);
-      // Pendiente por completar
+      const response = await fetchNewPassword(
+        email,
+        oldPassword,
+        newPassword,
+        newPasswordConfirm,
+        storageToken
+      );
+      if (response.status) {
+        Alert.alert("Contraseña cambiada");
+        setErrors(null);
+      } else {
+        setErrors(response.errors);
+      }
     } catch (error) {
       console.log("🚩 ~ context/Auth.js ~ newPassword() ~ error:", error);
     }
@@ -179,7 +194,10 @@ export const AuthProvider = ({ children }: ProviderProps) => {
         } else if (response.message === "Unauthenticated.") {
           unauthenticated();
         } else {
-          console.log("🚩 ~ context/Auth.js ~ isLoggedIn() ~ fetchUser:", response);
+          console.log(
+            "🚩 ~ context/Auth.js ~ isLoggedIn() ~ fetchUser:",
+            response
+          );
         }
       }
     } catch (error) {

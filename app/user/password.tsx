@@ -12,18 +12,18 @@ const Password = () => {
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const { state } = useUserContext();
-  const { newPassword } = useAuthContext();
+  const { newPassword, errors } = useAuthContext();
 
   const changePassword = async (): Promise<void> => {
-    const response = await newPassword(state.email, old, password);
-    console.log("🚀 ~ user/password.tsx ~ changePassword ~ response:", response);
-    Alert.alert("Contraseña actualizada.");
+    await newPassword(state.email, old, password, confirm);
   };
 
   return (
     <ChildPage>
       <Text style={LayoutStyles.pageTitle}>CAMBIAR CONTRASEÑA</Text>
-      <View style={{ width: "80%", marginHorizontal: "auto", marginBottom: 40 }}>
+      <View
+        style={{ width: "80%", marginHorizontal: "auto", marginBottom: 40 }}
+      >
         <Input
           placeholder="Contraseña actual"
           value={old}
@@ -31,6 +31,7 @@ const Password = () => {
           styles={PageStyles.input}
           theme="light"
           password={true}
+          error={errors ? errors.password : null}
         />
         <Input
           placeholder="Contraseña nueva"
@@ -39,6 +40,7 @@ const Password = () => {
           styles={PageStyles.input}
           theme="light"
           password={true}
+          error={errors ? errors.new_password : null}
         />
         <Input
           placeholder="Repetir contraseña nueva"
@@ -47,6 +49,7 @@ const Password = () => {
           styles={PageStyles.input}
           theme="light"
           password={true}
+          error={errors ? errors.new_password : null}
         />
       </View>
       <Pressable
@@ -69,11 +72,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: "center",
     marginBottom: 10,
-    marginHorizontal: "auto"
+    marginHorizontal: "auto",
   },
   buttonText: {
     color: Colors.white,
     fontSize: 16,
     fontFamily: "PoppinsMedium",
-  }
+  },
 });

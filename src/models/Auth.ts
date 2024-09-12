@@ -61,18 +61,33 @@ export const fetchUser = async (id: string, token: string | null) => {
   }
 };
 
-export const fetchNewPassword = async (email: string, oldPassword: string, newPassword: string) => {
-  const response = await fetch(`${API_URL}api/company/reset-password`, {
-    method: "POST",
-    headers: FETCH_HEADERS,
-    body: JSON.stringify({
-      email,
-      password: oldPassword,
-      new_password: newPassword,
-    }),
-  });
+export const fetchNewPassword = async (
+  email: string,
+  oldPassword: string,
+  newPassword: string,
+  newPasswordConfirm: string,
+  token: string | null
+) => {
+  try {
+    const response = await fetch(`${API_URL}api/company/change-password`, {
+      method: "POST",
+      headers: {
+        ...FETCH_HEADERS,
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        email,
+        password: oldPassword,
+        new_password: newPassword,
+        new_password_confirmation: newPasswordConfirm,
+      }),
+    });
 
-  return await response.json();
+    return await response.json();
+  } catch (error) {
+    console.log("🚩 ~ models/Auth.ts ~ fetchNewPassword() ~ error:", error);
+    return { status: false };
+  }
 };
 
 export const fetchLogout = async (token: string | null) => {
@@ -82,7 +97,7 @@ export const fetchLogout = async (token: string | null) => {
       headers: {
         ...FETCH_HEADERS,
         Authorization: `Bearer ${token}`,
-      }
+      },
     });
 
     return await response.json();
@@ -90,4 +105,4 @@ export const fetchLogout = async (token: string | null) => {
     console.log("🚩 ~ models/Auth.ts ~ fetchLogout() ~ error:", error);
     return { status: false };
   }
-}
+};

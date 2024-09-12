@@ -3,7 +3,6 @@ import {
   ActivityIndicator,
   Text,
   View,
-  Platform,
 } from "react-native";
 import { useState } from "react";
 import { Link } from "expo-router";
@@ -26,7 +25,7 @@ const CheckboxText = () => {
       Estoy de acuerdo con los
       <Link
         href={"/(auth)/terms"}
-        style={{ color: Colors.metallicGreen, marginLeft: 4 }}
+        style={{ color: Colors.metallicGreen }}
       >
         Términos y condiciones
       </Link>
@@ -98,7 +97,7 @@ const Register = () => {
           onPress={() => setCheckbox(!checkbox)}
         />
       </View>
-      <View>
+      <View style={{ width: "80%" }}>
         {loading ? (
           <ActivityIndicator size={"large"} />
         ) : (
@@ -111,8 +110,6 @@ const Register = () => {
                 password,
                 password_confirmation,
                 checkbox,
-                // status: false,
-                // photo: null
               })
             }
             style={PageStyles.button}

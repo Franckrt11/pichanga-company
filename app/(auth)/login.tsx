@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   StyleSheet,
 } from "react-native";
+import { StatusBar } from 'expo-status-bar';
 import { useState } from "react";
 import { Stack, router } from "expo-router";
 import { useAuthContext } from "@/src/context/Auth";
@@ -25,6 +26,7 @@ const Login = () => {
     <SafeAreaView
       style={LayoutStyles.blueContainer}
     >
+      <StatusBar style="light" />
       <Stack.Screen
         options={{
           headerShown: false,
@@ -45,6 +47,7 @@ const Login = () => {
               onChangeText={(text: string) => setEmail(text)}
               styles={LoginStyles.input}
               theme="dark"
+              keyboard="email-address"
               error={errors ? errors.email : null}
             />
             <Input

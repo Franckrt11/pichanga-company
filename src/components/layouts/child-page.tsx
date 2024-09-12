@@ -7,6 +7,7 @@ import {
   Platform,
   KeyboardAvoidingView,
 } from "react-native";
+import { StatusBar } from 'expo-status-bar';
 import { ReactNode } from "react";
 import { Stack } from "expo-router";
 import { LayoutStyles } from "@/src/utils/Styles";
@@ -21,6 +22,7 @@ const ChildPage = ({
 }) => {
   return (
     <SafeAreaView style={LayoutStyles.whiteContainer}>
+      <StatusBar style="dark" />
       <Stack.Screen
         options={{
           headerShown: true,

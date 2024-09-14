@@ -1,6 +1,6 @@
 import { Text, View, Pressable } from "react-native";
 import { useState } from "react";
-import { router, useLocalSearchParams } from "expo-router";
+import { Stack, router, useLocalSearchParams } from "expo-router";
 import { LayoutStyles, PageStyles } from "@/src/utils/Styles";
 import Colors from "@/src/utils/Colors";
 import ChildPage from "@/src/components/layouts/child-page";
@@ -32,6 +32,13 @@ const Days = () => {
 
   return (
     <ChildPage>
+      <Stack.Screen
+        options={{
+          headerShown: true,
+          title: "",
+          headerLeft: () => <></>,
+        }}
+      />
       <Text style={LayoutStyles.pageTitle}>DÍAS DE ATENCIÓN</Text>
       <Text style={[LayoutStyles.subtitle, { marginBottom: 50 }]}>
         ¿Qué días atiende su cancha generalmente?

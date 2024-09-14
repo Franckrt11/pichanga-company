@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, Pressable } from "react-native";
 import { useState, useEffect } from "react";
-import { router, useLocalSearchParams } from "expo-router";
+import { Stack, router, useLocalSearchParams } from "expo-router";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { LayoutStyles, PageStyles } from "@/src/utils/Styles";
 import Colors from "@/src/utils/Colors";
@@ -123,6 +123,13 @@ const Hours = () => {
 
   return (
     <ChildPage style={{ marginBottom: 60 }}>
+      <Stack.Screen
+        options={{
+          headerShown: true,
+          title: "",
+          headerLeft: () => <></>,
+        }}
+      />
       <Text style={LayoutStyles.pageTitle}>HORARIOS</Text>
       <Text style={[LayoutStyles.subtitle, { marginBottom: 20 }]}>
         ¿Todos los días atiende en el mismo horario?

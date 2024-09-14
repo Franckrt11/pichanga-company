@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, Pressable } from "react-native";
 import { useState, useEffect } from "react";
-import { router, useLocalSearchParams } from "expo-router";
+import { Stack, router, useLocalSearchParams } from "expo-router";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { PageStyles, LayoutStyles } from "@/src/utils/Styles";
 import { useAuthContext } from "@/src/context/Auth";
@@ -83,7 +83,7 @@ const Price = () => {
     let priceList = range;
 
     for (let i = 0; i < 7; i++) {
-      range[i].forEach((dayEle, index) => {
+      range[i].forEach((_, index) => {
         priceList[i][index].price = INIT_PRICE_RAGUE;
       });
     }
@@ -110,7 +110,7 @@ const Price = () => {
     const response = await saveFieldPrices(
       params.id as unknown as number,
       token,
-      filtered
+      filtered,
     );
     if (response.status) router.replace("/fields");
   };
@@ -122,6 +122,13 @@ const Price = () => {
 
   return (
     <ChildPage>
+      <Stack.Screen
+        options={{
+          headerShown: true,
+          title: "",
+          headerLeft: () => <></>,
+        }}
+      />
       <Text style={LayoutStyles.pageTitle}>PRECIO DE RESERVA</Text>
       <Text style={[LayoutStyles.subtitle, { marginBottom: 30 }]}>
         ¿Tienen un precio único de reserva por hora?

@@ -152,7 +152,7 @@ const Photos = () => {
           options={{
             headerShown: true,
             title: '',
-            headerLeft: () => <Back />,
+            headerLeft: () => <></>,
           }}
         />
         <BottomSheetModal

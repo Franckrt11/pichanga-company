@@ -88,11 +88,11 @@ export const fetchFieldPictures = async (id: number, token: string | null) => {
         Authorization: `Bearer ${token}`,
       },
     });
-    const result = await response.json();
 
-    return result.data;
+    return await response.json();
   } catch (error) {
     console.log("🚩 ~ models/Field.ts ~ fetchFieldPictures() ~ error:", error);
+    return { status: false };
   }
 };
 

@@ -102,13 +102,13 @@ const Photos = () => {
   };
 
   const loadPictures = async (): Promise<void> => {
-    const pictures: FieldPictureData[] = await fetchFieldPictures(parseInt(params.id as string), token);
-    setPictures(pictures);
+    const pictures = await fetchFieldPictures(parseInt(params.id as string), token);
+    if (pictures.status) setPictures(pictures.data);
   };
 
   const loadPortrait = async (): Promise<void> => {
-    const response:FieldData = await fetchField(params.id as unknown as number, token);
-    setPortrait(getFieldUrl(response.portrait) as string | undefined);
+    const response = await fetchField(params.id as unknown as number, token);
+    if (response.status) setPortrait(getFieldUrl(response.data.portrait) as string | undefined);
   };
 
   const save = () => {
@@ -226,9 +226,8 @@ const Photos = () => {
               <Text style={[LayoutStyles.subtitle, { marginBottom: 0, marginRight: 8 }]}>GALERÍA</Text>
               <Text style={[LayoutStyles.subtitle, { marginBottom: 0, fontSize: 14, fontFamily: "PoppinsMedium", }]}>(max 3 fotos)</Text>
             </View>
-
-            {pictures.map((picture, index) => (
-              <View key={index} style={{ flexDirection: "row", gap: 20, marginBottom: 20 }}>
+            {pictures && Array.isArray(pictures) && pictures.map((picture, index) => (
+              <View key={`picture-${index}`} style={{ flexDirection: "row", gap: 20, marginBottom: 20 }}>
                 <Image
                   source={{ uri: getFieldUrl(picture.filename) }}
                   style={{ borderRadius: 20, height: 120, width: "100%", flex: 1, flexBasis: "10%" }}

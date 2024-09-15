@@ -12,20 +12,13 @@ import {
   fetchFieldPrices,
   updateFieldPrices,
 } from "@/src/models/Field";
-import { HourRange, PriceRange } from "@/src/utils/Types";
+import { HourRange, PriceRange, FieldDay } from "@/src/utils/Types";
+import { INIT_FIELD_DAYS } from "@/src/utils/Constants";
 
 const Price = () => {
   const params = useLocalSearchParams();
   const { token } = useAuthContext();
-  const [days, setDays] = useState<boolean[]>([
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-  ]);
+  const [days, setDays] = useState<FieldDay[]>(INIT_FIELD_DAYS);
   const [hourPerDayList, setHourPerDayList] = useState<HourRange[][]>([
     [],
     [],
@@ -108,49 +101,49 @@ const Price = () => {
       <View style={{ width: "100%" }}>
         <View style={{ flexDirection: "row", gap: 6, marginBottom: 15 }}>
           <ButtonDayPicker
-            allowed={days[0]}
+            allowed={days[0].active}
             value={0}
             text="Do"
             selected={activeDay}
             onSelect={selectDay}
           />
           <ButtonDayPicker
-            allowed={days[1]}
+            allowed={days[1].active}
             value={1}
             text="Lu"
             selected={activeDay}
             onSelect={selectDay}
           />
           <ButtonDayPicker
-            allowed={days[2]}
+            allowed={days[2].active}
             value={2}
             text="Ma"
             selected={activeDay}
             onSelect={selectDay}
           />
           <ButtonDayPicker
-            allowed={days[3]}
+            allowed={days[3].active}
             value={3}
             text="Mi"
             selected={activeDay}
             onSelect={selectDay}
           />
           <ButtonDayPicker
-            allowed={days[4]}
+            allowed={days[4].active}
             value={4}
             text="Ju"
             selected={activeDay}
             onSelect={selectDay}
           />
           <ButtonDayPicker
-            allowed={days[5]}
+            allowed={days[5].active}
             value={5}
             text="Vi"
             selected={activeDay}
             onSelect={selectDay}
           />
           <ButtonDayPicker
-            allowed={days[6]}
+            allowed={days[6].active}
             value={6}
             text="Sa"
             selected={activeDay}

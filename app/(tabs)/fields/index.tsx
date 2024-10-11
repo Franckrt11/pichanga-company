@@ -10,7 +10,7 @@ import { router } from "expo-router";
 import { useState, useEffect } from "react";
 import { LayoutStyles } from "@/src/utils/Styles";
 import Colors from "@/src/utils/Colors";
-import { DistrictData, FieldData } from "@/src/utils/Types";
+import { FieldData } from "@/src/utils/Types";
 import FieldItem from "@/src/components/field-item";
 import { useUserContext } from "@/src/context/User";
 import { useAuthContext } from "@/src/context/Auth";
@@ -23,7 +23,7 @@ const Fields = () => {
 
   const getFieldsList = async (): Promise<void> => {
     const fields = await fetchAllFields(state.id as number, token);
-    setFields(fields.data);
+    if (fields.status) setFields(fields.data);
   };
 
   useEffect(() => {
@@ -37,16 +37,17 @@ const Fields = () => {
         contentContainerStyle={{ alignItems: "center" }}
       >
         <View style={LayoutStyles.scrollContainer}>
-          {fields?.map((field, index) => (
-            <FieldItem
-              key={index}
-              id={field.id as number}
-              name={field.name}
-              district={field.district.name}
-              portrait={field.portrait as string | null}
-              active={field.active as boolean}
-            />
-          ))}
+          {fields &&
+            fields?.map((field, index) => (
+              <FieldItem
+                key={index}
+                id={field.id as number}
+                name={field.location.name}
+                district={field.location.district.name}
+                portrait={field.portrait as string | null}
+                active={field.active as boolean}
+              />
+            ))}
           <View style={{ marginVertical: 30, width: "80%" }}>
             <Pressable
               onPress={() => router.push("/fields/new")}

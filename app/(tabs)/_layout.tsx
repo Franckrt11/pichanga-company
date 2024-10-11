@@ -1,8 +1,8 @@
+import { View } from "react-native";
 import { Tabs } from "expo-router/tabs";
 import { StyleSheet } from "react-native";
 import Colors from "@/src/utils/Colors";
 import HomeIcon from "@/src/components/icons/home-icon";
-import FieldIcon from "@/src/components/icons/field-icon";
 import CalendarBubble from "@/src/components/icons/calendar-bubble";
 import ChatIcon from "@/src/components/icons/chat-icon";
 import BellIcon from "@/src/components/icons/bell-icon";
@@ -10,6 +10,7 @@ import Logo from "@/src/components/header/logo";
 import Options from "@/src/components/header/options";
 import BookingControl from "@/src/components/header/booking-control";
 import { initSockets } from "@/src/models/Socket";
+import FieldBubble from "@/src/components/icons/field-bubble";
 
 const TabsLayout = () => {
   initSockets();
@@ -18,8 +19,8 @@ const TabsLayout = () => {
     <Tabs
       screenOptions={{
         headerShown: true,
-        headerLeft: () => <Logo />,
-        headerStyle: { backgroundColor: "white", borderBottomWidth: 0 },
+        headerLeft: () => <View style={{ marginLeft: 16 }}><Logo /></View>,
+        headerStyle: { borderBottomWidth: 0 },
         tabBarStyle: styles.tabBar,
         tabBarActiveTintColor: "white",
         tabBarInactiveTintColor: Colors.maastrichtBlue,
@@ -34,17 +35,18 @@ const TabsLayout = () => {
           tabBarIcon: ({ focused, color }) => (
             <HomeIcon active={focused} color={color} />
           ),
-          headerRight: () => <Options />,
+          headerRight: () => <View style={{ marginRight: 16 }}><Options /></View>,
         }}
       />
       <Tabs.Screen
         name="fields"
         options={{
+          headerShown: false,
           headerTitle: () => <></>,
           tabBarLabelStyle: styles.tabBarLabel,
           tabBarLabel: "CANCHAS",
           tabBarIcon: ({ focused, color }) => (
-            <FieldIcon active={focused} color={color} />
+            <FieldBubble active={focused} color={color} />
           ),
         }}
       />
@@ -57,7 +59,7 @@ const TabsLayout = () => {
           tabBarIcon: ({ focused, color }) => (
             <CalendarBubble active={focused} color={color} />
           ),
-          headerRight: () => <BookingControl />,
+          headerRight: () => <View style={{ marginRight: 10 }}><BookingControl /></View>,
         }}
       />
       <Tabs.Screen

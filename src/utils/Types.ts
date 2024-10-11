@@ -68,32 +68,35 @@ export interface CountryData {
   name: string;
 }
 
-export interface FieldDataSave {
+export interface LocationDataSave {
   address: string;
   company_id?: number;
   city_id: number;
   country_id: number;
   district_id: number;
-  games: string;
   map_latitude: number;
   map_longitude: number;
   mobile: string;
   name: string;
   parking: string;
   phone: string;
+}
+
+export interface FieldDataSave {
+  games: string;
+  location_id?: number;
   players: string;
   size: string;
   type: string;
 }
 
-export interface FieldData {
+export interface LocationData {
   active?: boolean;
   address: string;
   city: CityData;
   company_id: number;
   country: CountryData;
   district: DistrictData;
-  games: string;
   id?: number;
   map_latitude: number;
   map_longitude: number;
@@ -101,6 +104,13 @@ export interface FieldData {
   name: string;
   parking: string;
   phone: string;
+}
+
+export interface FieldData {
+  active?: boolean;
+  games: string;
+  id?: number;
+  location: LocationData;
   players: string;
   portrait?: string | null;
   size: string;

@@ -1,21 +1,8 @@
 import Svg, { G, Path, Defs, ClipPath } from "react-native-svg";
-import { View } from "react-native";
-import { TabStyles } from "@/src/utils/Styles";
-import Colors from "@/src/utils/Colors";
-import { ColorIconProps } from "@/src/utils/Types";
 
-const FieldIcon = ({ active, color }: ColorIconProps) => {
+const FieldIcon = ({ color, size }: { color: string; size: number }) => {
   return (
-    <View
-      style={[
-        TabStyles.tabIcon,
-        {
-          borderColor: active ? "white" : Colors.maastrichtBlue,
-          backgroundColor: active ? Colors.maastrichtBlue : "white",
-        },
-      ]}
-    >
-      <Svg width="15" height="15" viewBox="0 0 10 10">
+    <Svg width={size} height={size} viewBox="0 0 10 10">
         <Defs>
           <ClipPath id="a">
             <Path d="M-174.38 1110.6h540v-1170h-540z" />
@@ -31,7 +18,6 @@ const FieldIcon = ({ active, color }: ColorIconProps) => {
           <Path d="M6.48 9.99H3.5143V8.4474H6.48zm0-8.43H3.5157V.0202H6.48zm-.43 3.15H3.965c.047-.4097.503-.7797.9903-.805.5521-.0285 1.0047.3784 1.0947.805m-2.09.59h2.0777c-.0539.4276-.5493.8096-1.0439.8075-.4925-.002-.9826-.3824-1.0338-.8075" />
         </G>
       </Svg>
-    </View>
   );
 };
 

@@ -1,6 +1,5 @@
 import { API_URL, FETCH_HEADERS } from "@/src/utils/Constants";
 import {
-  //FieldData,
   FieldDataSave,
   FieldPicture,
   FieldDay,
@@ -54,30 +53,64 @@ export const saveField = async (token: string | null, data: FieldDataSave) => {
   }
 };
 
-export const uploadPicture = async (
+export const uploadPortrait = async (
   data: FieldPicture,
   token: string | null,
   id?: number
-): Promise<string | undefined> => {
+) => {
   try {
-    const response = await fetch(
-      `${API_URL}api/company/field/${id}/${data.location}`,
-      {
-        method: "POST",
-        headers: {
-          ...FETCH_HEADERS,
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(data),
-      }
-    );
-    const result = await response.json();
+    const response = await fetch(`${API_URL}api/company/field/${id}/portrait`, {
+      method: "POST",
+      headers: {
+        ...FETCH_HEADERS,
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
+    });
+    return await response.json();
+  } catch (error) {
+    console.log("🚩 ~ models/Field.ts ~ uploadPortrait() ~ error:", error);
+  }
+};
 
-    return result.picture;
+export const uploadPicture = async (
+  data: FieldPicture,
+  token: string | null
+) => {
+  try {
+    const response = await fetch(`${API_URL}api/company/field/gallery`, {
+      method: "POST",
+      headers: {
+        ...FETCH_HEADERS,
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
+    });
+    return await response.json();
   } catch (error) {
     console.log("🚩 ~ models/Field.ts ~ uploadPicture() ~ error:", error);
   }
 };
+
+export const changePicture = async (
+  data: FieldPicture,
+  token: string | null,
+  id: number
+) => {
+  try {
+    const response = await fetch(`${API_URL}api/company/field/gallery/${id}`, {
+      method: "PUT",
+      headers: {
+        ...FETCH_HEADERS,
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
+    });
+    return await response.json();
+  } catch (error) {
+    console.log("🚩 ~ models/Field.ts ~ changePicture() ~ error:", error);
+  }
+}
 
 export const fetchFieldPictures = async (id: number, token: string | null) => {
   try {
@@ -96,14 +129,13 @@ export const fetchFieldPictures = async (id: number, token: string | null) => {
   }
 };
 
-export const removePicture = async (
+export const removePortrait = async (
   id: number,
-  token: string | null,
-  location: string
+  token: string | null
 ) => {
   try {
     const response = await fetch(
-      `${API_URL}api/company/field/${id}/${location}`,
+      `${API_URL}api/company/field/${id}/portrait`,
       {
         method: "DELETE",
         headers: {
@@ -112,11 +144,32 @@ export const removePicture = async (
         },
       }
     );
-    const result = await response.json();
+    return await response.json();
+  } catch (error) {
+    console.log("🚩 ~ models/Field.ts ~ removePortrait() ~ error:", error);
+    return { status: false };
+  }
+};
 
-    return result.data;
+export const removePicture = async (
+  id: number,
+  token: string | null
+) => {
+  try {
+    const response = await fetch(
+      `${API_URL}api/company/field/${id}/gallery`,
+      {
+        method: "DELETE",
+        headers: {
+          ...FETCH_HEADERS,
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return await response.json();
   } catch (error) {
     console.log("🚩 ~ models/Field.ts ~ removePicture() ~ error:", error);
+    return { status: false };
   }
 };
 

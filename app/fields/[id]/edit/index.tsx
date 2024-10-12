@@ -4,7 +4,6 @@ import { router, useLocalSearchParams, Href } from "expo-router";
 import { Dropdown } from "react-native-element-dropdown";
 import { PageStyles, LayoutStyles } from "@/src/utils/Styles";
 import Colors from "@/src/utils/Colors";
-import { FieldData } from "@/src/utils/Types";
 import { fetchField, updateFieldStatus } from "@/src/models/Field";
 import { useAuthContext } from "@/src/context/Auth";
 import ChildPage from "@/src/components/layouts/child-page";
@@ -18,13 +17,11 @@ const STATUS_LIST = [
 const EditField = () => {
   const params = useLocalSearchParams();
   const { token } = useAuthContext();
-  const [field, setField] = useState<FieldData | null>(null);
   const [status, setStatus] = useState<boolean>(false);
 
   const getField = async () => {
     const response = await fetchField(params.id as unknown as number, token);
     if (response.status) {
-      setField(response.data);
       setStatus(response.data.active);
     }
   };
@@ -44,10 +41,9 @@ const EditField = () => {
 
   return (
     <ChildPage style={{ width: "80%", marginBottom: 80 }}>
-      <Text style={[LayoutStyles.pageTitle, { marginBottom: 0 }]}>
+      <Text style={[LayoutStyles.pageTitle, { marginBottom: 20 }]}>
         EDITAR CANCHA
       </Text>
-      <Text style={LayoutStyles.pageTitle}>{field?.name}</Text>
       <Pressable
         onPress={() =>
           router.push(

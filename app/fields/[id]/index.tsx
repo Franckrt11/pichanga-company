@@ -1,10 +1,5 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  Pressable,
-} from "react-native";
-import { router, useLocalSearchParams } from "expo-router";
+import { StyleSheet, Text, View, Pressable } from "react-native";
+import { router, useLocalSearchParams, Href } from "expo-router";
 import { useState, useEffect } from "react";
 import MapView, { Marker, PROVIDER_GOOGLE, LatLng } from "react-native-maps";
 import { LayoutStyles } from "@/src/utils/Styles";
@@ -71,10 +66,6 @@ const FieldDetails = () => {
   const [field, setField] = useState<FieldData | null>(null);
   const [pictures, setPictures] = useState<PictureList[]>([]);
   const [visible, setVisible] = useState(false);
-  const [coords, setCoords] = useState<LatLng>({
-    latitude: -12.0459667,
-    longitude: -77.0305709,
-  });
 
   const getField = async () => {
     const response = await fetchField(params.id as unknown as number, token);
@@ -82,23 +73,19 @@ const FieldDetails = () => {
       setField(response.data);
       const pictures = await getPictures();
       setPictures([
-        { id: 0, filename: response.portrait as string | undefined },
-        ...pictures,
+        { id: 1, filename: response.data.portrait as string | undefined },
+        ...(pictures as FieldPictureData[]),
       ]);
-      setCoords({
-        latitude: response.data.map_latitude,
-        longitude: response.data.map_longitude,
-      });
-      setVisible(response.active as boolean);
+      setVisible(response.data.active as boolean);
     }
   };
 
-  const getPictures = async (): Promise<FieldPictureData[]> => {
-    const pictures: FieldPictureData[] = await fetchFieldPictures(
+  const getPictures = async () => {
+    const pictures = await fetchFieldPictures(
       parseInt(params.id as string),
       token
     );
-    return pictures;
+    if (pictures.status) return pictures.data as FieldPictureData[];
   };
 
   const showGames = (json: string) => {
@@ -126,10 +113,7 @@ const FieldDetails = () => {
     <ChildPage
       style={{ width: "80%", alignItems: "flex-start", marginBottom: 80 }}
     >
-      <Text style={LayoutStyles.pageTitle}>{field?.name}</Text>
-
       <ImageCarousel data={pictures} />
-
       <View
         style={{
           flexDirection: "row",
@@ -140,13 +124,21 @@ const FieldDetails = () => {
         }}
       >
         <Pressable
-          onPress={() => router.push(`/fields/${params.id}/comments`)}
+          onPress={() =>
+            router.push(
+              `/fields/${params.id}/comments` as Href<`/fields/${string}/comments`>
+            )
+          }
           style={styles.buttom}
         >
           <Text style={styles.buttomText}>Ver comentarios</Text>
         </Pressable>
         <Pressable
-          onPress={() => router.push(`/fields/${params.id}/edit/photos`)}
+          onPress={() =>
+            router.push(
+              `/fields/${params.id}/edit/photos` as Href<`/fields/${string}/edit/photos`>
+            )
+          }
           style={styles.buttom}
         >
           <PencilIcon />
@@ -156,9 +148,8 @@ const FieldDetails = () => {
       </View>
 
       <View style={styles.divider} />
-      <ContentRow label="Teléfono fijo" data={field?.phone} />
-      <ContentRow label="Celular o Whatsapp" data={field?.mobile} />
-      <ContentRow label="Estacionamientos" data={field?.parking} />
+
+      <ContentRow label="Ubicación de la cancha" data={field?.location.name} />
       <ContentRow label="Medida de la cancha" data={field?.size} />
       <ContentRow label="Tipo de cancha" data={field?.type} />
       <ContentRow label="Cantidad máxima de jugadores" data={field?.players} />
@@ -166,33 +157,6 @@ const FieldDetails = () => {
         label="Modos de juego"
         data={field ? showGames(field.games) : ""}
       />
-      <ContentRow label="País" data={field?.country.name} />
-      <ContentRow label="Ciudad" data={field?.city.name} />
-      <ContentRow label="Distrito" data={field?.district.name} />
-      <ContentRow label="Dirección" data={field?.address} />
-
-      <View
-        style={{
-          width: "100%",
-          height: 300,
-          marginBottom: 50,
-          borderRadius: 20,
-          overflow: "hidden",
-        }}
-      >
-        <MapView
-          provider={PROVIDER_GOOGLE}
-          style={{ width: "100%", height: "100%" }}
-          region={{
-            latitude: coords.latitude,
-            longitude: coords.longitude,
-            latitudeDelta: 0.02,
-            longitudeDelta: 0.005,
-          }}
-        >
-          <Marker coordinate={coords} />
-        </MapView>
-      </View>
 
       <View style={{ width: "90%" }}>
         <RatingRow score={2} />

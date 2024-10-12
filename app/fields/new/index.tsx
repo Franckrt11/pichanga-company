@@ -1,8 +1,7 @@
-import { StyleSheet, Text, View, Pressable, Alert } from "react-native";
+import { StyleSheet, Text, View, Pressable } from "react-native";
 import { useState, useEffect } from "react";
 import { router } from "expo-router";
 import { Dropdown } from "react-native-element-dropdown";
-import MapView, { Marker, PROVIDER_GOOGLE, LatLng } from "react-native-maps";
 import { LayoutStyles, PageStyles } from "@/src/utils/Styles";
 import Colors from "@/src/utils/Colors";
 import ChildPage from "@/src/components/layouts/child-page";
@@ -10,27 +9,23 @@ import Input from "@/src/components/input";
 import ButtonCheckbox from "@/src/components/button-checkbox";
 import ArrowDownIcon from "@/src/components/icons/arrowdown-icon";
 import { saveField } from "@/src/models/Field";
-import {
-  fetchCountries,
-  fetchCities,
-  fetchDistricts,
-} from "@/src/models/Config";
+import { fetchAllLocations } from "@/src/models/Location";
 import { useUserContext } from "@/src/context/User";
 import { useAuthContext } from "@/src/context/Auth";
-import { CountryData, CityData, DistrictData } from "@/src/utils/Types";
+import { LocationData } from "@/src/utils/Types";
 import { FIELD_TYPES_LIST } from "@/src/utils/Constants";
 
 const NewField = () => {
   const { state } = useUserContext();
   const { token } = useAuthContext();
 
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [mobile, setMobile] = useState("");
-  const [parking, setParking] = useState("");
+  const [locations, setLocations] = useState<LocationData[]>([]);
+
   const [size, setSize] = useState("");
   const [type, setType] = useState("");
   const [players, setPlayers] = useState("");
+  const [locationID, setLocationID] = useState<number | null>(null);
+
   const [modes, setMode] = useState({
     "5v5": false,
     "6v6": false,
@@ -41,36 +36,13 @@ const NewField = () => {
     "11v11": false,
   });
 
-  const [countries, setCountries] = useState<CountryData[]>([]);
-  const [cities, setCities] = useState<CityData[]>([]);
-  const [districts, setDistricts] = useState<DistrictData[]>([]);
-
-  const [country, setCountry] = useState<number>(0);
-  const [city, setCity] = useState<number>(0);
-  const [district, setDistrict] = useState<number>(0);
-  const [address, setAddress] = useState("");
-  const [coords, setCoords] = useState<LatLng>({
-    latitude: -12.0459667,
-    longitude: -77.0305709,
-  });
-
   const changeModeState = (state: boolean, mode: string) => {
     setMode({ ...modes, [mode]: state });
   };
 
-  const getCountries = async () => {
-    const countries = await fetchCountries(token);
-    if (countries.status) setCountries(countries.data);
-  };
-
-  const getCities = async (country: number) => {
-    const cities = await fetchCities(country, token);
-    if (cities.status) setCities(cities.data);
-  };
-
-  const getDistricts = async (city: number) => {
-    const districts = await fetchDistricts(city, token);
-    if (districts.status) setDistricts(districts.data);
+  const getLocations = async (): Promise<void> => {
+    const response = await fetchAllLocations(state.id as number, token);
+    if (response.status) setLocations(response.data);
   };
 
   const nextStep = async () => {
@@ -81,33 +53,18 @@ const NewField = () => {
       .filter((element) => element !== undefined);
 
     const saved = await saveField(token, {
-      address,
-      city_id: city,
       company_id: state.id as number,
-      country_id: country,
-      district_id: district,
+      location_id: locationID as number,
       games: JSON.stringify(filteredModes),
-      map_latitude: coords.latitude,
-      map_longitude: coords.longitude,
-      mobile,
-      name,
-      parking,
-      phone,
       players,
       size,
       type,
     });
-
-    if (saved.status) {
-      router.push(`/fields/new/photos?id=${saved.data.id}`);
-    } else {
-      console.log("🚨 ~ fields/new/index.tsx ~ nextStep ~ error", saved);
-      Alert.alert("Error al guardar cancha.");
-    }
+    if (saved.status) router.push(`/fields/new/photos?id=${saved.data.id}`);
   };
 
   useEffect(() => {
-    getCountries();
+    getLocations();
   }, []);
 
   return (
@@ -116,36 +73,24 @@ const NewField = () => {
       <View
         style={{ width: "80%", marginHorizontal: "auto", marginBottom: 10 }}
       >
-        <Input
-          placeholder="Nombre de la cancha"
-          value={name}
-          onChangeText={(text: string) => setName(text)}
-          styles={PageStyles.input}
-          theme="light"
-        />
-        <Input
-          placeholder="Teléfono fijo"
-          value={phone}
-          onChangeText={(text: string) => setPhone(text)}
-          styles={PageStyles.input}
-          theme="light"
-          keyboard="numeric"
-        />
-        <Input
-          placeholder="Celular o Whatsapp"
-          value={mobile}
-          onChangeText={(text: string) => setMobile(text)}
-          styles={PageStyles.input}
-          theme="light"
-          keyboard="numeric"
-        />
-        <Input
-          placeholder="Cantidad de estacionamientos"
-          value={parking}
-          onChangeText={(text: string) => setParking(text)}
-          styles={PageStyles.input}
-          theme="light"
-          keyboard="numeric"
+        <Dropdown
+          style={[PageStyles.dropdown, styles.dropdown]}
+          data={locations}
+          labelField="name"
+          valueField="id"
+          placeholder="Local"
+          placeholderStyle={[
+            PageStyles.dropdownPlaceholder,
+            { paddingHorizontal: 10 },
+          ]}
+          onChange={(item) => {
+            setLocationID(item.id as number);
+          }}
+          value={locations.find((item) => item.id === locationID)}
+          selectedTextStyle={styles.dropdownSelectectText}
+          renderRightIcon={() => (
+            <ArrowDownIcon size={10} style={{ marginRight: 10 }} />
+          )}
         />
         <Input
           placeholder="Medida de cancha"
@@ -246,100 +191,6 @@ const NewField = () => {
           <View style={styles.pseudoButton}></View>
           <View style={styles.pseudoButton}></View>
         </View>
-      </View>
-      <View style={{ width: "80%", marginHorizontal: "auto" }}>
-        <Dropdown
-          style={[PageStyles.dropdown, styles.dropdown]}
-          data={countries}
-          labelField="name"
-          valueField="id"
-          placeholder="País"
-          placeholderStyle={[
-            PageStyles.dropdownPlaceholder,
-            { paddingHorizontal: 10 },
-          ]}
-          onChange={(item) => {
-            setCountry(item.id);
-            getCities(item.id);
-          }}
-          value={countries.find((item) => item.id === country)}
-          selectedTextStyle={styles.dropdownSelectectText}
-          renderRightIcon={() => (
-            <ArrowDownIcon size={10} style={{ marginRight: 10 }} />
-          )}
-        />
-        <Dropdown
-          style={[PageStyles.dropdown, styles.dropdown]}
-          data={cities}
-          labelField="name"
-          valueField="id"
-          placeholder="Ciudad"
-          placeholderStyle={[
-            PageStyles.dropdownPlaceholder,
-            { paddingHorizontal: 10 },
-          ]}
-          onChange={(item) => {
-            setCity(item.id);
-            getDistricts(item.id);
-          }}
-          value={cities.find((item) => item.id === city)}
-          selectedTextStyle={styles.dropdownSelectectText}
-          renderRightIcon={() => (
-            <ArrowDownIcon size={10} style={{ marginRight: 10 }} />
-          )}
-        />
-        <Dropdown
-          style={[PageStyles.dropdown, styles.dropdown]}
-          data={districts}
-          labelField="name"
-          valueField="id"
-          placeholder="Distrito"
-          placeholderStyle={[
-            PageStyles.dropdownPlaceholder,
-            { paddingHorizontal: 10 },
-          ]}
-          onChange={(item) => setDistrict(item.id)}
-          value={districts.find((item) => item.id === district)}
-          selectedTextStyle={styles.dropdownSelectectText}
-          renderRightIcon={() => (
-            <ArrowDownIcon size={10} style={{ marginRight: 10 }} />
-          )}
-        />
-        <Input
-          placeholder="Dirección"
-          value={address}
-          onChangeText={(text: string) => setAddress(text)}
-          styles={PageStyles.input}
-          theme="light"
-        />
-      </View>
-      <View
-        style={{
-          width: "80%",
-          height: 400,
-          marginBottom: 50,
-          borderRadius: 20,
-          overflow: "hidden",
-        }}
-      >
-        <MapView
-          provider={PROVIDER_GOOGLE}
-          style={{ width: "100%", height: "100%" }}
-          initialRegion={{
-            latitude: coords.latitude,
-            longitude: coords.longitude,
-            latitudeDelta: 0.02,
-            longitudeDelta: 0.005,
-          }}
-        >
-          <Marker
-            draggable
-            onDragEnd={(direction) =>
-              setCoords(direction.nativeEvent.coordinate)
-            }
-            coordinate={coords}
-          />
-        </MapView>
       </View>
       <Pressable
         onPress={() => nextStep()}

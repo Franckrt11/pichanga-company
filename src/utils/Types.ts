@@ -83,6 +83,7 @@ export interface LocationDataSave {
 }
 
 export interface FieldDataSave {
+  company_id?: number;
   games: string;
   location_id?: number;
   players: string;
@@ -118,9 +119,8 @@ export interface FieldData {
 };
 
 export interface FieldPicture {
-  location: string;
   picture: string | boolean;
-  position: number;
+  position?: number;
   field_id: number;
 };
 

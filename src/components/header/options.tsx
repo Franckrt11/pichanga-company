@@ -19,7 +19,7 @@ const Options = () => {
 
   return (
     <View
-      style={{ flexDirection: "row", alignItems: "center", paddingRight: 10 }}
+      style={{ flexDirection: "row", alignItems: "center" }}
     >
       <Link href="/options" asChild>
         <Pressable

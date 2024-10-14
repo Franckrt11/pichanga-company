@@ -24,20 +24,16 @@ const Terms = () => {
 
 export default Terms;
 
-const styles = StyleSheet.create({
-  content: {
-    color: Colors.maastrichtBlue,
-    fontSize: 15,
-    fontFamily: "PoppinsMedium",
-    marginBottom: 10,
-    textAlign: "justify",
-  },
-});
-
 const tagsStyles = {
   p: {
-    fontSize: 18,
+    fontSize: 16,
     lineHeight: 24,
     color: Colors.maastrichtBlue
+  },
+  li: {
+    fontSize: 16,
+    lineHeight: 24,
+    color: Colors.maastrichtBlue,
+    marginBottom: 10
   }
 };

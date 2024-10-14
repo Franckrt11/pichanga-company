@@ -1,31 +1,29 @@
 import { StyleSheet, Text, View, Pressable } from "react-native";
 import { useState } from "react";
 import { router, Href } from "expo-router";
-import { Image } from "expo-image";
 import Colors from "@/src/utils/Colors";
-import Images from "@/src/utils/Images";
-import StarIcon from "@/src/components/icons/star-icon";
-import PencilIcon from "@/src/components/icons/pencil-icon";
 import ZoomPlusIcon from "@/src/components/icons/zoom-plus-icon";
+import PencilIcon from "@/src/components/icons/pencil-icon";
 import Switch from "@/src/components/switch";
-import { getFieldUrl } from "@/src/utils/Helpers";
-import { updateFieldStatus } from "@/src/models/Field";
+import { updateLocationStatus }  from "@/src/models/Location";
 import { useAuthContext } from "@/src/context/Auth";
 
-interface FieldProps {
+const LocationItem = ({
+  id,
+  name,
+  district,
+  active,
+}: {
   id: number;
   name: string;
   district: string;
   active: boolean;
-  portrait: string | null;
-}
-
-const FieldItem = ({ id, name, district, active, portrait }: FieldProps) => {
+}) => {
   const { token } = useAuthContext();
   const [visible, setVisible] = useState(active);
 
-  const toggleVisible = async (): Promise<void> => {
-    const response = await updateFieldStatus(id, token, !visible);
+  const toggleVisible = async(): Promise<void> => {
+    const response = await updateLocationStatus(id, token, !visible);
     if (response.status) setVisible(!visible);
   };
 
@@ -33,29 +31,13 @@ const FieldItem = ({ id, name, district, active, portrait }: FieldProps) => {
     <View style={styles.container}>
       <View style={styles.wrapper}>
         <View style={styles.header}>
-          <View style={{ width: 90, overflow: "hidden" }}>
-            <Image
-              source={{ uri: getFieldUrl(portrait) }}
-              placeholder={Images.portraitDefault}
-              style={{ width: 200, height: 125, right: "70%" }}
-              transition={200}
-            />
-          </View>
           <View style={styles.content}>
             <View style={styles.description}>
               <Text style={styles.title}>{name}</Text>
               <Text style={styles.subtitle}>{district}</Text>
-              <View style={styles.score}>
-                <StarIcon size={15} active={true} />
-                <StarIcon size={15} active={true} />
-                <StarIcon size={15} active={true} />
-                <StarIcon size={15} active={false} />
-                <StarIcon size={15} active={false} />
-                <Text style={styles.countScore}>(50)</Text>
-              </View>
             </View>
             <View style={styles.more}>
-              <Pressable onPress={() => router.push(`/fields/${id}`)}>
+              <Pressable onPress={() => router.push(`/locations/${id}`)}>
                 <ZoomPlusIcon size={20} color={Colors.maastrichtBlue} />
               </Pressable>
             </View>
@@ -72,34 +54,23 @@ const FieldItem = ({ id, name, district, active, portrait }: FieldProps) => {
           ]}
         >
           <Pressable
-            onPress={() =>
-              router.push(
-                `/fields/${id}/comments` as Href<`/fields/${number}/comments`>
-              )
-            }
-            style={styles.buttom}
-          >
-            <Text style={styles.buttomText}>Comentarios</Text>
-          </Pressable>
-          <Pressable
-            onPress={() =>
-              router.push(
-                `/fields/${id}/edit` as Href<`/fields/${number}/edit`>
-              )
-            }
+            onPress={() => router.push(`/locations/${id}/edit` as Href<`/locations/${number}/edit`>)}
             style={styles.buttom}
           >
             <PencilIcon />
-            <Text style={styles.buttomText}>Editar cancha</Text>
+            <Text style={styles.buttomText}>Editar local</Text>
           </Pressable>
-          <Switch onValueChange={toggleVisible} value={visible} />
+          <Switch
+            onValueChange={toggleVisible}
+            value={visible}
+          />
         </View>
       </View>
     </View>
   );
 };
 
-export default FieldItem;
+export default LocationItem;
 
 const styles = StyleSheet.create({
   container: {
@@ -142,17 +113,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: "PoppinsMedium",
   },
-  score: {
-    flexDirection: "row",
-    gap: 5,
-    marginTop: 8,
-    alignItems: "center",
-  },
-  countScore: {
-    fontSize: 12,
-    fontFamily: "PoppinsMedium",
-    paddingTop: 4,
-  },
   more: {
     justifyContent: "center",
     paddingHorizontal: 12,
@@ -176,6 +136,6 @@ const styles = StyleSheet.create({
   buttomText: {
     color: Colors.maastrichtBlue,
     fontFamily: "PoppinsMedium",
-    fontSize: 10,
+    fontSize: 10
   },
 });

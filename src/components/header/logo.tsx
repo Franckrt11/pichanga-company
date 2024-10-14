@@ -5,7 +5,7 @@ import Colors from "@/src/utils/Colors";
 const Logo = () => {
   return (
     <View
-      style={{ flexDirection: "row", alignItems: "center", paddingLeft: 10 }}
+      style={{ flexDirection: "row", alignItems: "center" }}
     >
       <Image
         source={Images.logo}

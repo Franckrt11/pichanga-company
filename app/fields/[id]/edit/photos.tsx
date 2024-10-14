@@ -1,4 +1,12 @@
-import { StyleSheet, Text, View, Pressable, SafeAreaView, ScrollView, Alert } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+  ScrollView,
+  Pressable,
+  Alert,
+} from "react-native";
 import { useRef, useMemo, useCallback, useState, useEffect } from "react";
 import { router, Stack, useLocalSearchParams } from "expo-router";
 import * as Linking from "expo-linking";
@@ -8,16 +16,24 @@ import {
   BottomSheetView,
   BottomSheetModal,
   BottomSheetModalProvider,
-  BottomSheetBackdrop
+  BottomSheetBackdrop,
 } from "@gorhom/bottom-sheet";
 import Icon from "react-native-vector-icons/Feather";
 import Back from "@/src/components/header/back";
 import UploadPhoto from "@/src/components/upload-photo";
-import { PageStyles, LayoutStyles } from "@/src/utils/Styles";
+import { LayoutStyles, PageStyles } from "@/src/utils/Styles";
 import Colors from "@/src/utils/Colors";
 import Images from "@/src/utils/Images";
 import { pickImageAsync, pickCameraAsync } from "@/src/models/ImagePicker";
-import { fetchField, uploadPicture, fetchFieldPictures, removePicture } from "@/src/models/Field";
+import {
+  fetchField,
+  changePicture,
+  uploadPicture,
+  fetchFieldPictures,
+  removePicture,
+  removePortrait,
+  uploadPortrait,
+} from "@/src/models/Field";
 import { useUserContext } from "@/src/context/User";
 import { useAuthContext } from "@/src/context/Auth";
 import { getFieldUrl } from "@/src/utils/Helpers";
@@ -30,85 +46,143 @@ const Photos = () => {
   const { token } = useAuthContext();
 
   const [location, setLocation] = useState<string | null>(null);
+  const [changedPicture, setChangedPicture] = useState<
+    FieldPictureData | undefined
+  >(undefined);
+
   const [portrait, setPortrait] = useState<string | undefined>(undefined);
   const [pictures, setPictures] = useState<FieldPictureData[]>([]);
 
-  const [cameraStatus, requestCameraPermission] = ImagePicker.useCameraPermissions();
+  const [cameraStatus, requestCameraPermission] =
+    ImagePicker.useCameraPermissions();
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const snapPoints = useMemo(() => [120], []);
 
-  const handlePresentModalPress = useCallback((type: string | null) => {
-    setLocation(type);
-    bottomSheetModalRef.current?.present();
-  }, []);
+  const handlePresentModalPress = useCallback(
+    async (type: string | null, id?: number) => {
+      if (id) {
+        const selected = pictures.find((picture) => picture.id === id);
+        setChangedPicture(selected);
+      }
+      setLocation(type);
+      bottomSheetModalRef.current?.present();
+    },
+    [pictures]
+  );
 
   const handleClosePress = () => bottomSheetModalRef.current?.close();
 
-  const savePicture = async (imageUri: string | boolean, location: string): Promise<string | undefined> => {
-    const picture = await uploadPicture({
-      location: location,
-      picture: imageUri,
-      position: pictures.length + 1,
-      field_id: parseInt(params.id as string),
-    }, token, parseInt(params.id as string));
-    Alert.alert("Imagen de perfil guardada.");
-    return picture;
+  const savePortrait = async (
+    imageUri: string | boolean
+  ): Promise<string | undefined> => {
+    const portrait = await uploadPortrait(
+      {
+        picture: imageUri,
+        field_id: parseInt(params.id as string),
+      },
+      token,
+      parseInt(params.id as string)
+    );
+    if (portrait.status) return portrait.data;
+  };
+
+  const savePicture = async (
+    imageUri: string | boolean
+  ): Promise<FieldPictureData | undefined> => {
+    const picture = await uploadPicture(
+      {
+        picture: imageUri,
+        position: pictures.length + 1,
+        field_id: parseInt(params.id as string),
+      },
+      token
+    );
+    if (picture.status) return picture.data;
+  };
+
+  const editPicture = async (
+    imageUri: string | boolean,
+    picture: FieldPictureData
+  ) => {
+    const editedPicture = await changePicture(
+      {
+        picture: imageUri,
+        position: picture.position,
+        field_id: parseInt(params.id as string),
+      },
+      token,
+      picture.id
+    );
+    if (editedPicture.status) return editedPicture.data;
   };
 
   const handleSaveImage = async (image: string | boolean): Promise<void> => {
-    if (location === 'portrait') {
-      const picture = await savePicture(image, location);
+    if (location === "portrait") {
+      const picture = await savePortrait(image);
       setPortrait(getFieldUrl(picture));
     }
 
-    if (location === 'gallery') {
-      const picture = await savePicture(image, location);
-      loadPictures();
+    if (location === "add-gallery") {
+      const picture = await savePicture(image);
+      const picture_list: FieldPictureData[] = [
+        ...(pictures as FieldPictureData[]),
+        picture as FieldPictureData,
+      ];
+      setPictures(picture_list);
     }
+
+    if (location === "edit-gallery") {
+      const pictures: FieldPictureData[] = await editPicture(
+        image,
+        changedPicture as FieldPictureData
+      );
+      setPictures(pictures);
+    }
+
     handleClosePress();
   };
 
   const pickImage = async (): Promise<void> => {
-    let image = await pickImageAsync([8,5]);
-    if (image) {
-      handleSaveImage(image);
-    }
+    let image = await pickImageAsync([8, 5]);
+    if (image) handleSaveImage(image);
   };
 
   const pickCamera = async (): Promise<void> => {
-    let image = await pickCameraAsync([8,5]);
-    if (image) {
-      if (image) {
-        handleSaveImage(image);
-      }
+    let image = await pickCameraAsync([8, 5]);
+    if (image) handleSaveImage(image);
+  };
+
+  const removeFieldPortrait = async (): Promise<void> => {
+    const response = await removePortrait(state.id as number, token);
+    if (response.status) {
+      setPortrait(undefined);
+      Alert.alert(response.data);
     }
   };
 
-  const removePortrait = async (): Promise<void> => {
-    const response = await removePicture(state.id as number, token, 'portrait');
-    Alert.alert(response);
-    setPortrait(undefined);
-  };
-
   const removeFieldPicture = async (id: number): Promise<void> => {
-    const result = await removePicture(id, token, 'gallery');
-    setPictures(result);
+    const result = await removePicture(id, token);
+    if (result.status) setPictures(result.data);
   };
 
   const addPicture = () => {
-    setLocation('gallery');
+    setLocation("add-gallery");
     bottomSheetModalRef.current?.present();
   };
 
   const loadPictures = async (): Promise<void> => {
-    const pictures = await fetchFieldPictures(parseInt(params.id as string), token);
+    const pictures = await fetchFieldPictures(
+      parseInt(params.id as string),
+      token
+    );
     if (pictures.status) setPictures(pictures.data);
   };
 
   const loadPortrait = async (): Promise<void> => {
     const response = await fetchField(params.id as unknown as number, token);
-    if (response.status) setPortrait(getFieldUrl(response.data.portrait) as string | undefined);
+    if (response.status)
+      setPortrait(getFieldUrl(response.data.portrait) as string | undefined);
   };
 
   const save = () => {
@@ -131,34 +205,33 @@ const Photos = () => {
     if (cameraStatus) {
       if (
         cameraStatus.status === ImagePicker.PermissionStatus.UNDETERMINED ||
-        (cameraStatus.status === ImagePicker.PermissionStatus.DENIED && cameraStatus.canAskAgain)
+        (cameraStatus.status === ImagePicker.PermissionStatus.DENIED &&
+          cameraStatus.canAskAgain)
       ) {
-        const permission = await requestCameraPermission()
+        const permission = await requestCameraPermission();
         if (permission.granted) {
-          await pickCamera()
+          await pickCamera();
         }
       } else if (cameraStatus.status === ImagePicker.PermissionStatus.DENIED) {
-        await Linking.openSettings()
+        await Linking.openSettings();
       } else {
-        await pickCamera()
+        await pickCamera();
       }
     }
   }, [cameraStatus, pickCamera, requestCameraPermission]);
 
-  useEffect( () => {
+  useEffect(() => {
     loadPortrait();
     loadPictures();
   }, []);
 
   return (
     <BottomSheetModalProvider>
-      <SafeAreaView
-        style={LayoutStyles.whiteContainer}
-      >
+      <SafeAreaView style={LayoutStyles.whiteContainer}>
         <Stack.Screen
           options={{
             headerShown: true,
-            title: '',
+            title: "",
             headerLeft: () => <Back />,
           }}
         />
@@ -202,12 +275,18 @@ const Photos = () => {
         </BottomSheetModal>
         <ScrollView
           style={{ paddingTop: 20 }}
-          contentContainerStyle={{ alignItems: "center"}}
+          contentContainerStyle={{ alignItems: "center" }}
         >
           <View style={[LayoutStyles.scrollContainer, { paddingBottom: 60 }]}>
-            <Text style={[LayoutStyles.pageTitle, { marginBottom: 5 }]}>FOTOGRAFÍAS</Text>
-            <Text style={[LayoutStyles.subtitle, { marginBottom: 5 }]}>FOTO PORTADA</Text>
-            <View style={{ marginBottom: 30, overflow: "hidden", borderRadius: 20 }}>
+            <Text style={[LayoutStyles.pageTitle, { marginBottom: 5 }]}>
+              FOTOGRAFÍAS
+            </Text>
+            <Text style={[LayoutStyles.subtitle, { marginBottom: 5 }]}>
+              FOTO PORTADA
+            </Text>
+            <View
+              style={{ marginBottom: 30, overflow: "hidden", borderRadius: 20 }}
+            >
               <Image
                 source={{ uri: portrait }}
                 placeholder={Images.portraitDefault}
@@ -217,32 +296,69 @@ const Photos = () => {
             </View>
             <View style={{ marginBottom: 20 }}>
               <UploadPhoto
-                onRemovePhoto={removePortrait}
-                onModalPress={() => handlePresentModalPress('portrait')}
+                onRemovePhoto={removeFieldPortrait}
+                onModalPress={() => handlePresentModalPress("portrait")}
                 position="Horizontal"
               />
             </View>
-            <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 20 }}>
-              <Text style={[LayoutStyles.subtitle, { marginBottom: 0, marginRight: 8 }]}>GALERÍA</Text>
-              <Text style={[LayoutStyles.subtitle, { marginBottom: 0, fontSize: 14, fontFamily: "PoppinsMedium", }]}>(max 3 fotos)</Text>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                marginBottom: 20,
+              }}
+            >
+              <Text
+                style={[
+                  LayoutStyles.subtitle,
+                  { marginBottom: 0, marginRight: 8 },
+                ]}
+              >
+                GALERÍA
+              </Text>
+              <Text
+                style={[
+                  LayoutStyles.subtitle,
+                  {
+                    marginBottom: 0,
+                    fontSize: 14,
+                    fontFamily: "PoppinsMedium",
+                  },
+                ]}
+              >
+                (max 3 fotos)
+              </Text>
             </View>
-            {pictures && Array.isArray(pictures) && pictures.map((picture, index) => (
-              <View key={`picture-${index}`} style={{ flexDirection: "row", gap: 20, marginBottom: 20 }}>
-                <Image
-                  source={{ uri: getFieldUrl(picture.filename) }}
-                  style={{ borderRadius: 20, height: 120, width: "100%", flex: 1, flexBasis: "10%" }}
-                />
-                <View style={{ flex: 1, justifyContent: "center" }}>
-                  <UploadPhoto
-                    onRemovePhoto={() => removeFieldPicture(picture.id)}
-                    onModalPress={() => handlePresentModalPress('gallery')}
-                    position="Vertical"
+            {pictures &&
+              Array.isArray(pictures) &&
+              pictures.map((picture, index) => (
+                <View
+                  key={`picture-${index}`}
+                  style={{ flexDirection: "row", gap: 20, marginBottom: 20 }}
+                >
+                  <Image
+                    source={{ uri: getFieldUrl(picture.filename) }}
+                    style={{
+                      borderRadius: 20,
+                      height: 120,
+                      width: "100%",
+                      flex: 1,
+                      flexBasis: "10%",
+                    }}
                   />
+                  <View style={{ flex: 1, justifyContent: "center" }}>
+                    <UploadPhoto
+                      onRemovePhoto={() => removeFieldPicture(picture.id)}
+                      onModalPress={() =>
+                        handlePresentModalPress("edit-gallery", picture.id)
+                      }
+                      position="Vertical"
+                    />
+                  </View>
                 </View>
-              </View>
-            ))}
+              ))}
 
-            {pictures.length < 3 &&
+            {pictures.length < 3 && (
               <Pressable
                 style={[
                   styles.buttonOutline,
@@ -253,28 +369,30 @@ const Photos = () => {
                     marginBottom: 50,
                     borderWidth: 2,
                     paddingVertical: 6,
-                    borderRadius: 20
-                  }
+                    borderRadius: 20,
+                  },
                 ]}
                 onPress={() => addPicture()}
               >
                 <PicturesIcon size={20} />
                 <Text style={styles.buttonOutlineText}>Agregar fotos</Text>
               </Pressable>
-            }
+            )}
 
             <Pressable
               onPress={() => save()}
-              style={[PageStyles.button, { width: "80%", marginHorizontal: "auto", marginTop: 50 }]}
+              style={[
+                PageStyles.button,
+                { width: "80%", marginHorizontal: "auto", marginTop: 50 },
+              ]}
             >
               <Text style={PageStyles.buttonText}>GUARDAR</Text>
             </Pressable>
-
           </View>
         </ScrollView>
       </SafeAreaView>
     </BottomSheetModalProvider>
-  )
+  );
 };
 
 export default Photos;

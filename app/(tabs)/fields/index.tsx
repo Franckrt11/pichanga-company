@@ -45,6 +45,7 @@ const Fields = () => {
                 name={field.location.name}
                 district={field.location.district.name}
                 portrait={field.portrait as string | null}
+                rating={field.rating}
                 active={field.active as boolean}
               />
             ))}

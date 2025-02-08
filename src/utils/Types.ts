@@ -114,6 +114,7 @@ export interface FieldData {
   location: LocationData;
   players: string;
   portrait?: string | null;
+  rating: number;
   size: string;
   type: string;
 };

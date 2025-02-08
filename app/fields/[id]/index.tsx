@@ -1,13 +1,11 @@
 import { StyleSheet, Text, View, Pressable } from "react-native";
 import { router, useLocalSearchParams, Href } from "expo-router";
 import { useState, useEffect } from "react";
-import MapView, { Marker, PROVIDER_GOOGLE, LatLng } from "react-native-maps";
-import { LayoutStyles } from "@/src/utils/Styles";
 import Colors from "@/src/utils/Colors";
 import { FieldData, FieldPictureData } from "@/src/utils/Types";
 import ChildPage from "@/src/components/layouts/child-page";
 import PencilIcon from "@/src/components/icons/pencil-icon";
-import StarIcon from "@/src/components/icons/star-icon";
+
 import { useAuthContext } from "@/src/context/Auth";
 import {
   fetchField,
@@ -15,6 +13,7 @@ import {
   updateFieldStatus,
 } from "@/src/models/Field";
 import ImageCarousel from "@/src/components/image-carousel";
+import RatingRow from "@/src/components/rating-row";
 import Switch from "@/src/components/switch";
 
 interface PictureList {
@@ -33,29 +32,6 @@ const ContentRow = ({
     <View style={styles.contentRow}>
       <Text style={styles.contentLabel}>{label}</Text>
       <Text style={styles.contentData}>{data}</Text>
-    </View>
-  );
-};
-
-const RatingRow = ({ score }: { score: number }) => {
-  let star_array = [];
-
-  for (let i = 0; i < 5; i++) {
-    if (i < score) {
-      star_array.push(true);
-    } else {
-      star_array.push(false);
-    }
-  }
-
-  return (
-    <View style={styles.contentRow}>
-      <Text style={styles.contentLabel}>Ranking</Text>
-      <View style={{ flexDirection: "row", gap: 5, marginLeft: 20 }}>
-        {star_array.map((star, index) => (
-          <StarIcon key={index} size={28} active={star} />
-        ))}
-      </View>
     </View>
   );
 };

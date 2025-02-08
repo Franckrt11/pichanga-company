@@ -4,10 +4,10 @@ import { router, Href } from "expo-router";
 import { Image } from "expo-image";
 import Colors from "@/src/utils/Colors";
 import Images from "@/src/utils/Images";
-import StarIcon from "@/src/components/icons/star-icon";
 import PencilIcon from "@/src/components/icons/pencil-icon";
 import ZoomPlusIcon from "@/src/components/icons/zoom-plus-icon";
 import Switch from "@/src/components/switch";
+import RatingScore from "@/src/components/rating-score";
 import { getFieldUrl } from "@/src/utils/Helpers";
 import { updateFieldStatus } from "@/src/models/Field";
 import { useAuthContext } from "@/src/context/Auth";
@@ -18,9 +18,10 @@ interface FieldProps {
   district: string;
   active: boolean;
   portrait: string | null;
+  rating: number;
 }
 
-const FieldItem = ({ id, name, district, active, portrait }: FieldProps) => {
+const FieldItem = ({ id, name, district, active, portrait, rating }: FieldProps) => {
   const { token } = useAuthContext();
   const [visible, setVisible] = useState(active);
 
@@ -45,14 +46,7 @@ const FieldItem = ({ id, name, district, active, portrait }: FieldProps) => {
             <View style={styles.description}>
               <Text style={styles.title}>{name}</Text>
               <Text style={styles.subtitle}>{district}</Text>
-              <View style={styles.score}>
-                <StarIcon size={15} active={true} />
-                <StarIcon size={15} active={true} />
-                <StarIcon size={15} active={true} />
-                <StarIcon size={15} active={false} />
-                <StarIcon size={15} active={false} />
-                <Text style={styles.countScore}>(50)</Text>
-              </View>
+              <RatingScore score={3.8} />
             </View>
             <View style={styles.more}>
               <Pressable onPress={() => router.push(`/fields/${id}`)}>
